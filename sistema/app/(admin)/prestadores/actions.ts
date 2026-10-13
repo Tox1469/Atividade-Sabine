@@ -10,7 +10,7 @@ import { prisma } from "@/lib/db";
 import { gravarDocumento } from "@/lib/documentos";
 import { EM_ANDAMENTO } from "@/lib/dominio/ordem";
 import { hoje, lerData } from "@/lib/formato";
-import { comErros, erroNoCampo, valoresDo, type EstadoFormulario } from "@/lib/formulario";
+import { comErros, erroNoCampo, valoresDo, voltarPara, type EstadoFormulario } from "@/lib/formulario";
 import { registrarLog } from "@/lib/log";
 import { exigirPerfil } from "@/lib/permissao";
 import { apagarArquivo, linkDeEnvio, receberArquivo } from "@/lib/storage";
@@ -129,6 +129,9 @@ export async function alterarSituacao(id: number, _estado: EstadoFormulario, for
   });
 
   revalidatePath(caminho(id, "/situacao"));
+  revalidatePath("/vencimentos");
+  // aberta como janela no painel de vencimentos (UC09): volta pro painel com o aviso
+  if (form.get("voltar")) redirect(voltarPara(form.get("voltar"), "/vencimentos", `Situação de ${prestador.nome_fantasia ?? prestador.nome_razao_social} alterada para ${situacao}.`));
   return { ok: "Situação alterada." };
 }
 

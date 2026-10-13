@@ -7,10 +7,11 @@ import { atribuirOrdem, cancelarOrdem } from "./actions";
 type Apto = { id: number; nome: string; detalhe: string; nota: string; emAndamento: number; ultimo: string };
 
 // T12b - janela de atribuicao. um formulario so, cada linha tem o proprio botao
-export function FormAtribuir({ idOrdem, aptos, troca, children }: { idOrdem: number; aptos: Apto[]; troca: boolean; children: React.ReactNode }) {
+export function FormAtribuir({ idOrdem, aptos, troca, voltar, children }: { idOrdem: number; aptos: Apto[]; troca: boolean; voltar: string; children: React.ReactNode }) {
   const { estado, enviar, enviando, valor } = useFormulario(atribuirOrdem.bind(null, idOrdem));
   return (
     <form onSubmit={enviar}>
+      <input type="hidden" name="voltar" value={voltar} />
       <div className="modal-corpo">
         <MensagemFormulario estado={estado} />
         {children}
@@ -65,6 +66,7 @@ export function FormCancelar({ idOrdem, voltar }: { idOrdem: number; voltar: str
   const { estado, enviar, enviando, valor, erro } = useFormulario(cancelarOrdem.bind(null, idOrdem));
   return (
     <form onSubmit={enviar} noValidate>
+      <input type="hidden" name="voltar" value={voltar} />
       <div className="modal-corpo">
         <p className="aviso atencao">
           <strong>O cancelamento não apaga a ordem.</strong>

@@ -4,14 +4,16 @@ import { prisma } from "@/lib/db";
 import { situacaoDocumento } from "@/lib/dominio/documento";
 import { emAtraso, foiAceita, semRespostaHaMaisDe24h } from "@/lib/dominio/ordem";
 import { FILTRO_ACEITE } from "@/lib/ordens";
+import { JanelaAtribuir } from "../ordens/janela-atribuir";
 import { dataBR, diasEntre, hoje, plural, somarDias } from "@/lib/formato";
 import { exigirPerfil } from "@/lib/permissao";
 
 export const metadata = { title: "Painel do dia" };
 
 // T02 - painel do dia: o que o administrador precisa resolver hoje
-export default async function Painel() {
+export default async function Painel({ searchParams }: { searchParams: Promise<{ atribuir?: string; ok?: string }> }) {
   await exigirPerfil("administrador");
+  const { atribuir, ok } = await searchParams;
   const dia = hoje();
   const agora = new Date();
   const inicioMes = new Date(Date.UTC(dia.getUTCFullYear(), dia.getUTCMonth(), 1));
@@ -55,9 +57,10 @@ export default async function Painel() {
   return (
     <div className="mx-auto max-w-6xl">
       <Titulo titulo="Painel do dia" subtitulo={`Situação em ${dataBR(dia)}`}>
-        <Link href="/ordens/nova" className="botao-principal">Abrir ordem</Link>
+        <Link href="/ordens?janela=nova" className="botao-principal">Abrir ordem</Link>
       </Titulo>
 
+      {ok && <Aviso tom="ok" titulo={ok} />}
       {pendentes > 0 && (
         <Aviso titulo={`${plural(pendentes, "prestador pendente já enviou documentos", "prestadores pendentes já enviaram documentos")} e espera conferência.`}>
           <Link href="/prestadores?situacao=pendente" className="underline">Ver os pendentes</Link> e, com a documentação em dia, mudar a situação para ativo.
@@ -111,7 +114,7 @@ export default async function Painel() {
                   </td>
                   <td className="acoes">
                     {o.status === "aberta" ? (
-                      <Link href={`/ordens/${o.id_ordem}?janela=atribuir`} className="botao-principal botao-pequeno">Atribuir</Link>
+                      <Link href={`/painel?atribuir=${o.id_ordem}`} scroll={false} className="botao-principal botao-pequeno">Atribuir</Link>
                     ) : (
                       <Link href={`/ordens/${o.id_ordem}`} className="botao botao-pequeno">Abrir</Link>
                     )}
@@ -149,6 +152,8 @@ export default async function Painel() {
           </table>
         )}
       </div>
+
+      {atribuir && <JanelaAtribuir idOrdem={Number(atribuir) || 0} fechar="/painel" />}
     </div>
   );
 }

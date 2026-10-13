@@ -2,15 +2,15 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { HistoricoOrdem } from "@/app/_componentes/historico-ordem";
 import { Aviso, Chip, ChipStatus, Titulo, Trilha } from "@/app/_componentes/ui";
-import { candidatosDaOrdem } from "@/lib/aptidao";
 import { prisma } from "@/lib/db";
-import { textoNota } from "@/lib/dominio/avaliacao";
 import { emAtraso, foiAceita, semRespostaHaMaisDe24h } from "@/lib/dominio/ordem";
 import { dataBR, dataHoraBR, diasEntre, hoje, plural } from "@/lib/formato";
 import { FILTRO_ACEITE } from "@/lib/ordens";
 import { exigirPerfil } from "@/lib/permissao";
 import { BotaoImprimir } from "@/app/_componentes/imprimir";
-import { FormAtribuir, FormCancelar } from "../formularios";
+import { Janela } from "@/app/_componentes/janela";
+import { FormCancelar } from "../formularios";
+import { JanelaAtribuir } from "../janela-atribuir";
 
 export const metadata = { title: "Ordem de serviço" };
 
@@ -40,10 +40,6 @@ export default async function OrdemAdmin({ params, searchParams }: { params: Pro
   const podeAtribuir = ordem.status === "aberta" || ordem.status === "atribuida";
   const aqui = `/ordens/${ordem.id_ordem}`;
   const nome = (p: { nome_fantasia: string | null; nome_razao_social: string }) => p.nome_fantasia ?? p.nome_razao_social;
-
-  const candidatos = (janela === "atribuir" || janela === "trocar") && podeAtribuir
-    ? await candidatosDaOrdem(ordem.id_ordem, ordem.servico.id_categoria, ordem.servico.categoria.nome)
-    : null;
 
   return (
     <div className="mx-auto max-w-6xl">
@@ -148,72 +144,12 @@ export default async function OrdemAdmin({ params, searchParams }: { params: Pro
         </div>
       </div>
 
-      {candidatos && (
-        <div className="modal-fundo" role="dialog" aria-modal="true" aria-labelledby="titulo-janela">
-          <div className="modal">
-            <h2 id="titulo-janela">{janela === "trocar" ? "Trocar o prestador da ordem" : "Atribuir a ordem a um prestador"}</h2>
-            <FormAtribuir
-              idOrdem={ordem.id_ordem}
-              troca={ordem.status === "atribuida"}
-              aptos={candidatos.aptos
-                .filter((a) => a.prestador.id_prestador !== ordem.id_prestador)
-                .map((a) => ({
-                  id: a.prestador.id_prestador,
-                  nome: a.prestador.nome_razao_social,
-                  detalhe: a.prestador.nome_fantasia ?? `cadastrado em ${dataBR(a.prestador.criado_em)}`,
-                  nota: textoNota(a.nota),
-                  emAndamento: a.emAndamento,
-                  ultimo: a.ultimoAtendimento ? dataBR(a.ultimoAtendimento) : "Nenhum ainda",
-                }))}
-            >
-              <p className="aviso">
-                <strong>Aparecem apenas os prestadores aptos para esta ordem.</strong>
-                Aptidão é estar ativo, estar habilitado na categoria {ordem.servico.categoria.nome}, não ter documento obrigatório vencido e ter contrato vigente
-                (RN01 a RN04).
-              </p>
-            </FormAtribuir>
-            {candidatos.inaptos.length > 0 && (
-              <div className="modal-corpo border-t border-regua-clara">
-                <h3 className="mb-1 text-sm font-semibold">Não disponíveis para esta ordem</h3>
-                <p className="ajuda mb-2">A lista evita a dúvida de por que um prestador conhecido não aparece. Nenhum deles pode ser selecionado.</p>
-                <div className="overflow-x-auto">
-                  <table className="tabela min-w-[520px]">
-                    <thead>
-                      <tr><th>Prestador</th><th>Motivo do impedimento</th></tr>
-                    </thead>
-                    <tbody>
-                      {candidatos.inaptos.map(({ prestador, motivo }) => (
-                        <tr key={prestador.id_prestador}>
-                          <td>{nome(prestador)}</td>
-                          <td>
-                            <Chip tom={motivo.tom}>{motivo.chip}</Chip> {motivo.texto}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-                {candidatos.outrosNaoHabilitados > 0 && (
-                  <p className="ajuda mt-2">
-                    E mais {plural(candidatos.outrosNaoHabilitados, "prestador ativo", "prestadores ativos")} sem habilitação em {ordem.servico.categoria.nome}.
-                  </p>
-                )}
-              </div>
-            )}
-            <div className="rodape-form">
-              <Link href={aqui} className="botao">Fechar</Link>
-            </div>
-          </div>
-        </div>
-      )}
+      {(janela === "atribuir" || janela === "trocar") && podeAtribuir && <JanelaAtribuir idOrdem={ordem.id_ordem} fechar={aqui} />}
 
       {janela === "cancelar" && aberta && (
-        <div className="modal-fundo" role="dialog" aria-modal="true" aria-labelledby="titulo-cancelar">
-          <div className="modal" style={{ maxWidth: 560 }}>
-            <h2 id="titulo-cancelar">Cancelar a ordem {ordem.numero}</h2>
-            <FormCancelar idOrdem={ordem.id_ordem} voltar={aqui} />
-          </div>
-        </div>
+        <Janela titulo={`Cancelar a ordem ${ordem.numero}`} fechar={aqui} largura={560}>
+          <FormCancelar idOrdem={ordem.id_ordem} voltar={aqui} />
+        </Janela>
       )}
     </div>
   );

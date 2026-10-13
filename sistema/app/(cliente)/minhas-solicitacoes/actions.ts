@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { comErros, valoresDo, type EstadoFormulario } from "@/lib/formulario";
+import { comErros, valoresDo, voltarPara, type EstadoFormulario } from "@/lib/formulario";
 import { abrirOrdem, avaliar } from "@/lib/ordens";
 import { exigirCliente } from "@/lib/permissao";
 import { ordemSchema } from "@/lib/validacao/ordem";
@@ -35,6 +35,9 @@ export async function avaliarAtendimento(idOrdem: number, _estado: EstadoFormula
   const comentario = String(form.get("comentario") ?? "");
   const r = await avaliar(idOrdem, cliente.id_cliente, Number(form.get("nota")), comentario);
   revalidatePath(`/minhas-solicitacoes/${idOrdem}`);
+  revalidatePath("/minhas-solicitacoes");
   if ("erro" in r) return { mensagem: r.erro, valores: { comentario } };
+  // avaliada pela janela da lista: volta pra lista com o agradecimento
+  if (form.get("voltar")) redirect(voltarPara(form.get("voltar"), "/minhas-solicitacoes", r.ok));
   return { ok: r.ok };
 }

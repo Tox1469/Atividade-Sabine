@@ -1,15 +1,17 @@
 import Link from "next/link";
-import { ChipStatus, Paginacao, paginaAtual, Titulo, Vazio } from "@/app/_componentes/ui";
+import { Janela } from "@/app/_componentes/janela";
+import { Aviso, ChipStatus, Paginacao, paginaAtual, Titulo, Vazio } from "@/app/_componentes/ui";
 import { prisma } from "@/lib/db";
 import { dataBR, plural } from "@/lib/formato";
 import { exigirCliente } from "@/lib/permissao";
+import { FormAvaliacao } from "./avaliacao";
 
 export const metadata = { title: "Minhas solicitações" };
 
 const POR_PAGINA = 20;
 
 // T16 - minhas solicitacoes. so as ordens do cliente logado (RNF02)
-export default async function MinhasSolicitacoes({ searchParams }: { searchParams: Promise<{ pagina?: string }> }) {
+export default async function MinhasSolicitacoes({ searchParams }: { searchParams: Promise<{ pagina?: string; avaliar?: string; ok?: string }> }) {
   const { cliente } = await exigirCliente();
   const params = await searchParams;
   const pagina = paginaAtual(params.pagina);
@@ -26,11 +28,18 @@ export default async function MinhasSolicitacoes({ searchParams }: { searchParam
     }),
   ]);
 
+  // so abre a janela de avaliacao pra ordem concluida, sem avaliacao, deste cliente (RN08)
+  const aAvaliar = params.avaliar
+    ? await prisma.ordem_servico.findFirst({ where: { id_ordem: Number(params.avaliar) || 0, id_cliente: cliente.id_cliente, status: "concluida", avaliacao: null }, include: { servico: true } })
+    : null;
+
   return (
     <div className="mx-auto max-w-5xl">
       <Titulo titulo="Minhas solicitações" subtitulo={plural(total, "solicitação", "solicitações")}>
         {cliente.ativo && <Link href="/minhas-solicitacoes/nova" className="botao-principal">Nova solicitação</Link>}
       </Titulo>
+
+      {params.ok && <Aviso tom="ok" titulo={params.ok} />}
 
       <div className="cartao overflow-x-auto">
         <h2 className="cartao-titulo">Minhas solicitações</h2>
@@ -52,7 +61,7 @@ export default async function MinhasSolicitacoes({ searchParams }: { searchParam
                     <td>{dataBR(o.prazo)}</td>
                     <td><ChipStatus status={o.status} /></td>
                     <td className="acoes">
-                      <Link href={`/minhas-solicitacoes/${o.id_ordem}`} className={`${avaliar ? "botao-principal" : "botao"} botao-pequeno`}>
+                      <Link href={avaliar ? `/minhas-solicitacoes?avaliar=${o.id_ordem}` : `/minhas-solicitacoes/${o.id_ordem}`} scroll={false} className={`${avaliar ? "botao-principal" : "botao"} botao-pequeno`}>
                         {avaliar ? "Avaliar" : o.avaliacao ? "Ver avaliação" : "Acompanhar"}
                       </Link>
                     </td>
@@ -64,6 +73,15 @@ export default async function MinhasSolicitacoes({ searchParams }: { searchParam
         )}
       </div>
       <Paginacao pagina={pagina} total={total} porPagina={POR_PAGINA} base="/minhas-solicitacoes" params={params} />
+
+      {aAvaliar && (
+        <Janela titulo={`Avaliar o atendimento da ${aAvaliar.numero}`} fechar="/minhas-solicitacoes" largura={460}>
+          <p className="px-4 pt-4 text-sm text-tinta2">
+            {aAvaliar.servico.nome}, concluída em {dataBR(aAvaliar.data_conclusao)}.
+          </p>
+          <FormAvaliacao idOrdem={aAvaliar.id_ordem} voltar="/minhas-solicitacoes" />
+        </Janela>
+      )}
     </div>
   );
 }

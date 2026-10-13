@@ -17,10 +17,11 @@ type Props = {
   localPadrao?: string;
   clientes?: { id: number; nome: string; local: string }[]; // so na abertura pelo administrador (UC12 A1.1)
   clienteInicial?: string;
+  emJanela?: boolean; // dentro da janela do administrador, sem a moldura de cartao
 };
 
 // T17 - nova solicitacao. o servico depende da categoria escolhida
-export function FormularioOrdem({ acao, categorias, voltar, prazoMinimo, localPadrao = "", clientes, clienteInicial = "" }: Props) {
+export function FormularioOrdem({ acao, categorias, voltar, prazoMinimo, localPadrao = "", clientes, clienteInicial = "", emJanela }: Props) {
   const { estado, enviar, enviando, valor, erro } = useFormulario(acao);
   const servicoInicial = valor("id_servico");
   const [categoria, setCategoria] = useState(
@@ -60,8 +61,8 @@ export function FormularioOrdem({ acao, categorias, voltar, prazoMinimo, localPa
         : "";
 
   return (
-    <form onSubmit={enviar} className="cartao" noValidate>
-      <h2 className="cartao-titulo">O que você precisa</h2>
+    <form onSubmit={enviar} className={emJanela ? "" : "cartao"} noValidate>
+      {!emJanela && <h2 className="cartao-titulo">O que você precisa</h2>}
       <div className="space-y-3 p-4">
         <MensagemFormulario estado={estado} />
         {clientes && (
@@ -155,7 +156,7 @@ export function FormularioOrdem({ acao, categorias, voltar, prazoMinimo, localPa
       </div>
       <div className="rodape-form">
         <Link href={voltar} className="botao">Cancelar</Link>
-        <BotaoEnviar enviando={enviando} texto="Enviar solicitação" enviandoTexto="Enviando..." />
+        <BotaoEnviar enviando={enviando} texto={emJanela ? "Abrir ordem" : "Enviar solicitação"} enviandoTexto="Enviando..." />
       </div>
     </form>
   );

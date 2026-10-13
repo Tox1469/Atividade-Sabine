@@ -1,15 +1,17 @@
 import Link from "next/link";
 import { Prisma } from "@prisma/client";
-import { Chip, ChipSituacao, Titulo, Vazio } from "@/app/_componentes/ui";
+import { Janela } from "@/app/_componentes/janela";
+import { Aviso, Chip, ChipSituacao, Titulo, Vazio } from "@/app/_componentes/ui";
 import { prisma } from "@/lib/db";
 import { situacaoDocumento } from "@/lib/dominio/documento";
 import { dataBR, hoje, plural, somarDias } from "@/lib/formato";
 import { exigirPerfil } from "@/lib/permissao";
+import { FormSituacao } from "../prestadores/formularios";
 import { BotaoRotina } from "./botao";
 
 export const metadata = { title: "Vencimentos" };
 
-type Busca = { categoria?: string; situacao?: string; ordem?: string };
+type Busca = { categoria?: string; situacao?: string; ordem?: string; situacao_de?: string; ok?: string };
 
 // T10 - painel de vencimentos (UC09, TA31): vencidos e os que vencem nos proximos 30 dias
 export default async function Vencimentos({ searchParams }: { searchParams: Promise<Busca> }) {
@@ -39,11 +41,22 @@ export default async function Vencimentos({ searchParams }: { searchParams: Prom
   ]);
   const nome = (p: { nome_fantasia: string | null; nome_razao_social: string }) => p.nome_fantasia ?? p.nome_razao_social;
 
+  // endereco do painel com os filtros de agora, pra janela de situacao abrir por cima dele
+  const painel = (extra: Record<string, string> = {}) => {
+    const q = new URLSearchParams();
+    for (const [k, val] of Object.entries(params)) if (val && k !== "situacao_de" && k !== "ok") q.set(k, val);
+    for (const [k, val] of Object.entries(extra)) q.set(k, val);
+    return `/vencimentos${q.size ? "?" + q : ""}`;
+  };
+  const alvo = params.situacao_de ? vencidos.find((d) => d.id_prestador === Number(params.situacao_de)) : undefined;
+
   return (
     <div className="mx-auto max-w-6xl">
       <Titulo titulo="Vencimentos" subtitulo="Documentos vencidos e os que vencem nos próximos 30 dias">
         <BotaoRotina />
       </Titulo>
+
+      {params.ok && <Aviso tom="ok" titulo={params.ok} />}
 
       <form className="cartao mb-4 flex flex-wrap items-end gap-3 p-4">
         <div className="w-44">
@@ -100,7 +113,7 @@ export default async function Vencimentos({ searchParams }: { searchParams: Prom
                       <td>{plural(situacaoDocumento(d.data_validade, dia).dias, "dia", "dias")}</td>
                       <td><ChipSituacao situacao={d.prestador.situacao} /></td>
                       <td className="acoes">
-                        <Link href={`/prestadores/${d.id_prestador}/situacao`} className="botao botao-pequeno">Alterar situação</Link>
+                        <Link href={painel({ situacao_de: String(d.id_prestador) })} scroll={false} className="botao botao-pequeno">Alterar situação</Link>
                       </td>
                     </tr>
                   ))}
@@ -138,6 +151,15 @@ export default async function Vencimentos({ searchParams }: { searchParams: Prom
             )}
           </div>
         </>
+      )}
+
+      {alvo && (
+        <Janela titulo={`Situação cadastral de ${nome(alvo.prestador)}`} fechar={painel()} largura={560}>
+          <p className="px-4 pt-4 text-sm">
+            Situação atual: <ChipSituacao situacao={alvo.prestador.situacao} />. {alvo.tipo.nome} vencido em {dataBR(alvo.data_validade)}.
+          </p>
+          <FormSituacao id={alvo.id_prestador} atual={alvo.prestador.situacao} voltar={painel()} />
+        </Janela>
       )}
     </div>
   );

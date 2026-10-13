@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { comErros, erroNoCampo, valoresDo, type EstadoFormulario } from "@/lib/formulario";
+import { comErros, erroNoCampo, valoresDo, voltarPara, type EstadoFormulario } from "@/lib/formulario";
 import { abrirOrdem, atribuir, cancelar } from "@/lib/ordens";
 import { exigirPerfil } from "@/lib/permissao";
 import { ordemSchema } from "@/lib/validacao/ordem";
@@ -41,7 +41,9 @@ export async function atribuirOrdem(idOrdem: number, _estado: EstadoFormulario, 
   const r = await atribuir(idOrdem, idPrestador, Number(usuario.id), motivo || undefined);
   revalidatePath(`/ordens/${idOrdem}`);
   if ("erro" in r) return { mensagem: r.erro, valores: { motivo } };
-  redirect(`/ordens/${idOrdem}?ok=${encodeURIComponent(r.ok)}`);
+  // volta pra tela de onde a janela abriu (painel, lista de ordens ou a propria ordem)
+  revalidatePath("/painel");
+  redirect(voltarPara(form.get("voltar"), `/ordens/${idOrdem}`, r.ok));
 }
 
 // T12c - cancelar com motivo (RN07)
@@ -51,5 +53,5 @@ export async function cancelarOrdem(idOrdem: number, _estado: EstadoFormulario, 
   const r = await cancelar(idOrdem, Number(usuario.id), motivo);
   if ("erro" in r) return { erros: { motivo: [r.erro] }, valores: { motivo } };
   revalidatePath(`/ordens/${idOrdem}`);
-  redirect(`/ordens/${idOrdem}?ok=${encodeURIComponent(r.ok)}`);
+  redirect(voltarPara(form.get("voltar"), `/ordens/${idOrdem}`, r.ok));
 }

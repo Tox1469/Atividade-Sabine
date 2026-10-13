@@ -22,3 +22,16 @@ export function comErros(erro: ZodError, valores: Record<string, string>): Estad
 export function erroNoCampo(campo: string, mensagem: string, valores: Record<string, string>): EstadoFormulario {
   return { erros: { [campo]: [mensagem] }, mensagem: "Confira os campos destacados.", valores };
 }
+
+// pra onde voltar depois de salvar numa janela (painel, lista de ordens, vencimentos).
+// o endereco vem do navegador, entao so vale caminho interno: nada de "//outro-site" (redirect aberto)
+export function voltarPara(valor: FormDataEntryValue | null, padrao: string, ok: string) {
+  const texto = typeof valor === "string" ? valor : "";
+  const caminho = texto.startsWith("/") && !texto.startsWith("//") && !texto.includes("\\") ? texto : padrao;
+  const url = new URL(caminho, "http://sgp");
+  url.searchParams.delete("janela");
+  url.searchParams.delete("atribuir");
+  url.searchParams.delete("situacao_de");
+  url.searchParams.set("ok", ok);
+  return url.pathname + url.search;
+}

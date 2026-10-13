@@ -4,11 +4,11 @@ import { BotaoEnviar, CampoTexto, MensagemFormulario, useFormulario } from "@/ap
 import { avaliarAtendimento } from "./actions";
 
 // T18 - nota de 1 a 5 (botoes de radio com cara de botao) e comentario opcional
-export function FormAvaliacao({ idOrdem }: { idOrdem: number }) {
+export function FormAvaliacao({ idOrdem, voltar }: { idOrdem: number; voltar?: string }) {
   const { estado, enviar, enviando, valor } = useFormulario(avaliarAtendimento.bind(null, idOrdem));
   return (
-    <form onSubmit={enviar} className="cartao" style={{ flex: "0 1 400px" }}>
-      <h2 className="cartao-titulo">Avaliar o atendimento</h2>
+    <form onSubmit={enviar} className={voltar ? "" : "cartao"} style={voltar ? undefined : { flex: "0 1 400px" }}>
+      {voltar ? <input type="hidden" name="voltar" value={voltar} /> : <h2 className="cartao-titulo">Avaliar o atendimento</h2>}
       <div className="space-y-3 p-4">
         <MensagemFormulario estado={estado} />
         <fieldset>

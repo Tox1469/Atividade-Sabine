@@ -1,33 +1,27 @@
 import { FormularioOrdem } from "@/app/_componentes/formulario-ordem";
-import { Titulo } from "@/app/_componentes/ui";
+import { Janela } from "@/app/_componentes/janela";
 import { prisma } from "@/lib/db";
 import { catalogoAtivo, enderecoDe } from "@/lib/ordens";
-import { exigirPerfil } from "@/lib/permissao";
 import { prazoMinimo } from "@/lib/validacao/ordem";
-import { abrirPeloAdmin } from "../actions";
+import { abrirPeloAdmin } from "./actions";
 
-export const metadata = { title: "Abrir ordem" };
-
-// UC12 A1.1 - abertura pelo administrador, quando o pedido chega por telefone
-export default async function NovaOrdem({ searchParams }: { searchParams: Promise<{ cliente?: string }> }) {
-  await exigirPerfil("administrador");
-  const { cliente } = await searchParams;
+// UC12 A1.1 - o administrador abre em nome do cliente, quando o pedido chega por telefone
+export async function JanelaNovaOrdem({ fechar, cliente }: { fechar: string; cliente?: string }) {
   const [categorias, clientes] = await Promise.all([
     catalogoAtivo(),
     prisma.cliente.findMany({ where: { ativo: true }, orderBy: { nome_razao_social: "asc" } }),
   ]);
-
   return (
-    <div className="mx-auto max-w-4xl">
-      <Titulo voltar={["/ordens", "ordens de serviço"]} titulo="Abrir ordem de serviço" subtitulo="Em nome de um cliente ativo" />
+    <Janela titulo="Abrir ordem de serviço" fechar={fechar}>
       <FormularioOrdem
+        emJanela
         acao={abrirPeloAdmin}
         categorias={categorias}
-        voltar="/ordens"
+        voltar={fechar}
         prazoMinimo={prazoMinimo()}
         clienteInicial={cliente ?? ""}
         clientes={clientes.map((c) => ({ id: c.id_cliente, nome: c.nome_fantasia ? `${c.nome_fantasia} (${c.nome_razao_social})` : c.nome_razao_social, local: enderecoDe(c) }))}
       />
-    </div>
+    </Janela>
   );
 }

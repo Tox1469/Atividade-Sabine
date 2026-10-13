@@ -1,3 +1,5 @@
 {
+  "framework": "nextjs",
+  "regions": ["gru1"],
   "crons": [{ "path": "/api/rotinas/vencimentos", "schedule": "5 3 * * *" }]
 }

@@ -107,12 +107,12 @@ export function FormDocumentoAdmin({ id, tipos }: { id: number; tipos: Tipo[] })
   return <FormDocumento tipos={tipos} acao={enviarDocumento.bind(null, id)} preparar={prepararEnvio.bind(null, id, "documentos")} />;
 }
 
-export function FormSituacao({ id, atual }: { id: number; atual: string }) {
+export function FormSituacao({ id, atual, voltar }: { id: number; atual: string; voltar?: string }) {
   const { estado, enviar, enviando, valor, erro } = useFormulario(alterarSituacao.bind(null, id));
   const opcoes = ["ativo", "pendente", "bloqueado", "inativo"].filter((s) => s !== atual);
   return (
-    <form onSubmit={enviar} className="cartao" noValidate>
-      <h2 className="cartao-titulo">Alterar situação cadastral</h2>
+    <form onSubmit={enviar} className={voltar ? "" : "cartao"} noValidate>
+      {voltar ? <input type="hidden" name="voltar" value={voltar} /> : <h2 className="cartao-titulo">Alterar situação cadastral</h2>}
       <div className="space-y-3 p-4">
         <MensagemFormulario estado={estado} />
         <Selecao
@@ -135,7 +135,7 @@ export function FormSituacao({ id, atual }: { id: number; atual: string }) {
         />
       </div>
       <div className="rodape-form">
-        <Link href="/prestadores" className="botao">Cancelar</Link>
+        <Link href={voltar ?? "/prestadores"} scroll={false} className="botao">Cancelar</Link>
         <BotaoEnviar enviando={enviando} texto="Gravar alteração" />
       </div>
     </form>

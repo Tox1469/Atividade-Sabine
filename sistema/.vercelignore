@@ -1,0 +1,8 @@
+# nunca sobe: banco local, arquivos de upload de teste e variaveis da maquina
+.banco
+.arquivos
+.env
+.env.*
+!.env.example
+node_modules
+.next

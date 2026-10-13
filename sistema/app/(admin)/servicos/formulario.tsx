@@ -4,16 +4,15 @@ import Link from "next/link";
 import { BotaoEnviar, Campo, CampoTexto, MensagemFormulario, Selecao, useFormulario } from "@/app/_componentes/campos";
 import { salvarServico } from "./actions";
 
-type Props = { id: number | null; inicial?: Record<string, string>; categorias: { id: number; nome: string }[] };
+type Props = { id: number | null; inicial?: Record<string, string>; categorias: { id: number; nome: string }[]; voltar: string };
 
-// T09 - ficha do servico
-export function FormServico({ id, inicial = {}, categorias }: Props) {
+// T09 - ficha do servico, aberta em janela por cima do catalogo (T08)
+export function FormServico({ id, inicial = {}, categorias, voltar }: Props) {
   const { estado, enviar, enviando, valor, erro } = useFormulario(salvarServico.bind(null, id), inicial);
   const ativo = estado.valores ? estado.valores.ativo === "sim" : inicial.ativo !== "nao";
 
   return (
-    <form onSubmit={enviar} className="cartao" noValidate>
-      <h2 className="cartao-titulo">Dados do serviço</h2>
+    <form onSubmit={enviar} noValidate>
       <div className="space-y-3 p-4">
         <MensagemFormulario estado={estado} />
         <div className="grid gap-3 sm:grid-cols-3">
@@ -42,7 +41,7 @@ export function FormServico({ id, inicial = {}, categorias }: Props) {
         </div>
       </div>
       <div className="rodape-form">
-        <Link href="/servicos" className="botao">Cancelar</Link>
+        <Link href={voltar} scroll={false} className="botao">Cancelar</Link>
         <BotaoEnviar enviando={enviando} texto="Salvar" />
       </div>
     </form>
