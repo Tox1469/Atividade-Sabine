@@ -61,16 +61,19 @@ a definicao de cada nivel, o criterio de decisao e a justificativa item a item e
 | banco | postgresql 18 (local pelo embedded-postgres) | restricao de unicidade nativa pra RN10 e tipos de data adequados |
 | autenticacao | auth.js v5 (credentials) + bcryptjs | login por email e senha, sessao de 30 min e bloqueio depois de 5 erros (RF01, RNF01, RNF03, RNF12) |
 | validacao | zod | o mesmo esquema valida no formulario e no servidor (RNF02) |
-| arquivos | storage de objetos em nuvem (ainda nao usado) | documentos e contratos em pdf, jpg e png, ate 10 mb (RNF09) |
-| hospedagem | vercel (o sistema entra no ar em 06/11) | url publica e deploy a cada push |
-| testes | vitest + casos manuais documentados | regras de negocio e fluxos pela tela |
+| arquivos | supabase storage (bucket privado), pasta `.arquivos` rodando local | documentos e contratos em pdf, jpg e png, ate 10 mb (RNF09). o navegador sobe direto pro storage com link assinado |
+| hospedagem | vercel (regiao sao paulo) + postgresql do supabase | url publica, deploy a cada push e a rotina diaria de vencimentos (RN02) pelo cron da vercel |
+| testes | vitest + casos manuais documentados | regras de negocio, permissoes e regras das ordens contra um postgres de verdade |
+| integracao continua | github actions | tipos, lint, testes e build a cada push e pull request |
 
-a escolha foi por familiaridade da equipe e por serem ferramentas com plano gratuito, que é o que cabe no prazo e no orcamento do trabalho. o detalhamento de cada decisao, as alternativas descartadas e a arquitetura em camadas estao em [docs/tecnologias-e-arquitetura.md](docs/tecnologias-e-arquitetura.md). o que mudou ao comecar a programar esta na secao 3.3 desse documento. continua em aberto apenas o provedor do postgresql gerenciado e do storage, que precisa ser escolhido ate 06/11.
+a escolha foi por familiaridade da equipe e por serem ferramentas com plano gratuito, que é o que cabe no prazo e no orcamento do trabalho. o detalhamento de cada decisao, as alternativas descartadas e a arquitetura em camadas estao em [docs/tecnologias-e-arquitetura.md](docs/tecnologias-e-arquitetura.md). o que mudou ao comecar a programar esta na secao 3.3 desse documento. o provedor do postgresql gerenciado e do storage ficou sendo o supabase.
 
 ## o projeto no ar
 
 a documentacao e o prototipo navegavel ficam publicados em **[sgp-equipe8.vercel.app](https://sgp-equipe8.vercel.app)**.
-a pagina inicial é o arquivo `index.html` da raiz, e o conteudo é o mesmo do repositorio, sem build. o sistema em si ainda roda so na maquina, pelos passos da secao "como rodar".
+a pagina inicial é o arquivo `index.html` da raiz, e o conteudo é o mesmo do repositorio, sem build.
+
+o sistema esta publicado em **[sgp-equipe8-sistema.vercel.app](https://sgp-equipe8-sistema.vercel.app)**, com banco e storage no supabase. a tela de login tem os botoes "entrar como" com as contas de demonstracao dos tres perfis. pra rodar na propria maquina, seguir a secao "como rodar".
 
 ## organizacao do repositorio
 
@@ -155,7 +158,7 @@ python ferramentas/gerar-html.py
 | 2 | 08/09/2026 | casos de uso, diagramas de atividade, diagrama de classes e modelagem do banco | pronto |
 | 3 | 25/09/2026 | repositorio, backlog, mapa de navegacao, prototipos, mvp e apresentacao | pronto |
 | 4 | 20/10/2026 | planejamento tecnico e implementacao inicial: login e cadastro e consulta de prestadores, com testes. tag `entrega-20-10-2026` | pronto |
-| 5 | 06/11/2026 | implementacao, integracao e testes: resto da release 1 e release 2, publicado na vercel | a fazer |
+| 5 | 06/11/2026 | implementacao, integracao e testes: resto da release 1 e release 2, publicado na vercel | em andamento |
 | 6 | 27/11/2026 | sistema funcionando e apresentacao final | a fazer |
 
 ## mvp
@@ -202,7 +205,7 @@ npm run db:carga      administradores de teste, tipos de documento, categorias e
 npm run dev
 ```
 
-o sistema abre em http://localhost:3000. usuarios de teste: `luis@sgp.teste` ou `igor@sgp.teste`, senha `sgp@2026`. todos os dados da carga sao inventados.
+o sistema abre em http://localhost:3000. usuarios de teste, todos com a senha `sgp@2026`: `luis@sgp.teste` ou `igor@sgp.teste` (administrador), `eletrica@sgp.teste` (prestador) e `zanin@sgp.teste` (cliente). todos os dados da carga sao inventados.
 
 ### no dia a dia
 
@@ -214,19 +217,46 @@ o sistema abre em http://localhost:3000. usuarios de teste: `luis@sgp.teste` ou 
 npm test
 ```
 
-roda os testes unitarios das regras de negocio. os casos de teste pela tela e os resultados estao em [docs/testes.md](docs/testes.md).
+roda os testes das regras de negocio e das permissoes. com o `npm run banco` aberto, roda tambem os testes de integracao das ordens contra o banco `sgp_teste` (sem ele esses sao pulados). os casos de teste pela tela e os resultados estao em [docs/testes.md](docs/testes.md).
+
+a cada push e pull request o github actions roda tipos, lint, todos os testes (com um postgres proprio) e o build de producao. a configuracao esta em `.github/workflows/sistema.yml`.
 
 ### variaveis de ambiente
 
 | variavel | pra que serve |
 |---|---|
-| `DATABASE_URL` | endereco do postgres. o padrao aponta pro banco local do `npm run banco`, na porta 5433 |
+| `DATABASE_URL` | endereco do postgres. o padrao aponta pro banco local do `npm run banco`, na porta 5433. no supabase, a conexao pelo pooler (porta 6543) |
+| `DIRECT_URL` | conexao direta, usada so pelo `prisma migrate`. no banco local é igual ao `DATABASE_URL` |
+| `DATABASE_URL_TESTE` | banco separado dos testes de integracao. o `npm run banco` ja cria |
 | `AUTH_SECRET` | chave que assina o cookie da sessao. cada um gera a sua, nunca vai pro repositorio |
+| `SUPABASE_URL` e `SUPABASE_SECRET_KEY` | so publicado: storage dos documentos e contratos. sem elas os arquivos vao pra pasta `.arquivos` |
+| `CRON_SECRET` | so publicado: segredo que a vercel manda pra rodar a rotina diaria de vencimentos (RN02) |
 
 ### o que ja funciona
 
+**acesso**
 - login por email e senha, com bloqueio de 15 minutos depois de 5 senhas erradas e sessao que vence com 30 minutos parado
-- lista de prestadores com busca por nome, cpf ou cnpj, filtro por situacao e paginacao
-- cadastro e edicao de prestador pessoa fisica ou juridica, com validacao do cpf e do cnpj e sem repetir documento
+- conta desativada pelo administrador perde o acesso na proxima tela, mesmo com a sessao aberta
+- cadastro pela tela de login: cliente entra ativo, prestador entra pendente ate o administrador conferir os documentos
+- minha conta, com troca de senha, e liberacao de acesso e senha provisoria pelo administrador
 
-o resto aparece no menu como "em desenvolvimento". o que vem ate 06/11 esta na secao 6 de [docs/entrega-20-10.md](docs/entrega-20-10.md) e no [quadro de tarefas](docs/backlog.md).
+**administrador**
+- painel do dia, prestadores (ficha com categorias, documentos, contratos e historico de situacao), clientes, categorias e catalogo de servicos
+- busca de cnpj, cep e municipios em apis publicas no cadastro
+- vencimentos: painel dos documentos vencendo e rotina diaria que passa pra pendente quem tem documento obrigatorio vencido (RN02)
+- ordens de servico: abertura, atribuicao so pra quem esta apto (com o motivo de cada inapto), troca de prestador com motivo e cancelamento
+- relatorios de desempenho e de servicos por periodo, com exportacao em csv e pdf, log de acoes criticas e anonimizacao de cliente
+
+**prestador**
+- minhas ordens: aceitar ou recusar, iniciar, registrar andamento e concluir
+- meus documentos: envio e acompanhamento da validade
+
+**cliente**
+- minhas solicitacoes: abrir pedido, acompanhar o andamento e avaliar o atendimento
+
+o que ainda falta ate 06/11 esta no [quadro de tarefas](docs/backlog.md).
+
+### limitacoes conhecidas
+
+- o bloqueio depois de 5 senhas erradas é por email (RNF12). quem souber o email de alguem consegue travar o login dessa pessoa por 15 minutos, e a mensagem de bloqueio mostra que o email existe. limitar tambem por endereco ip resolveria, mas ficou fora do escopo
+- o sistema nao manda email (item W da priorizacao): a senha provisoria aparece uma vez na tela pro administrador repassar
