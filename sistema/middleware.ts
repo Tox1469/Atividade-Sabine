@@ -13,10 +13,10 @@ export default auth((req) => {
     return Response.redirect(new URL("/login", req.nextUrl));
   }
   if (logado && naTelaDeLogin) {
-    return Response.redirect(new URL("/prestadores", req.nextUrl));
+    return Response.redirect(new URL("/", req.nextUrl));
   }
 });
 
 export const config = {
-  matcher: ["/((?!api/auth|_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/((?!api/auth|api/rotinas|_next/static|_next/image|favicon.ico).*)"],
 };

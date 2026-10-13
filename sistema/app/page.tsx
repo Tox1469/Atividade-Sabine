@@ -1,6 +1,14 @@
 import { redirect } from "next/navigation";
+import { usuarioLogado } from "@/lib/permissao";
 
-// por enquanto a unica area pronta e a de prestadores (recorte da entrega de 20/10)
-export default function Inicio() {
-  redirect("/prestadores");
+// cada perfil cai na sua tela inicial
+const INICIO: Record<string, string> = {
+  administrador: "/painel",
+  prestador: "/minhas-ordens",
+  cliente: "/minhas-solicitacoes",
+};
+
+export default async function Inicio() {
+  const usuario = await usuarioLogado();
+  redirect(INICIO[usuario.perfil] ?? "/sem-permissao");
 }

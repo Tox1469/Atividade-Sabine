@@ -51,4 +51,94 @@ body {
   .cartao-titulo {
     @apply border-b border-regua-clara bg-[#f7f6f4] px-4 py-2.5 text-sm font-semibold;
   }
+  .botao-perigo {
+    @apply inline-flex cursor-pointer items-center justify-center rounded border border-[#dcbdbb] bg-white px-3.5 py-1.5 text-sm font-semibold text-carimbo hover:bg-carimbo-fundo;
+  }
+  .botao-pequeno {
+    @apply px-2.5 py-0.5 text-[13px];
+  }
+  .rodape-form {
+    @apply flex flex-wrap justify-end gap-2 border-t border-regua-clara px-4 py-3;
+  }
+  .ajuda {
+    @apply mt-1 text-xs text-tinta2;
+  }
+}
+
+/* daqui pra baixo e o mesmo css do prototipo (prototipos/estilo.css), pras telas sairem iguais */
+
+.tabela { width: 100%; border-collapse: collapse; font-size: 14px; }
+.tabela th { padding: 8px 16px; text-align: left; font-size: 12px; font-weight: 600; color: var(--color-tinta2); border-bottom: 1px solid var(--color-regua-clara); }
+.tabela td { padding: 8px 16px; border-bottom: 1px solid var(--color-regua-clara); vertical-align: top; }
+.tabela tr:last-child td { border-bottom: 0; }
+.tabela tbody tr:hover { background: #faf9f7; }
+.tabela .numerico { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tabela .acoes { text-align: right; white-space: nowrap; }
+.secundario { display: block; font-size: 12px; color: var(--color-tinta2); }
+
+.chip { display: inline-block; padding: 1px 7px; border: 1px solid; border-left-width: 3px; border-radius: 2px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.chip-ativo, .chip-concluida, .chip-em_dia { border-color: #b9d3c3; border-left-color: var(--color-verde); color: var(--color-verde); background: var(--color-verde-fundo); }
+.chip-pendente, .chip-vence { border-color: #e6d4a8; border-left-color: var(--color-ocre); color: var(--color-ocre); background: var(--color-ocre-fundo); }
+.chip-bloqueado, .chip-vencido, .chip-atraso, .chip-cancelada { border-color: #e6bab8; border-left-color: var(--color-carimbo); color: var(--color-carimbo); background: var(--color-carimbo-fundo); }
+.chip-inativo, .chip-neutro { border-color: var(--color-regua); border-left-color: var(--color-tinta2); color: var(--color-tinta2); background: #f4f5f6; }
+.chip-aberta, .chip-atribuida, .chip-em_execucao { border-color: #cdd2d4; border-left-color: var(--color-ardosia); color: var(--color-ardosia); background: var(--color-ardosia-fundo); }
+
+.aviso { padding: 9px 12px; border: 1px solid var(--color-regua); border-left: 3px solid var(--color-caneta); border-radius: 2px; background: var(--color-caneta-clara); margin-bottom: 14px; font-size: 14px; }
+.aviso strong { display: block; }
+.aviso.ok { background: var(--color-verde-fundo); border-color: #c4dccd; border-left-color: var(--color-verde); }
+.aviso.atencao { background: var(--color-ocre-fundo); border-color: #ead9b0; border-left-color: var(--color-ocre); }
+.aviso.erro { background: var(--color-carimbo-fundo); border-color: #e6c3c1; border-left-color: var(--color-carimbo); }
+
+.indicadores { display: flex; flex-wrap: wrap; border: 1px solid var(--color-regua); border-radius: 3px; background: #fff; margin-bottom: 14px; overflow: hidden; }
+.indicador { flex: 1 1 170px; padding: 10px 14px; border-left: 1px solid var(--color-regua-clara); cursor: pointer; }
+.indicador:first-child { border-left: 0; }
+.indicador:hover { background: #f7f8f9; }
+.indicador .rotulo-ind { color: var(--color-tinta2); font-size: 12px; }
+.indicador .numero { font-size: 23px; font-weight: 600; line-height: 1.25; }
+.indicador .detalhe { font-size: 12px; color: var(--color-tinta2); }
+.indicador.alerta .numero { color: var(--color-carimbo); }
+.indicador.atencao .numero { color: var(--color-ocre); }
+.indicador.ok .numero { color: var(--color-verde); }
+
+.trilha { display: flex; flex-wrap: wrap; border: 1px solid var(--color-regua); border-radius: 2px; overflow: hidden; }
+.passo { padding: 5px 14px 5px 12px; border-left: 1px solid var(--color-regua-clara); background: #fff; color: var(--color-tinta2); font-size: 13px; }
+.passo:first-child { border-left: 0; }
+.passo.feito { background: var(--color-verde-fundo); color: var(--color-verde); }
+.passo.atual { background: var(--color-ardosia); color: #fff; font-weight: 600; }
+.passo.cancelado { background: var(--color-carimbo-fundo); color: var(--color-carimbo); font-weight: 600; }
+
+.tempo { list-style: none; margin: 0; padding: 0; font-size: 14px; }
+.tempo li { padding: 7px 0 7px 12px; border-left: 2px solid var(--color-regua); border-bottom: 1px solid var(--color-regua-clara); }
+.tempo li:last-child { border-bottom: 0; padding-bottom: 0; }
+.tempo strong { font-weight: 600; }
+.tempo .quando { display: block; color: var(--color-tinta2); font-size: 12px; }
+
+.vazio { padding: 26px 16px; text-align: center; color: var(--color-tinta2); font-size: 13px; }
+.vazio strong { display: block; margin-bottom: 3px; color: var(--color-tinta); font-size: 14px; }
+
+.colunas { display: flex; gap: 14px; align-items: flex-start; flex-wrap: wrap; }
+.colunas > * { flex: 1 1 340px; min-width: 0; }
+
+.marcadores { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; }
+.marcador { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+.marcador input { cursor: pointer; }
+
+/* janela sobre a tela (atribuir, cancelar). sem javascript: abre e fecha pelo endereco */
+.modal-fundo { position: fixed; inset: 0; z-index: 20; display: flex; align-items: flex-start; justify-content: center; overflow-y: auto; padding: 40px 12px; background: rgba(34, 38, 42, .45); }
+.modal { width: 100%; max-width: 760px; background: #fff; border: 1px solid #9aa5b1; border-radius: 3px; box-shadow: 0 6px 18px rgba(34, 38, 42, .2); }
+.modal > h2 { margin: 0; padding: 10px 14px; border-bottom: 1px solid var(--color-regua); background: #f2f4f6; font-size: 15px; font-weight: 600; }
+.modal-corpo { padding: 14px; }
+
+.notas-avaliacao { display: flex; gap: 6px; }
+.nota-opcao { position: relative; }
+.nota-opcao input { position: absolute; opacity: 0; }
+.nota-opcao span { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border: 1px solid #b9c1ca; border-radius: 3px; background: #fff; font-weight: 600; cursor: pointer; }
+.nota-opcao span:hover { border-color: var(--color-caneta); color: var(--color-caneta); }
+.nota-opcao input:checked + span { background: var(--color-caneta); border-color: var(--color-caneta-escura); color: #fff; }
+.nota-opcao input:focus-visible + span { outline: 2px solid var(--color-caneta); outline-offset: 2px; }
+
+@media print {
+  header, nav, .nao-imprimir { display: none !important; }
+  body { background: #fff; }
+  .cartao { border: 0; }
 }

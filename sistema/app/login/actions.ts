@@ -13,7 +13,7 @@ export async function entrar(_estado: Estado, form: FormData): Promise<Estado> {
     await signIn("credentials", {
       email,
       senha: form.get("senha"),
-      redirectTo: "/prestadores",
+      redirectTo: "/",
     });
     return { erro: null, email };
   } catch (erro) {

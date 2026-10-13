@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { signOut } from "@/auth";
 
 export default function SemPermissao() {
@@ -6,11 +7,14 @@ export default function SemPermissao() {
       <div className="cartao max-w-md p-6">
         <h1 className="mb-2 text-lg font-semibold">Acesso não liberado</h1>
         <p className="mb-4 text-sm text-tinta2">
-          Seu perfil não tem permissão para esta área. As telas de prestador e de cliente ainda estão em desenvolvimento.
+          Seu perfil não tem permissão para esta área, ou o seu login ainda não foi ligado a um cadastro de prestador ou de cliente. Fale com o administrador.
         </p>
-        <form action={async () => { "use server"; await signOut({ redirectTo: "/login" }); }}>
-          <button className="botao">Sair</button>
-        </form>
+        <div className="flex gap-2">
+          <Link href="/" className="botao">Ir para o início</Link>
+          <form action={async () => { "use server"; await signOut({ redirectTo: "/login" }); }}>
+            <button className="botao">Sair</button>
+          </form>
+        </div>
       </div>
     </main>
   );
