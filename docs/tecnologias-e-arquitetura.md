@@ -1,7 +1,7 @@
 # sgp - sistema de gestao de prestadores
 ## especificacao de tecnologias e arquitetura
 
-**versao 1.1 - 06/10/2026 - 1ª entrega do 2º bimestre (20/10)**
+**versao 1.2 - 13/10/2026 - 2ª entrega do 2º bimestre (06/11)**
 unicesumar - analise e desenvolvimento de sistemas
 imersao profissional - projeto de software - equipe 8
 
@@ -35,17 +35,18 @@ toda escolha desta secao foi avaliada por quatro criterios, nesta ordem:
 | linguagem | typescript | 5.x | tipagem estatica no front e no back, com o mesmo tipo compartilhado entre os dois |
 | framework web | next.js (app router) | 15.5 | renderizacao das telas e hospedagem das rotas de api no mesmo projeto |
 | biblioteca de interface | react | 19.1 | componentes das telas |
-| estilo | tailwind css | 4. o shadcn/ui ficou pra quando houver dialogo de confirmacao (ver 3.3) | layout responsivo das telas, com as cores do prototipo |
+| estilo | tailwind css, letra ibm plex sans | 4. o shadcn/ui nao entrou (ver 3.3 e 3.4) | layout responsivo das telas |
 | runtime do servidor | node.js | 20 ou superior, testado no 22 | execucao das rotas de api do proprio next |
 | acesso a dados | prisma orm | 6.19 | mapeamento objeto-relacional, migracões versionadas e tipagem do banco |
-| banco de dados | postgresql | 18 no ambiente local. o gerenciado sera escolhido ate 06/11 | persistencia |
+| banco de dados | postgresql | 18 no ambiente local, 17 no supabase (publicado) | persistencia |
 | autenticacao | auth.js (next-auth) v5, estrategia credentials | 5.0 beta 32 | login por email e senha, sessao em cookie httponly e controle de perfil |
 | hash de senha | bcryptjs | 3.0 | armazenamento da senha conforme RNF01 |
 | validacao | zod | 3.25 | validacao dos dados no cliente e no servidor a partir do mesmo esquema |
-| armazenamento de arquivos | storage de objetos do proprio provedor do banco | ainda nao usado, entra com o RF07 | documentos e contratos em pdf, jpg e png |
-| hospedagem | vercel | plano hobby, a partir de 06/11 | publicacao continua a cada push na branch principal |
+| armazenamento de arquivos | storage do supabase, bucket privado `sgp` | api rest do storage, sem biblioteca a mais | documentos e contratos em pdf, jpg e png |
+| hospedagem | vercel | plano hobby, funcões na regiao gru1 (sao paulo) | publicacao do sistema e a rotina diaria do RN02 (cron do proprio projeto) |
+| apis publicas | brasilapi, viacep e ibge | sem chave, chamadas pelo navegador | ajuda de preenchimento: dados do cnpj na receita, endereco pelo cep, municipios da uf e feriados nacionais |
 | versionamento | git + github | - | repositorio unico, com commits identificaveis por integrante (RNF11) |
-| testes | vitest (unidade) e playwright (fluxo) | vitest 5. os fluxos estao em casos manuais documentados no testes.md, o playwright entra depois | verificacao das regras de negocio e dos fluxos criticos |
+| testes | vitest (unidade, seguranca e integracao com banco) e playwright (fluxo pela tela) | vitest 5. o playwright roda os casos do testes.md e tira as evidencias | verificacao das regras de negocio e dos fluxos criticos |
 | modelagem | plantuml | 1.2026 | diagramas versionados como texto junto do codigo |
 
 ### 3.2 justificativa por escolha
@@ -73,6 +74,24 @@ na hora de escrever o codigo algumas escolhas da versao 1.0 mudaram. nenhuma mex
 | shadcn/ui | tailwind puro, com as cores do `prototipos/estilo.css` | as telas ja estavam desenhadas no prototipo e os componentes do shadcn teriam que ser repintados. ele volta a ser avaliado quando entrar o primeiro dialogo de confirmacao (RNF05) |
 | codigo na raiz do repositorio | pasta `sistema/` | a raiz publica a documentacao e o prototipo. separar evita misturar as duas coisas |
 | primeiro deploy junto com o projeto | deploy em 06/11 | publicar exige o banco gerenciado, e essa escolha ja estava em aberto na secao 8 |
+
+### 3.4 decisões do 2º bimestre (versao 1.2)
+
+o que estava em aberto na secao 8 foi decidido, e a implementacao das releases 2 e 3 trouxe mais alguns ajustes.
+
+| assunto | decisao | por que |
+|---|---|---|
+| postgresql gerenciado | supabase, num schema proprio (`sgp`) com um usuario do banco que so enxerga esse schema | resolve banco e storage no mesmo lugar, tem backup diario (RNF08) e fica em sao paulo. o neon so resolveria o banco |
+| storage | storage do supabase, num bucket privado | o arquivo nunca fica publico. pra baixar, o sistema confere a permissao e gera um link que vale 5 minutos |
+| envio do arquivo | o navegador sobe o arquivo direto pro storage com um link assinado, e o servidor confere depois | a funcao da vercel aceita no maximo 4,5 mb por requisicao, menos que os 10 mb do RNF09. o servidor le o comeco do arquivo pra conferir se é mesmo pdf, jpg ou png e apaga o que nao for |
+| regiao | funcões da vercel em gru1 (sao paulo) | o padrao é nos estados unidos, e cada consulta ao banco atravessaria o continente |
+| rotina do RN02 | cron da vercel uma vez por dia (00:05 de brasilia), protegido por segredo | o plano gratuito permite uma execucao diaria, o suficiente pra validade, que é em dias. o administrador tambem pode rodar na mao pelo painel de vencimentos |
+| confirmacao (RNF05) | `confirm` do navegador nas acões que nao tem volta (concluir, recusar, cancelar, anonimizar) e janelas por cima da tela pras acões rapidas | resolve sem trazer o shadcn/ui so por causa de um dialogo |
+| janelas | as acões rapidas (atribuir, abrir ordem, novo cadastro, avaliar, alterar situacao) abrem por cima da lista e voltam pra ela com um aviso | a pessoa nao perde a lista em que estava. a ficha completa do cadastro continua sendo uma tela |
+| formularios | o envio vai pelo `onSubmit` e nao pelo `<form action>` | com `action`, o react 19 limpa o formulario depois de qualquer resposta, e o select do tipo de pessoa voltava pra juridica por baixo do que a tela mostrava (defeito D05 do testes.md) |
+| visual | as cores do prototipo (chumbo no texto, laranja queimado no que é clicavel) com menu lateral claro, mais espaco entre as linhas e a letra ibm plex sans | a barra escura com faixa laranja e as tabelas apertadas do prototipo ficaram pesadas nas telas reais. a paleta continuou porque vem do mundo da manutencao, e a estrutura das 18 telas é a mesma |
+| apis publicas | brasilapi, viacep e ibge, chamadas pelo navegador | so ajudam a preencher. se alguma cair, a pessoa digita na mao, e o servidor valida tudo de novo |
+| cadastro pela tela de login | o cliente e o prestador podem criar a propria conta | o cliente entra ativo. o prestador entra pendente, como todo prestador novo, ate a documentacao ser conferida |
 
 ---
 
@@ -142,18 +161,18 @@ a regra que sustenta essa divisao é o RNF02: **nenhuma permissao é decidida na
 
 ## 5. como cada requisito nao funcional é atendido
 
-| RNF | requisito | como sera atendido |
+| RNF | requisito | como foi atendido |
 |---|---|---|
 | RNF01 | senha em hash | bcrypt com fator de custo 10 na criacao e na troca de senha. a coluna guarda apenas o hash |
-| RNF02 | permissao validada no servidor | verificacao de perfil e de titularidade em toda rota de api, com esquema zod na entrada |
+| RNF02 | permissao validada no servidor | toda pagina, action e rota comeca por `exigirPerfil`, `exigirPrestador` ou `exigirCliente` (`lib/permissao.ts`). a ordem, o documento e a avaliacao sao buscados junto com o dono, entao o id de outra pessoa da 404. ha testes automaticos chamando as actions sem sessao e com o perfil errado |
 | RNF03 | sessao expira em 30 minutos | `maxAge` da sessao do auth.js configurado em 1800 segundos, renovado a cada requisicao valida |
 | RNF04 | interface responsiva | tailwind com layout fluido, testado em 1366x768 e em largura de celular, sem rolagem horizontal |
-| RNF05 | confirmacao e mensagem de retorno | dialogo de confirmacao do shadcn/ui em toda acao destrutiva e notificacao de sucesso ou erro apos cada operacao |
-| RNF06 | listagem paginada em ate 3 segundos com 5 mil registros | paginacao no banco (`limit` e `offset`), indice nas colunas de filtro e carga de dados ficticios para medir o tempo |
+| RNF05 | confirmacao e mensagem de retorno | confirmacao nas acões sem volta, aviso no canto da tela depois de cada acao feita em janela e mensagem no proprio campo quando da erro |
+| RNF06 | listagem paginada em ate 3 segundos com 5 mil registros | paginacao no banco, de 20 em 20. com 5.008 prestadores no banco publicado, as listagens responderam entre 0,19 e 0,72 segundo (testes.md, secao do RNF06) |
 | RNF07 | compatibilidade com chrome, edge e firefox | uso apenas de recursos suportados pelas versões atuais dos tres, sem api experimental |
-| RNF08 | hospedagem em nuvem com backup diario | instancia gerenciada de postgresql com backup automatico diario incluido no plano gratuito |
-| RNF09 | upload de pdf, jpg e png ate 10 mb | validacao de tipo mime e de tamanho na rota de upload, antes de enviar ao storage |
-| RNF10 | privacidade e lgpd | dados pessoais visiveis apenas ao perfil autorizado, base de teste com dados ficticios e rotina de anonimizacao do cadastro mediante solicitacao |
+| RNF08 | hospedagem em nuvem com backup diario | vercel pro sistema e supabase pro banco e os arquivos, com backup diario automatico do banco |
+| RNF09 | upload de pdf, jpg e png ate 10 mb | o bucket recusa tipo e tamanho fora do limite, e o servidor confere o conteudo do arquivo (assinatura do pdf, do png e do jpg), porque o nome e o tipo informado pelo navegador podem ser trocados |
+| RNF10 | privacidade e lgpd | dados pessoais so pro perfil autorizado, arquivo so por link temporario, consentimento no cadastro pela tela de login e anonimizacao do prestador e do cliente a pedido do titular, registrada no log |
 | RNF11 | codigo versionado com padrao | repositorio no github, branch por funcionalidade, commits no padrao `tipo: descricao` e readme atualizado a cada entrega |
 
 ---
@@ -197,20 +216,22 @@ as pastas `(prestador)` e `(cliente)` previstas na versao 1.0 entram quando as t
 | banco local | postgresql pelo `embedded-postgres` (`npm run banco`), sem docker e sem instalar nada a parte |
 | variaveis de ambiente | arquivo `.env` dentro de `sistema/`, fora do versionamento. o repositorio guarda apenas o `.env.example`, com os nomes e sem segredo |
 | fluxo de trabalho | commits pequenos citando a tarefa do backlog. branch por funcionalidade e pull request quando os dois estiverem mexendo no codigo ao mesmo tempo |
-| publicacao | na vercel a partir de 06/11 |
+| publicacao | `npx vercel deploy --prod` dentro de `sistema/`, no projeto `sgp`. as variaveis de producao ficam na vercel, nunca no repositorio |
 
 ---
 
 ## 8. decisões ainda em aberto
 
-as definicões abaixo nao bloquearam o inicio do desenvolvimento. a do banco gerenciado agora tem data, porque a publicacao depende dela.
+as quatro decisões que estavam aqui foram tomadas no 2º bimestre:
 
-| item | opcões em avaliacao | quando decidir |
-|---|---|---|
-| provedor do postgresql gerenciado | neon ou supabase | ate 06/11, junto com a definicao do storage, porque a escolha do banco arrasta o storage |
-| storage dos documentos | vercel blob ou storage do supabase | mesmo momento acima |
-| geracao do pdf do relatorio (UC24) | biblioteca no servidor ou impressao pelo navegador | apenas se UC24 sair do backlog |
-| biblioteca de grafico no relatorio | recharts ou tabela simples sem grafico | na construcao do UC20 |
+| item | o que ficou |
+|---|---|
+| provedor do postgresql gerenciado | supabase (secao 3.4) |
+| storage dos documentos | storage do supabase (secao 3.4) |
+| geracao do pdf do relatorio (UC24) | impressao pelo navegador, com uma folha de estilo que esconde menu e botões. o csv é gerado no servidor |
+| biblioteca de grafico no relatorio | tabela simples, ordenavel por qualquer coluna. com poucos prestadores o grafico nao acrescentava nada |
+
+nenhuma decisao estrutural continua em aberto.
 
 ---
 
@@ -219,7 +240,8 @@ as definicões abaixo nao bloquearam o inicio do desenvolvimento. a do banco ger
 | risco | impacto | como a equipe pretende tratar |
 |---|---|---|
 | limite do plano gratuito de storage ou de banco | alto | volume de teste controlado, com no maximo alguns megabytes de arquivo por prestador |
-| hibernacao da instancia gratuita do banco | medio | acessar o sistema antes de qualquer apresentacao, para a primeira requisicao nao pegar o banco frio |
+| hibernacao da instancia gratuita do banco | medio | o projeto do supabase usado é de plano pago e nao hiberna. mesmo assim, abrir o sistema uns minutos antes da apresentacao |
+| uma api publica fora do ar no dia | baixo | todas sao so ajuda de preenchimento. o cadastro funciona digitando |
 | a equipe nunca usou auth.js v5 | medio | implementar a autenticacao logo na release 1, quando ainda ha prazo para trocar de abordagem |
 | indisponibilidade de um integrante | alto | commits pequenos e frequentes, e nenhuma parte do sistema conhecida por apenas uma pessoa |
 
@@ -240,3 +262,4 @@ as definicões abaixo nao bloquearam o inicio do desenvolvimento. a do banco ger
 |---|---|---|
 | 1.0 | 21/08/2026 | primeira versao, detalhando a stack que estava indicada apenas em nivel de intencao na 1ª entrega |
 | 1.1 | 06/10/2026 | versões reais em uso, ajustes da secao 3.3, diagrama da arquitetura atual e organizacao real das pastas |
+| 1.2 | 13/10/2026 | decisões do 2º bimestre (secao 3.4): supabase pra banco e storage, envio direto do arquivo, regiao sao paulo, rotina diaria, apis publicas, janelas e visual novo. secões 5 e 8 atualizadas com o que foi feito |

@@ -57,7 +57,7 @@
 <div class="capa">
   <div class="inst">unicesumar<br>analise e desenvolvimento de sistemas<br>imersao profissional - projeto de software</div>
   <div class="titulo">sgp - sistema de gestao de prestadores</div>
-  <div class="sub">casos de teste e registro de defeitos<br>1&ordf; entrega do 2&ordm; bimestre - equipe 8</div>
+  <div class="sub">casos de teste e registro de defeitos<br>1&ordf; e 2&ordf; entregas do 2&ordm; bimestre - equipe 8</div>
   <div class="equipe">
     <strong>integrantes</strong><br>
     luis gustavo boratto de oliveira<br>
@@ -67,8 +67,7 @@
 </div>
 
 <h2>1. o que este documento registra</h2>
-<p>os testes do que ja foi implementado: login e cadastro e consulta de prestadores, que é o recorte escolhido pra entrega de 20/10 (ver <a href="entrega-20-10.md">entrega-20-10.md</a>). é um documento vivo, a cada entrega entram os casos das funcionalidades novas e os que ja existem sao executados de novo.</p>
-<p>tem dois tipos de teste:</p>
+<p>os testes de tudo que ja foi implementado. na versao 1.0 era so o recorte de 20/10 (login e cadastro e consulta de prestadores). nesta versao entram os cadastros de apoio, os documentos, a situacao cadastral, a ordem de servico do pedido ate a avaliacao, os relatorios, o log e a lgpd (ver <a href="entrega-06-11.md">entrega-06-11.md</a>). é um documento vivo: a cada entrega entram os casos novos e os que ja existem sao executados de novo.</p>
 <table>
 <thead>
 <tr>
@@ -80,49 +79,76 @@
 <tbody>
 <tr>
 <td>unitario (vitest)</td>
-<td>as regras que ficam em <code>lib/dominio</code>: digito verificador do cpf e do cnpj (RN10) e a contagem do bloqueio de login (RNF12)</td>
+<td>as regras que ficam em <code>lib/dominio</code>: cpf e cnpj, bloqueio do login, sequencia da ordem, prazo e atraso, aptidao, nota media e validade de documento</td>
 <td><code>npm test</code> dentro da pasta <code>sistema</code></td>
 </tr>
 <tr>
-<td>manual, no navegador</td>
-<td>o uso de verdade pela tela, incluindo banco, sessao e mensagens</td>
-<td>seguindo os passos de cada caso abaixo</td>
+<td>seguranca (vitest)</td>
+<td>as actions e as rotas chamadas direto, sem passar pela tela, com um banco falso que falha se for tocado</td>
+<td><code>npm test</code></td>
+</tr>
+<tr>
+<td>integracao (vitest + postgres)</td>
+<td>as regras das ordens contra um banco de verdade (<code>sgp_teste</code>), incluindo duas pessoas clicando ao mesmo tempo</td>
+<td><code>npm test</code> com o <code>npm run banco</code> aberto</td>
+</tr>
+<tr>
+<td>pela tela</td>
+<td>o uso de verdade no navegador, com banco, sessao, arquivo e mensagens</td>
+<td>os casos CT01 a CT21 foram feitos a mao. os CT22 a CT62 foram feitos por um roteiro no navegador (playwright) que clica e preenche como uma pessoa e salva o print de cada caso</td>
 </tr>
 </tbody>
 </table>
+<p>desde 13/10 o github actions roda os tipos, o lint, todos os testes automaticos (com um postgres proprio) e o build a cada push (<code>.github/workflows/sistema.yml</code>).</p>
 <h2>2. condicões de execucao</h2>
 <table>
 <thead>
 <tr>
 <th>item</th>
-<th>valor</th>
+<th>entrega de 20/10 (CT01 a CT21)</th>
+<th>entrega de 06/11 (CT22 a CT62)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>data</td>
 <td>06/10/2026</td>
+<td>13/10/2026</td>
 </tr>
 <tr>
 <td>versao testada</td>
-<td>commit <code>1239a07</code> (casos CT01 a CT21). o reteste do defeito D01 foi no commit <code>87a0287</code></td>
+<td>commit <code>1239a07</code>. o reteste do D01 foi no <code>87a0287</code></td>
+<td>commit <code>6e0df72</code></td>
 </tr>
 <tr>
 <td>ambiente</td>
-<td>windows 11, node 22.14, google chrome, tela de 1280x800 e de 390x844 (celular)</td>
+<td>windows 11, node 22.14, google chrome, <code>npm run dev</code></td>
+<td>windows 11, node 22.14, chromium do playwright. o sistema rodou como em producao (<code>next build</code> e <code>next start</code>)</td>
 </tr>
 <tr>
-<td>como o ambiente foi montado</td>
-<td>clone novo do repositorio numa pasta vazia, seguindo so o readme: <code>npm install</code>, <code>npm run banco</code>, <code>npm run db:migrar</code>, <code>npm run db:carga</code> e <code>npm run dev</code>. serviu tambem pra conferir que o passo a passo do readme funciona do zero</td>
+<td>banco</td>
+<td>clone novo seguindo so o readme: <code>npm install</code>, <code>npm run banco</code>, <code>npm run db:migrar</code>, <code>npm run db:carga</code></td>
+<td>um banco criado so pra esta rodada (<code>sgp_evidencia</code>), migrado e com a carga inicial. assim o resultado nao depende do que sobrou de teste anterior</td>
+</tr>
+<tr>
+<td>telas</td>
+<td>1280x800 e 390x844 (celular)</td>
+<td>1280x800 e 390x844 (celular)</td>
 </tr>
 <tr>
 <td>dados</td>
-<td>os da carga inicial (<code>prisma/seed.ts</code>), todos ficticios. usuarios de teste <code>luis@sgp.teste</code> e <code>igor@sgp.teste</code>, senha <code>sgp@2026</code></td>
+<td>os da carga inicial (<code>prisma/seed.ts</code>), todos ficticios. senha de todos os usuarios de teste: <code>sgp@2026</code></td>
+<td>os mesmos</td>
+</tr>
+<tr>
+<td>desempenho (RNF06)</td>
+<td>nao medido</td>
+<td>medido no endereco publicado, https://sgp-equipe8-sistema.vercel.app, com 5.008 prestadores no banco</td>
 </tr>
 </tbody>
 </table>
-<h2>3. testes unitarios</h2>
-<p>11 testes, todos passando. a saida completa do <code>npm test</code> esta em <a href="evidencias/entrega-20-10/testes-unitarios.txt">evidencias/entrega-20-10/testes-unitarios.txt</a>.</p>
+<h2>3. testes automaticos</h2>
+<p>54 testes, todos passando. a saida completa do <code>npm test</code> esta em <a href="evidencias/entrega-06-11/testes-automaticos.txt">evidencias/entrega-06-11/testes-automaticos.txt</a>.</p>
 <table>
 <thead>
 <tr>
@@ -134,18 +160,38 @@
 <tbody>
 <tr>
 <td><code>lib/dominio/cpf-cnpj.test.ts</code></td>
-<td>cpf e cnpj validos com e sem mascara, digito errado, numero repetido (111.111.111-11), tamanho errado, escolha entre cpf e cnpj pelo tipo de pessoa e a formatacao pra tela</td>
+<td>cpf e cnpj validos com e sem mascara, digito errado, numero repetido, tamanho errado, escolha entre cpf e cnpj pelo tipo de pessoa e a formatacao pra tela (RN10)</td>
 <td>8</td>
 </tr>
 <tr>
 <td><code>lib/dominio/login.test.ts</code></td>
-<td>as quatro primeiras senhas erradas so somam, a quinta bloqueia por 15 minutos e zera a contagem, e o bloqueio acaba quando passa o horario</td>
+<td>as quatro primeiras senhas erradas so somam, a quinta bloqueia por 15 minutos e o bloqueio acaba quando passa o horario (RNF12)</td>
 <td>3</td>
+</tr>
+<tr>
+<td><code>lib/dominio/regras.test.ts</code></td>
+<td>a ordem anda um passo por vez e nao volta (RN05), concluida nao muda (RN06), cancelamento antes da conclusao (RN07), prazo padrao do servico, atraso (RN12), numero OS-ano-sequencia, aptidao com o motivo de cada recusa (RN01 a RN04), nota media so com tres avaliacões (RN09), validade e formato do documento (RF08, RNF09) e o dia de hoje no horario de brasilia</td>
+<td>18</td>
+</tr>
+<tr>
+<td><code>app/seguranca.test.ts</code></td>
+<td>actions do administrador sem sessao ou com outro perfil, actions do prestador e do cliente chamadas pelo administrador, cadastro tentando criar conta de administrador, download de documento e contrato, csv dos relatorios e a rotina do RN02 sem o segredo (RNF02)</td>
+<td>9</td>
+</tr>
+<tr>
+<td><code>lib/permissao.test.ts</code></td>
+<td>a conta é conferida no banco a cada requisicao: desativada, apagada ou com perfil trocado perde o acesso mesmo com o cookie antigo</td>
+<td>5</td>
+</tr>
+<tr>
+<td><code>lib/ordens.banco.test.ts</code></td>
+<td>contra o banco: numeracao e prazo padrao, nao atribui pra quem tem documento vencido e grava o log, duas atribuicões ao mesmo tempo gravam uma so, dois cliques em aceitar gravam um aceite so, outro prestador nao mexe na ordem, avaliacao unica do cliente titular, cancelamento com motivo e log, recusa devolve pra fila, e a rotina do RN02 sem desfazer bloqueio</td>
+<td>11</td>
 </tr>
 </tbody>
 </table>
-<h2>4. casos de teste manuais</h2>
-<p>a coluna evidencia aponta pro print salvo em <code>docs/evidencias/entrega-20-10/</code>. caso sem print teve o resultado conferido na propria tela ou no banco, e o que apareceu esta descrito na coluna observado.</p>
+<h2>4. casos de teste pela tela</h2>
+<p>a coluna evidencia aponta pro print. os de 20/10 estao em <code>docs/evidencias/entrega-20-10/</code> e os de 06/11 em <code>docs/evidencias/entrega-06-11/</code>. caso sem print teve o resultado conferido na propria tela ou no banco, e o que apareceu esta descrito na coluna observado.</p>
 <h3>4.1 login e acesso (RF01, RNF02, RNF03, RNF12)</h3>
 <table>
 <thead>
@@ -358,7 +404,536 @@
 </tr>
 </tbody>
 </table>
-<p><strong>resumo:</strong> 21 casos manuais executados, 21 passaram (o CT02 e o CT04 depois do reteste do D01). 11 testes unitarios passando.</p>
+<p>desde 13/10 o cadastro novo de prestador e de cliente abre numa janela por cima da lista, e a pagina <code>/prestadores/novo</code> deixou de existir. o CT05 continua valendo pra qualquer endereco do sistema: sem login, o middleware leva pro <code>/login</code> antes de abrir a pagina.</p>
+<h3>4.3 clientes, categorias e servicos (RF03, RF04, RF05)</h3>
+<table>
+<thead>
+<tr>
+<th>caso</th>
+<th>requisito</th>
+<th>passos e entrada</th>
+<th>esperado</th>
+<th>observado</th>
+<th>situacao</th>
+<th>evidencia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT22</td>
+<td>RF03</td>
+<td>em clientes, "Novo cliente". cnpj <code>11222333000181</code>, mercado bom preco, cep <code>87013210</code>, numero 1500</td>
+<td>o cep preencher o endereco, a janela fechar ao salvar e o cliente aparecer na lista sem sair da tela</td>
+<td>o cep trouxe "Avenida Tamandaré, Zona 01, Maringá". aviso "Mercado Bom Preço cadastrado." e a linha nova ativa na lista</td>
+<td>passou</td>
+<td>CT22-cep-preenche-endereco.png, CT22-cliente-cadastrado.png</td>
+</tr>
+<tr>
+<td>CT23</td>
+<td>RN10</td>
+<td>outro cliente com o mesmo cnpj, agora com mascara <code>11.222.333/0001-81</code></td>
+<td>recusar no campo</td>
+<td>"Já existe um cliente cadastrado com este CNPJ."</td>
+<td>passou</td>
+<td>CT23-cnpj-de-cliente-repetido.png</td>
+</tr>
+<tr>
+<td>CT24</td>
+<td>RF03</td>
+<td>inativar o supermercado zanin, que tem ordem em andamento</td>
+<td>recusar dizendo qual ordem</td>
+<td>"Não dá para inativar: o cliente tem ordem em aberto (OS-2026-0011). Conclua ou cancele antes."</td>
+<td>passou</td>
+<td>CT24-inativar-cliente-com-ordem-aberta.png</td>
+</tr>
+<tr>
+<td>CT25</td>
+<td>RF04</td>
+<td>adicionar a categoria <code>Elétrica</code>, que ja existe</td>
+<td>recusar o nome repetido</td>
+<td>"Já existe uma categoria com esse nome."</td>
+<td>passou</td>
+<td>CT25-categoria-repetida.png</td>
+</tr>
+<tr>
+<td>CT26</td>
+<td>RF04</td>
+<td>editar elétrica na janela e desmarcar "ativa"</td>
+<td>recusar porque ainda tem servico ativo nela</td>
+<td>"Tem 3 serviços ativos nesta categoria. Inative ou mude os serviços antes."</td>
+<td>passou</td>
+<td>CT26-inativar-categoria-com-servico.png</td>
+</tr>
+<tr>
+<td>CT27</td>
+<td>RF05</td>
+<td>"Novo serviço" e salvar sem preencher</td>
+<td>apontar cada campo obrigatorio</td>
+<td>"Informe o nome do serviço.", "Escolha a categoria." e "O prazo padrão é de pelo menos 1 dia."</td>
+<td>passou</td>
+<td>CT27-servico-sem-dados.png</td>
+</tr>
+<tr>
+<td>CT28</td>
+<td>RF05</td>
+<td>na mesma janela: troca de chuveiro, elétrica, R$ 95,00, 1 dia</td>
+<td>salvar e aparecer no catalogo</td>
+<td>"Serviço Troca de chuveiro cadastrado." e a linha "Troca de chuveiro, Elétrica, R$ 95,00, 1 dia, Ativo"</td>
+<td>passou</td>
+<td>CT28-servico-cadastrado.png</td>
+</tr>
+<tr>
+<td>CT57</td>
+<td>RF03</td>
+<td>em novo cliente, cnpj <code>33000167000101</code> e "Buscar dados na Receita Federal"</td>
+<td>preencher razao social e endereco pela brasilapi</td>
+<td>"Dados preenchidos pela Receita Federal. Situação do CNPJ: ativa." razao "PETROLEO BRASILEIRO S A PETROBRAS", Rio de Janeiro/RJ</td>
+<td>passou</td>
+<td>CT57-cnpj-consultado-na-receita.png</td>
+</tr>
+</tbody>
+</table>
+<h3>4.4 habilitacao, documentos, situacao e contratos (RF06 a RF10, RN02, RN11, RNF09)</h3>
+<table>
+<thead>
+<tr>
+<th>caso</th>
+<th>requisito</th>
+<th>passos e entrada</th>
+<th>esperado</th>
+<th>observado</th>
+<th>situacao</th>
+<th>evidencia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT29</td>
+<td>RF06</td>
+<td>na ficha do valdir aparecido da silva, aba categorias, marcar hidráulica e salvar</td>
+<td>gravar as habilitacões</td>
+<td>"Habilitações salvas." e a tabela com elétrica, hidráulica e manutenção predial</td>
+<td>passou</td>
+<td>CT29-habilitacao-salva.png</td>
+</tr>
+<tr>
+<td>CT30</td>
+<td>RF06</td>
+<td>na elétrica santos, desmarcar elétrica</td>
+<td>recusar porque ela tem ordem em andamento nessa categoria</td>
+<td>"Não dá para tirar a categoria enquanto houver ordem em andamento nela: OS-2026-0011 (Elétrica), OS-2026-0012 (Elétrica)."</td>
+<td>passou</td>
+<td>CT30-tirar-categoria-com-ordem-em-andamento.png</td>
+</tr>
+<tr>
+<td>CT31</td>
+<td>RF07</td>
+<td>na ponto certo, enviar apolice de seguro em pdf, validade 01/10/2027</td>
+<td>gravar e mostrar em dia</td>
+<td>"Documento enviado: Apólice de seguro." e a situacao "Em dia" na tabela</td>
+<td>passou</td>
+<td>CT31-documento-enviado.png</td>
+</tr>
+<tr>
+<td>CT32</td>
+<td>RNF09</td>
+<td>enviar um arquivo com nome <code>.pdf</code> mas que por dentro é zip</td>
+<td>recusar pelo conteudo, nao pelo nome</td>
+<td>"Formato não aceito. Envie o arquivo em PDF, JPG ou PNG, com até 10 MB."</td>
+<td>passou</td>
+<td>CT32-arquivo-que-nao-e-pdf.png</td>
+</tr>
+<tr>
+<td>CT33</td>
+<td>RNF09</td>
+<td>enviar um pdf de 10 mb e 5 kb</td>
+<td>recusar pelo tamanho</td>
+<td>"O arquivo passa de 10 MB."</td>
+<td>passou</td>
+<td>CT33-arquivo-acima-de-10mb.png</td>
+</tr>
+<tr>
+<td>CT34</td>
+<td>RF07</td>
+<td>emissao 10/10/2026 e validade 01/10/2026</td>
+<td>recusar as datas invertidas</td>
+<td>"A emissão não pode ser depois da validade." e "A validade não pode ser antes da emissão."</td>
+<td>passou</td>
+<td>CT34-emissao-depois-da-validade.png</td>
+</tr>
+<tr>
+<td>CT35</td>
+<td>RF07</td>
+<td>enviar uma certidao negativa nova pra ponto certo, que ja tinha uma</td>
+<td>a nova fica em dia e a anterior fica no historico como substituida</td>
+<td>"Em dia" na nova e "Substituído" na anterior</td>
+<td>passou</td>
+<td>CT35-versao-anterior-substituida.png</td>
+</tr>
+<tr>
+<td>CT36</td>
+<td>RF08</td>
+<td>abrir vencimentos</td>
+<td>separar vencidos e os que vencem em 30 dias</td>
+<td>"Vencidos (3)" e "Vencem nos próximos 30 dias (4)"</td>
+<td>passou</td>
+<td>CT36-painel-de-vencimentos.png</td>
+</tr>
+<tr>
+<td>CT62</td>
+<td>RF09</td>
+<td>em vencimentos, "Alterar situação" e depois <code>esc</code></td>
+<td>abrir em janela sem trocar de pagina e fechar com esc</td>
+<td>abriu em 34 ms continuando em <code>/vencimentos</code>, e o esc fechou</td>
+<td>passou</td>
+<td>CT62-situacao-em-janela-no-painel.png</td>
+</tr>
+<tr>
+<td>CT37</td>
+<td>RN02</td>
+<td>na são judas, que esta ativa, enviar certidao com validade 01/10/2026 e clicar "Aplicar RN02 agora"</td>
+<td>avisar que entrou vencido, e a rotina passar o prestador pra pendente com historico feito pelo sistema</td>
+<td>"Documento enviado: Certidão negativa de débitos. A validade (01/10/2026) já passou, então ele entra como vencido.", "1 prestador passou para pendente." e no historico "Ativo para pendente, pelo sistema, Documento obrigatório vencido (RN02)"</td>
+<td>passou</td>
+<td>CT37-rn02-passou-para-pendente.png</td>
+</tr>
+<tr>
+<td>CT38</td>
+<td>RF09</td>
+<td>na polar (bloqueada), mudar pra pendente com o motivo <code>curto</code>, depois com motivo completo</td>
+<td>recusar motivo curto e gravar o historico com quem fez</td>
+<td>"O motivo precisa ter no mínimo 10 caracteres." e depois "Bloqueado para pendente, por Luis Gustavo Boratto" com o motivo</td>
+<td>passou</td>
+<td>CT38-situacao-alterada-com-historico.png</td>
+</tr>
+<tr>
+<td>CT39</td>
+<td>RN11</td>
+<td>inativar a elétrica santos, que tem duas ordens em andamento</td>
+<td>recusar dizendo quais ordens</td>
+<td>"Não dá para inativar: conclua ou realoque antes as ordens OS-2026-0011, OS-2026-0012."</td>
+<td>passou</td>
+<td>CT39-rn11-inativar-com-ordem-em-andamento.png</td>
+</tr>
+<tr>
+<td>CT40</td>
+<td>RF10</td>
+<td>contrato novo da elétrica santos de 01/11/2026 a 01/11/2027, que cruza com o vigente</td>
+<td>recusar a vigencia cruzada</td>
+<td>"A vigência cruza com a do contrato CT-2026-004."</td>
+<td>passou</td>
+<td>CT40-contrato-com-vigencia-cruzada.png</td>
+</tr>
+</tbody>
+</table>
+<h3>4.5 ordem de servico (RF11 a RF15, RN01 a RN08, RN12)</h3>
+<table>
+<thead>
+<tr>
+<th>caso</th>
+<th>requisito</th>
+<th>passos e entrada</th>
+<th>esperado</th>
+<th>observado</th>
+<th>situacao</th>
+<th>evidencia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT42</td>
+<td>RF11</td>
+<td>como cliente zanin, "Nova solicitação": hidráulica, troca de registro, descricao <code>registro pingando</code></td>
+<td>recusar descricao curta sem perder o resto</td>
+<td>"Descreva com mais detalhe: são necessários pelo menos 20 caracteres." e os outros campos continuaram preenchidos</td>
+<td>passou</td>
+<td>CT42-descricao-curta.png</td>
+</tr>
+<tr>
+<td>CT61</td>
+<td>RF11</td>
+<td>na mesma janela, prazo 20/11/2026 e depois prazo em branco</td>
+<td>avisar que é feriado e, em branco, mostrar o prazo padrao</td>
+<td>"20/11/2026 é feriado nacional (Dia da consciência negra). Confirme se o prestador atende nesse dia." e em branco "Em branco vale o prazo padrão do serviço: 15/10/2026."</td>
+<td>passou</td>
+<td>CT61-aviso-de-feriado-no-prazo.png</td>
+</tr>
+<tr>
+<td>CT41</td>
+<td>RF11, UC12 A3.1</td>
+<td>descricao completa, prazo em branco, "Enviar solicitação"</td>
+<td>criar a ordem numerada com o prazo padrao e mostrar na lista</td>
+<td>"Solicitação OS-2026-0015 enviada. Prazo combinado: 15/10/2026, pelo prazo padrão do serviço." e a linha nova como aberta</td>
+<td>passou</td>
+<td>CT41-solicitacao-com-prazo-padrao.png</td>
+</tr>
+<tr>
+<td>CT43</td>
+<td>RF12, RN01 a RN04</td>
+<td>como administrador, "Atribuir" na OS-2026-0013 (hidráulica)</td>
+<td>so os aptos com botao, e os demais com o motivo. ao atribuir, ficar na lista</td>
+<td>aptos: ponto certo e hidráulica três lagoas. sem botao: jose carlos e valdir (pendentes) e elétrica santos (nao habilitada em hidráulica). "Ordem OS-2026-0013 atribuída a Hidráulica Três Lagoas." e continuou em <code>/ordens</code></td>
+<td>passou</td>
+<td>CT43-atribuicao-aptos-e-inaptos.png</td>
+</tr>
+<tr>
+<td>CT49</td>
+<td>RN07, RF19</td>
+<td>cancelar a OS-2026-0014 com o motivo <code>duplicada</code>, depois com motivo completo. abrir a OS-2026-0004 (concluida)</td>
+<td>recusar motivo curto, cancelar com o completo e nao oferecer cancelar na concluida</td>
+<td>"O motivo precisa ter no mínimo 10 caracteres. Faltam 1.", depois "Ordem OS-2026-0014 cancelada." e a trilha em cancelada. a concluida nao mostra o botao</td>
+<td>passou</td>
+<td>CT49-cancelamento-motivo-curto.png</td>
+</tr>
+<tr>
+<td>CT45</td>
+<td>RF13, RF14, RN05</td>
+<td>como hidráulica três lagoas, abrir a OS-2026-0013, aceitar, iniciar e registrar andamento</td>
+<td>cada passo liberar o seguinte e ficar no historico</td>
+<td>historico: ordem aberta, ordem atribuída, atribuição aceita, execução iniciada, andamento registrado</td>
+<td>passou</td>
+<td>CT45-aceite-inicio-e-andamento.png</td>
+</tr>
+<tr>
+<td>CT47</td>
+<td>RF13, RN06, RN12</td>
+<td>concluir sem relato, depois com relato</td>
+<td>exigir o relato e, depois de concluida, travar a ordem e dizer se foi no prazo</td>
+<td>"Descreva o que foi executado antes de concluir a ordem (mínimo de 10 caracteres)." e depois "Concluída dentro do prazo. A ordem não pode mais ser alterada (RN06)."</td>
+<td>passou</td>
+<td>CT47-conclusao-e-ordem-travada.png</td>
+</tr>
+<tr>
+<td>CT46</td>
+<td>RF14, RNF02</td>
+<td>ainda como três lagoas, abrir o endereco da OS-2026-0011, que é da elétrica santos</td>
+<td>nao mostrar ordem de outro prestador</td>
+<td>http 404, "Página não encontrada"</td>
+<td>passou</td>
+<td>CT46-ordem-de-outro-prestador.png</td>
+</tr>
+<tr>
+<td>CT51</td>
+<td>RF14, UC14 A3.1</td>
+<td>como elétrica santos, recusar a OS-2026-0012 com motivo. depois, como administrador, abrir a atribuicao dela</td>
+<td>voltar pra lista com aviso, e na atribuicao a elétrica santos aparecer como "recusou"</td>
+<td>"Ordem OS-2026-0012 devolvida para a fila do administrador." de volta em <code>/minhas-ordens</code>. na atribuicao: "Elétrica Santos, Recusou, Já recusou esta ordem"</td>
+<td>passou</td>
+<td>CT51-recusa-volta-para-a-lista.png, CT51-recusa-volta-para-a-fila.png</td>
+</tr>
+<tr>
+<td>CT48</td>
+<td>RF15, RN08</td>
+<td>como padaria dom bosco, "Avaliar" a OS-2026-0013 com nota 5</td>
+<td>gravar e tirar o botao de avaliar</td>
+<td>"Obrigado pela avaliação." e o botao avaliar sumiu da linha</td>
+<td>passou</td>
+<td>CT48-avaliacao-em-janela.png</td>
+</tr>
+</tbody>
+</table>
+<h3>4.6 relatorios, log, lgpd e contas (RF16 a RF19, RN09, RNF10, RNF12)</h3>
+<table>
+<thead>
+<tr>
+<th>caso</th>
+<th>requisito</th>
+<th>passos e entrada</th>
+<th>esperado</th>
+<th>observado</th>
+<th>situacao</th>
+<th>evidencia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT50</td>
+<td>RN09</td>
+<td>abrir a lista de prestadores</td>
+<td>nota media so pra quem tem 3 avaliacões ou mais</td>
+<td>4,7 e 4,8 nos dois com historico, "Sem histórico" nos demais</td>
+<td>passou</td>
+<td>CT50-nota-media-na-lista.png</td>
+</tr>
+<tr>
+<td>CT63</td>
+<td>RF16</td>
+<td>na ficha da elétrica santos, "Ver ordens do prestador" e filtrar aberta de 01/10/2026 ate 31/10/2026. depois o mesmo pela ficha do supermercado zanin</td>
+<td>listar so as ordens dele, e so as do periodo quando filtrar</td>
+<td>"Histórico do prestador Elétrica Santos" com OS-2026-0011, 0009, 0008 e 0004 (a 0012 que ele recusou no CT51 nao aparece). em outubro, so a OS-2026-0011. pelo cliente, "Histórico do cliente Supermercado Zanin" com 6 ordens, todas dele</td>
+<td>passou</td>
+<td>CT63-historico-do-prestador-por-periodo.png</td>
+</tr>
+<tr>
+<td>CT52</td>
+<td>RF17</td>
+<td>relatorio de desempenho e "Exportar CSV"</td>
+<td>concluidas, nota, percentual no prazo e o csv com as mesmas linhas</td>
+<td>hidráulica três lagoas 4, 4,8, 100%. elétrica santos 3, 4,7, 100%. são judas 2, sem histórico suficiente. ponto certo 1, 0% no prazo. csv salvo</td>
+<td>passou</td>
+<td>CT52-relatorio-de-desempenho.png, CT52-desempenho.csv</td>
+</tr>
+<tr>
+<td>CT53</td>
+<td>RF18</td>
+<td>servicos por periodo com a data final antes da inicial, depois o periodo padrao</td>
+<td>recusar o periodo invertido e totalizar por categoria</td>
+<td>"A data final está antes da inicial. Ajuste o intervalo e gere de novo (UC21)." e o total 12 abertas, 7 concluidas, 2 canceladas</td>
+<td>passou</td>
+<td>CT53-servicos-por-periodo.png</td>
+</tr>
+<tr>
+<td>CT54</td>
+<td>RF19</td>
+<td>abrir o log de acões</td>
+<td>atribuicões, cancelamento e mudancas de situacao feitas nos casos anteriores</td>
+<td>cancelamento de ordem, atribuições e alterações de situação, a mais recente em cima</td>
+<td>passou</td>
+<td>CT54-log-de-acoes.png</td>
+</tr>
+<tr>
+<td>CT55</td>
+<td>RNF10</td>
+<td>na cliente ana paula ribeiro (pessoa fisica), confirmar e anonimizar</td>
+<td>apagar os dados pessoais e manter as ordens</td>
+<td>"Dados pessoais removidos. As ordens do cliente continuam no histórico." a ficha virou "Cadastro anonimizado nº 5", documento ANON0000000005, telefone "dado removido"</td>
+<td>passou</td>
+<td>CT55-cliente-anonimizado.png</td>
+</tr>
+<tr>
+<td>CT60</td>
+<td>RF01</td>
+<td>no auto posto maringá, que nao tem login, "Liberar acesso" e entrar com a senha provisoria</td>
+<td>a senha continuar na tela ate ser anotada e funcionar</td>
+<td>"Acesso liberado. Login adm@autopostomga.com.br, senha provisória ..." continuou na tela 3 segundos depois, e com ela entrou em <code>/minhas-solicitacoes</code></td>
+<td>passou</td>
+<td>CT60-acesso-liberado-com-senha-provisoria.png</td>
+</tr>
+<tr>
+<td>CT58</td>
+<td>RNF12, RF01</td>
+<td>errar 5 vezes a senha do igor. como luis, em usuarios, "Gerar senha provisória" e entrar com ela</td>
+<td>bloquear, mostrar o bloqueio na tela de usuarios e liberar com a provisoria</td>
+<td>"Muitas tentativas erradas para este e-mail. Tente de novo em 15 minutos.", na lista "Bloqueado até 14:12", e com a provisoria entrou em <code>/painel</code></td>
+<td>passou</td>
+<td>CT58-desbloqueio-com-senha-provisoria.png</td>
+</tr>
+<tr>
+<td>CT56</td>
+<td>RF03, RNF10</td>
+<td>sem login, "Criar conta" como cliente pessoa fisica, sem marcar o consentimento e depois marcando</td>
+<td>exigir o consentimento e entrar como cliente</td>
+<td>"Para criar a conta é preciso concordar com o uso dos dados." e depois entrou em <code>/minhas-solicitacoes</code> como Marina Souza Teixeira</td>
+<td>passou</td>
+<td>CT56-cadastro-pela-tela-de-login.png</td>
+</tr>
+</tbody>
+</table>
+<h3>4.7 celular e desempenho (RNF04, RNF06)</h3>
+<table>
+<thead>
+<tr>
+<th>caso</th>
+<th>requisito</th>
+<th>passos e entrada</th>
+<th>esperado</th>
+<th>observado</th>
+<th>situacao</th>
+<th>evidencia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT59</td>
+<td>RNF04</td>
+<td>com 390 px de largura: painel do administrador, janela de atribuicao e execucao da ordem pelo prestador</td>
+<td>nenhuma rolagem horizontal na pagina</td>
+<td>nenhuma rolagem horizontal nas tres telas</td>
+<td>passou</td>
+<td>CT59-celular-painel.png, CT59-celular-atribuicao.png, CT59-celular-execucao.png</td>
+</tr>
+<tr>
+<td>CT44</td>
+<td>RNF06</td>
+<td>no sistema publicado, com 5.008 prestadores, abrir cada listagem quatro vezes e medir ate a pagina pronta</td>
+<td>responder em ate 3 segundos</td>
+<td>a mais lenta levou 716 ms. tabela abaixo</td>
+<td>passou</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>tela no sistema publicado</th>
+<th>1ª</th>
+<th>2ª</th>
+<th>3ª</th>
+<th>4ª</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/prestadores</code></td>
+<td>299 ms</td>
+<td>239 ms</td>
+<td>271 ms</td>
+<td>302 ms</td>
+</tr>
+<tr>
+<td><code>/prestadores?pagina=125</code></td>
+<td>221 ms</td>
+<td>258 ms</td>
+<td>234 ms</td>
+<td>324 ms</td>
+</tr>
+<tr>
+<td><code>/prestadores?busca=ribeiro</code></td>
+<td>246 ms</td>
+<td>186 ms</td>
+<td>200 ms</td>
+<td>263 ms</td>
+</tr>
+<tr>
+<td><code>/prestadores?busca=60000123</code> (cnpj)</td>
+<td>205 ms</td>
+<td>190 ms</td>
+<td>704 ms</td>
+<td>232 ms</td>
+</tr>
+<tr>
+<td><code>/prestadores?situacao=pendente&amp;pagina=200</code></td>
+<td>225 ms</td>
+<td>221 ms</td>
+<td>240 ms</td>
+<td>220 ms</td>
+</tr>
+<tr>
+<td><code>/vencimentos</code></td>
+<td>215 ms</td>
+<td>230 ms</td>
+<td>242 ms</td>
+<td>234 ms</td>
+</tr>
+<tr>
+<td><code>/ordens</code></td>
+<td>255 ms</td>
+<td>225 ms</td>
+<td>320 ms</td>
+<td>716 ms</td>
+</tr>
+<tr>
+<td><code>/painel</code></td>
+<td>392 ms</td>
+<td>620 ms</td>
+<td>519 ms</td>
+<td>299 ms</td>
+</tr>
+</tbody>
+</table>
+<p>os 5 mil prestadores ficticios foram criados com <code>npx tsx scripts/carga-5mil.ts</code> e saem com <code>--apagar</code>.</p>
+<p><strong>resumo:</strong> 63 casos pela tela, todos passando: 21 de 20/10 e 42 de 06/11 (CT22 a CT63). 54 testes automaticos passando.</p>
 <h2>5. defeitos encontrados</h2>
 <table>
 <thead>
@@ -409,6 +984,114 @@
 <td>corrigido antes do commit <code>1239a07</code></td>
 <td>a tela formata o cep ao carregar</td>
 </tr>
+<tr>
+<td>D05</td>
+<td>cadastro de pessoa fisica com erro em outro campo</td>
+<td>escolher pessoa fisica, deixar um campo obrigatorio vazio e salvar</td>
+<td>continuar pessoa fisica</td>
+<td>a tela mostrava pessoa fisica, mas o formulario por baixo voltava pra juridica e o cpf era validado como cnpj</td>
+<td>corrigido, CT10 e CT56 passam</td>
+<td>o envio passou a ser pelo <code>onSubmit</code>, sem o reset automatico do react 19</td>
+</tr>
+<tr>
+<td>D06</td>
+<td>revisao do cadastro pela tela de login</td>
+<td>mandar a requisicao do cadastro trocando o perfil pra administrador</td>
+<td>recusar</td>
+<td>o perfil vinha da tela e podia ser trocado</td>
+<td>corrigido antes de publicar, teste automatico em <code>app/seguranca.test.ts</code></td>
+<td>o perfil fica preso no servidor e so aceita cliente ou prestador</td>
+</tr>
+<tr>
+<td>D07</td>
+<td>atribuir pelo painel do dia</td>
+<td>atribuir uma ordem na janela aberta pelo painel</td>
+<td>aparecer a confirmacao</td>
+<td>a ordem saia da lista junto com o botao, e a confirmacao sumia antes de aparecer</td>
+<td>corrigido, CT43 passa</td>
+<td>o aviso é disparado assim que a resposta chega e fica no canto da tela</td>
+</tr>
+<tr>
+<td>D08</td>
+<td>revisao de codigo do igor</td>
+<td>desativar a conta de alguem que esta logado</td>
+<td>perder o acesso na hora</td>
+<td>seguia usando o sistema enquanto o cookie valesse</td>
+<td>corrigido pelo igor (commit <code>ee48be1</code>), teste em <code>lib/permissao.test.ts</code></td>
+<td>a conta é conferida no banco a cada tela e action</td>
+</tr>
+<tr>
+<td>D09</td>
+<td>revisao de codigo do igor</td>
+<td>bloquear um prestador enquanto a rotina do RN02 esta rodando</td>
+<td>continuar bloqueado</td>
+<td>a rotina lia os ativos e gravava pendente so pelo id, entao o bloqueio feito no meio virava pendente</td>
+<td>corrigido pelo igor (commit <code>3cdd17b</code>), teste em <code>lib/ordens.banco.test.ts</code></td>
+<td>a rotina so mexe em quem esta ativo</td>
+</tr>
+<tr>
+<td>D10</td>
+<td>revisao de codigo do igor</td>
+<td>clicar duas vezes rapido em aceitar a ordem</td>
+<td>um aceite so</td>
+<td>o aceite era gravado sem transacao e entrava duas vezes no historico</td>
+<td>corrigido pelo igor (commit <code>38cc0a5</code>), teste em <code>lib/ordens.banco.test.ts</code></td>
+<td>a linha da ordem fica travada durante a gravacao e o segundo clique recebe o aviso de que ja foi aceita</td>
+</tr>
+<tr>
+<td>D11</td>
+<td>revisao de codigo do igor</td>
+<td>baixar um documento com acento no nome</td>
+<td>o nome certo no arquivo baixado</td>
+<td>a cedilha chegava como %C3%A7</td>
+<td>corrigido pelo igor (commit <code>30fa2db</code>)</td>
+<td>cabecalho <code>filename*</code> em utf-8</td>
+</tr>
+<tr>
+<td>D12</td>
+<td>bateria de 13/10, CT51</td>
+<td>recusar uma ordem como prestador</td>
+<td>voltar pra lista com aviso</td>
+<td>"Página não encontrada", porque a ordem deixa de ser dele e a pagina dela era redesenhada</td>
+<td>corrigido e retestado, CT51 passa</td>
+<td>commit <code>d22d462</code>. a recusa nao redesenha a ordem e a tela volta pra lista</td>
+</tr>
+<tr>
+<td>D13</td>
+<td>bateria de 13/10, CT60</td>
+<td>liberar o acesso de um cliente</td>
+<td>a senha provisoria ficar na tela</td>
+<td>a senha aparecia e sumia em seguida, quando o cartao era redesenhado</td>
+<td>corrigido e retestado, CT60 passa</td>
+<td>commit <code>d22d462</code></td>
+</tr>
+<tr>
+<td>D14</td>
+<td>bateria de 13/10, CT41 e CT42</td>
+<td>abrir nova solicitacao como cliente</td>
+<td>botao "Enviar solicitação"</td>
+<td>o botao dizia "Abrir ordem", o texto do administrador</td>
+<td>corrigido e retestado</td>
+<td>commit <code>d22d462</code></td>
+</tr>
+<tr>
+<td>D15</td>
+<td>bateria de 13/10, CT55</td>
+<td>anonimizar um cliente</td>
+<td>ver a confirmacao</td>
+<td>a ficha mudava inteira e a mensagem ia junto</td>
+<td>corrigido e retestado, CT55 passa</td>
+<td>commit <code>d22d462</code>. a confirmacao vai pro canto da tela</td>
+</tr>
+<tr>
+<td>D16</td>
+<td>bateria de 13/10, CT31</td>
+<td>enviar uma apolice ou certidao</td>
+<td>mensagem com o genero certo</td>
+<td>"Apólice de seguro enviado"</td>
+<td>corrigido e retestado</td>
+<td>commit <code>d22d462</code>. "Documento enviado: Apólice de seguro."</td>
+</tr>
 </tbody>
 </table>
 <p>nenhum defeito aberto nesta versao.</p>
@@ -423,19 +1106,19 @@
 </thead>
 <tbody>
 <tr>
-<td>RNF06, listagem em ate 3 segundos com 5 mil prestadores</td>
-<td>a paginacao ja é feita no banco, de 20 em 20, mas falta a carga de 5 mil registros pra medir</td>
-<td>06/11, junto com o script de carga grande</td>
+<td>RNF07, firefox e edge</td>
+<td>todos os casos rodaram no chrome e no chromium. o sistema nao usa nada especifico de navegador, mas falta abrir nos outros dois</td>
+<td>ensaio de 27/11</td>
 </tr>
 <tr>
-<td>acesso dos perfis prestador e cliente</td>
-<td>as telas desses perfis ainda nao existem. hoje um usuario desses cai na tela "Acesso não liberado"</td>
-<td>quando as telas T13 a T18 forem feitas</td>
+<td>RNF08, restauracao do backup</td>
+<td>o supabase faz o backup diario sozinho, mas a equipe ainda nao restaurou um pra conferir</td>
+<td>antes de 27/11</td>
 </tr>
 <tr>
-<td>chamada da action de salvar sem sessao, montada fora da tela</td>
-<td>a action chama <code>exigirPerfil</code> antes de tudo (ver <code>app/(admin)/prestadores/actions.ts</code>), mas falta um teste automatizado que prove isso</td>
-<td>06/11</td>
+<td>RNF03 em producao</td>
+<td>a sessao de 30 minutos foi conferida no ambiente local (CT18), falta conferir no endereco publicado</td>
+<td>ensaio de 27/11</td>
 </tr>
 </tbody>
 </table>
@@ -454,6 +1137,11 @@
 <td>1.0</td>
 <td>06/10/2026</td>
 <td>primeira versao, com os testes do recorte da 1ª entrega do 2º bimestre</td>
+</tr>
+<tr>
+<td>1.1</td>
+<td>13/10/2026</td>
+<td>testes da entrega de 06/11: CT22 a CT63 pela tela, 54 testes automaticos, medicao do RNF06 com 5 mil prestadores no sistema publicado e os defeitos D05 a D16</td>
 </tr>
 </tbody>
 </table>

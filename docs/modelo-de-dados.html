@@ -57,7 +57,7 @@
 <div class="capa">
   <div class="inst">unicesumar<br>analise e desenvolvimento de sistemas<br>imersao profissional - projeto de software</div>
   <div class="titulo">sgp - sistema de gestao de prestadores</div>
-  <div class="sub">diagrama de classes, modelo de dados e dicionario de dados<br>2&ordf; entrega, revisado na 1&ordf; entrega do 2&ordm; bimestre - equipe 8</div>
+  <div class="sub">diagrama de classes, modelo de dados e dicionario de dados<br>2&ordf; entrega, revisado nas duas primeiras entregas do 2&ordm; bimestre - equipe 8</div>
   <div class="equipe">
     <strong>integrantes</strong><br>
     luis gustavo boratto de oliveira<br>
@@ -1792,7 +1792,7 @@
 <td>acao</td>
 <td>varchar(40)</td>
 <td>sim</td>
-<td>alteracao de situacao, atribuicao ou cancelamento</td>
+<td>alteracao de situacao, atribuicao, cancelamento ou anonimizacao</td>
 <td>check com as acões previstas</td>
 </tr>
 <tr>
@@ -2063,11 +2063,11 @@
 </tr>
 <tr>
 <td>ajuste fino dos indices</td>
-<td>depois da carga de teste, medindo com a base de 5 mil registros do RNF06</td>
+<td>medido com 5.008 prestadores no sistema publicado: a listagem mais lenta levou 716 ms, dentro dos 3 segundos do RNF06. nenhum indice novo foi preciso (testes.md, CT44)</td>
 </tr>
 <tr>
 <td>rotina de anonimizacao para a LGPD</td>
-<td>junto do modulo de cadastro, na release 1</td>
+<td>feita em <code>sistema/lib/anonimizar.ts</code>: troca nome, documento, contato e endereco por valores sem identificacao, desativa o login e grava no log. as ordens continuam ligadas ao cadastro</td>
 </tr>
 </tbody>
 </table>
@@ -2106,6 +2106,11 @@
 <td>1.2</td>
 <td>06/10/2026</td>
 <td><code>usuario</code> ganhou <code>tentativas_falhas</code> e <code>bloqueado_ate</code>, que faltavam pro RNF12. o status "em execucao" passou a ser gravado como <code>em_execucao</code>. o modelo virou a migracao inicial do prisma</td>
+</tr>
+<tr>
+<td>1.3</td>
+<td>13/10/2026</td>
+<td>migracao <code>20261013120000_log_anonimizacao</code>: o check de <code>log_acao.acao</code> passou a aceitar <code>anonimizacao</code>, pra pedido de remocao de dados (RNF10) ficar registrado como as outras acões criticas. indices conferidos com a carga de 5 mil</td>
 </tr>
 </tbody>
 </table>

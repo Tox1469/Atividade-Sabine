@@ -57,7 +57,7 @@
 <div class="capa">
   <div class="inst">unicesumar<br>analise e desenvolvimento de sistemas<br>imersao profissional - projeto de software</div>
   <div class="titulo">sgp - sistema de gestao de prestadores</div>
-  <div class="sub">especificacao de tecnologias e arquitetura<br>2&ordf; entrega, revisado na 1&ordf; entrega do 2&ordm; bimestre - equipe 8</div>
+  <div class="sub">especificacao de tecnologias e arquitetura<br>2&ordf; entrega, revisado nas duas primeiras entregas do 2&ordm; bimestre - equipe 8</div>
   <div class="equipe">
     <strong>integrantes</strong><br>
     luis gustavo boratto de oliveira<br>
@@ -130,9 +130,9 @@
 </tr>
 <tr>
 <td>estilo</td>
-<td>tailwind css</td>
-<td>4. o shadcn/ui ficou pra quando houver dialogo de confirmacao (ver 3.3)</td>
-<td>layout responsivo das telas, com as cores do prototipo</td>
+<td>tailwind css, letra ibm plex sans</td>
+<td>4. o shadcn/ui nao entrou (ver 3.3 e 3.4)</td>
+<td>layout responsivo das telas</td>
 </tr>
 <tr>
 <td>runtime do servidor</td>
@@ -149,7 +149,7 @@
 <tr>
 <td>banco de dados</td>
 <td>postgresql</td>
-<td>18 no ambiente local. o gerenciado sera escolhido ate 06/11</td>
+<td>18 no ambiente local, 17 no supabase (publicado)</td>
 <td>persistencia</td>
 </tr>
 <tr>
@@ -172,15 +172,21 @@
 </tr>
 <tr>
 <td>armazenamento de arquivos</td>
-<td>storage de objetos do proprio provedor do banco</td>
-<td>ainda nao usado, entra com o RF07</td>
+<td>storage do supabase, bucket privado <code>sgp</code></td>
+<td>api rest do storage, sem biblioteca a mais</td>
 <td>documentos e contratos em pdf, jpg e png</td>
 </tr>
 <tr>
 <td>hospedagem</td>
 <td>vercel</td>
-<td>plano hobby, a partir de 06/11</td>
-<td>publicacao continua a cada push na branch principal</td>
+<td>plano hobby, funcões na regiao gru1 (sao paulo)</td>
+<td>publicacao do sistema e a rotina diaria do RN02 (cron do proprio projeto)</td>
+</tr>
+<tr>
+<td>apis publicas</td>
+<td>brasilapi, viacep e ibge</td>
+<td>sem chave, chamadas pelo navegador</td>
+<td>ajuda de preenchimento: dados do cnpj na receita, endereco pelo cep, municipios da uf e feriados nacionais</td>
 </tr>
 <tr>
 <td>versionamento</td>
@@ -190,8 +196,8 @@
 </tr>
 <tr>
 <td>testes</td>
-<td>vitest (unidade) e playwright (fluxo)</td>
-<td>vitest 5. os fluxos estao em casos manuais documentados no testes.md, o playwright entra depois</td>
+<td>vitest (unidade, seguranca e integracao com banco) e playwright (fluxo pela tela)</td>
+<td>vitest 5. o playwright roda os casos do testes.md e tira as evidencias</td>
 <td>verificacao das regras de negocio e dos fluxos criticos</td>
 </tr>
 <tr>
@@ -306,6 +312,74 @@
 </tr>
 </tbody>
 </table>
+<h3>3.4 decisões do 2º bimestre (versao 1.2)</h3>
+<p>o que estava em aberto na secao 8 foi decidido, e a implementacao das releases 2 e 3 trouxe mais alguns ajustes.</p>
+<table>
+<thead>
+<tr>
+<th>assunto</th>
+<th>decisao</th>
+<th>por que</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>postgresql gerenciado</td>
+<td>supabase, num schema proprio (<code>sgp</code>) com um usuario do banco que so enxerga esse schema</td>
+<td>resolve banco e storage no mesmo lugar, tem backup diario (RNF08) e fica em sao paulo. o neon so resolveria o banco</td>
+</tr>
+<tr>
+<td>storage</td>
+<td>storage do supabase, num bucket privado</td>
+<td>o arquivo nunca fica publico. pra baixar, o sistema confere a permissao e gera um link que vale 5 minutos</td>
+</tr>
+<tr>
+<td>envio do arquivo</td>
+<td>o navegador sobe o arquivo direto pro storage com um link assinado, e o servidor confere depois</td>
+<td>a funcao da vercel aceita no maximo 4,5 mb por requisicao, menos que os 10 mb do RNF09. o servidor le o comeco do arquivo pra conferir se é mesmo pdf, jpg ou png e apaga o que nao for</td>
+</tr>
+<tr>
+<td>regiao</td>
+<td>funcões da vercel em gru1 (sao paulo)</td>
+<td>o padrao é nos estados unidos, e cada consulta ao banco atravessaria o continente</td>
+</tr>
+<tr>
+<td>rotina do RN02</td>
+<td>cron da vercel uma vez por dia (00:05 de brasilia), protegido por segredo</td>
+<td>o plano gratuito permite uma execucao diaria, o suficiente pra validade, que é em dias. o administrador tambem pode rodar na mao pelo painel de vencimentos</td>
+</tr>
+<tr>
+<td>confirmacao (RNF05)</td>
+<td><code>confirm</code> do navegador nas acões que nao tem volta (concluir, recusar, cancelar, anonimizar) e janelas por cima da tela pras acões rapidas</td>
+<td>resolve sem trazer o shadcn/ui so por causa de um dialogo</td>
+</tr>
+<tr>
+<td>janelas</td>
+<td>as acões rapidas (atribuir, abrir ordem, novo cadastro, avaliar, alterar situacao) abrem por cima da lista e voltam pra ela com um aviso</td>
+<td>a pessoa nao perde a lista em que estava. a ficha completa do cadastro continua sendo uma tela</td>
+</tr>
+<tr>
+<td>formularios</td>
+<td>o envio vai pelo <code>onSubmit</code> e nao pelo <code>&lt;form action&gt;</code></td>
+<td>com <code>action</code>, o react 19 limpa o formulario depois de qualquer resposta, e o select do tipo de pessoa voltava pra juridica por baixo do que a tela mostrava (defeito D05 do testes.md)</td>
+</tr>
+<tr>
+<td>visual</td>
+<td>as cores do prototipo (chumbo no texto, laranja queimado no que é clicavel) com menu lateral claro, mais espaco entre as linhas e a letra ibm plex sans</td>
+<td>a barra escura com faixa laranja e as tabelas apertadas do prototipo ficaram pesadas nas telas reais. a paleta continuou porque vem do mundo da manutencao, e a estrutura das 18 telas é a mesma</td>
+</tr>
+<tr>
+<td>apis publicas</td>
+<td>brasilapi, viacep e ibge, chamadas pelo navegador</td>
+<td>so ajudam a preencher. se alguma cair, a pessoa digita na mao, e o servidor valida tudo de novo</td>
+</tr>
+<tr>
+<td>cadastro pela tela de login</td>
+<td>o cliente e o prestador podem criar a propria conta</td>
+<td>o cliente entra ativo. o prestador entra pendente, como todo prestador novo, ate a documentacao ser conferida</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2>4. arquitetura da aplicacao</h2>
 <h3>4.1 estilo arquitetural</h3>
@@ -412,7 +486,7 @@
 <tr>
 <th>RNF</th>
 <th>requisito</th>
-<th>como sera atendido</th>
+<th>como foi atendido</th>
 </tr>
 </thead>
 <tbody>
@@ -424,7 +498,7 @@
 <tr>
 <td>RNF02</td>
 <td>permissao validada no servidor</td>
-<td>verificacao de perfil e de titularidade em toda rota de api, com esquema zod na entrada</td>
+<td>toda pagina, action e rota comeca por <code>exigirPerfil</code>, <code>exigirPrestador</code> ou <code>exigirCliente</code> (<code>lib/permissao.ts</code>). a ordem, o documento e a avaliacao sao buscados junto com o dono, entao o id de outra pessoa da 404. ha testes automaticos chamando as actions sem sessao e com o perfil errado</td>
 </tr>
 <tr>
 <td>RNF03</td>
@@ -439,12 +513,12 @@
 <tr>
 <td>RNF05</td>
 <td>confirmacao e mensagem de retorno</td>
-<td>dialogo de confirmacao do shadcn/ui em toda acao destrutiva e notificacao de sucesso ou erro apos cada operacao</td>
+<td>confirmacao nas acões sem volta, aviso no canto da tela depois de cada acao feita em janela e mensagem no proprio campo quando da erro</td>
 </tr>
 <tr>
 <td>RNF06</td>
 <td>listagem paginada em ate 3 segundos com 5 mil registros</td>
-<td>paginacao no banco (<code>limit</code> e <code>offset</code>), indice nas colunas de filtro e carga de dados ficticios para medir o tempo</td>
+<td>paginacao no banco, de 20 em 20. com 5.008 prestadores no banco publicado, as listagens responderam entre 0,19 e 0,72 segundo (testes.md, secao do RNF06)</td>
 </tr>
 <tr>
 <td>RNF07</td>
@@ -454,17 +528,17 @@
 <tr>
 <td>RNF08</td>
 <td>hospedagem em nuvem com backup diario</td>
-<td>instancia gerenciada de postgresql com backup automatico diario incluido no plano gratuito</td>
+<td>vercel pro sistema e supabase pro banco e os arquivos, com backup diario automatico do banco</td>
 </tr>
 <tr>
 <td>RNF09</td>
 <td>upload de pdf, jpg e png ate 10 mb</td>
-<td>validacao de tipo mime e de tamanho na rota de upload, antes de enviar ao storage</td>
+<td>o bucket recusa tipo e tamanho fora do limite, e o servidor confere o conteudo do arquivo (assinatura do pdf, do png e do jpg), porque o nome e o tipo informado pelo navegador podem ser trocados</td>
 </tr>
 <tr>
 <td>RNF10</td>
 <td>privacidade e lgpd</td>
-<td>dados pessoais visiveis apenas ao perfil autorizado, base de teste com dados ficticios e rotina de anonimizacao do cadastro mediante solicitacao</td>
+<td>dados pessoais so pro perfil autorizado, arquivo so por link temporario, consentimento no cadastro pela tela de login e anonimizacao do prestador e do cliente a pedido do titular, registrada no log</td>
 </tr>
 <tr>
 <td>RNF11</td>
@@ -530,44 +604,40 @@
 </tr>
 <tr>
 <td>publicacao</td>
-<td>na vercel a partir de 06/11</td>
+<td><code>npx vercel deploy --prod</code> dentro de <code>sistema/</code>, no projeto <code>sgp</code>. as variaveis de producao ficam na vercel, nunca no repositorio</td>
 </tr>
 </tbody>
 </table>
 <hr />
 <h2>8. decisões ainda em aberto</h2>
-<p>as definicões abaixo nao bloquearam o inicio do desenvolvimento. a do banco gerenciado agora tem data, porque a publicacao depende dela.</p>
+<p>as quatro decisões que estavam aqui foram tomadas no 2º bimestre:</p>
 <table>
 <thead>
 <tr>
 <th>item</th>
-<th>opcões em avaliacao</th>
-<th>quando decidir</th>
+<th>o que ficou</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>provedor do postgresql gerenciado</td>
-<td>neon ou supabase</td>
-<td>ate 06/11, junto com a definicao do storage, porque a escolha do banco arrasta o storage</td>
+<td>supabase (secao 3.4)</td>
 </tr>
 <tr>
 <td>storage dos documentos</td>
-<td>vercel blob ou storage do supabase</td>
-<td>mesmo momento acima</td>
+<td>storage do supabase (secao 3.4)</td>
 </tr>
 <tr>
 <td>geracao do pdf do relatorio (UC24)</td>
-<td>biblioteca no servidor ou impressao pelo navegador</td>
-<td>apenas se UC24 sair do backlog</td>
+<td>impressao pelo navegador, com uma folha de estilo que esconde menu e botões. o csv é gerado no servidor</td>
 </tr>
 <tr>
 <td>biblioteca de grafico no relatorio</td>
-<td>recharts ou tabela simples sem grafico</td>
-<td>na construcao do UC20</td>
+<td>tabela simples, ordenavel por qualquer coluna. com poucos prestadores o grafico nao acrescentava nada</td>
 </tr>
 </tbody>
 </table>
+<p>nenhuma decisao estrutural continua em aberto.</p>
 <hr />
 <h2>9. riscos tecnicos</h2>
 <table>
@@ -587,7 +657,12 @@
 <tr>
 <td>hibernacao da instancia gratuita do banco</td>
 <td>medio</td>
-<td>acessar o sistema antes de qualquer apresentacao, para a primeira requisicao nao pegar o banco frio</td>
+<td>o projeto do supabase usado é de plano pago e nao hiberna. mesmo assim, abrir o sistema uns minutos antes da apresentacao</td>
+</tr>
+<tr>
+<td>uma api publica fora do ar no dia</td>
+<td>baixo</td>
+<td>todas sao so ajuda de preenchimento. o cadastro funciona digitando</td>
 </tr>
 <tr>
 <td>a equipe nunca usou auth.js v5</td>
@@ -629,6 +704,11 @@
 <td>1.1</td>
 <td>06/10/2026</td>
 <td>versões reais em uso, ajustes da secao 3.3, diagrama da arquitetura atual e organizacao real das pastas</td>
+</tr>
+<tr>
+<td>1.2</td>
+<td>13/10/2026</td>
+<td>decisões do 2º bimestre (secao 3.4): supabase pra banco e storage, envio direto do arquivo, regiao sao paulo, rotina diaria, apis publicas, janelas e visual novo. secões 5 e 8 atualizadas com o que foi feito</td>
 </tr>
 </tbody>
 </table>

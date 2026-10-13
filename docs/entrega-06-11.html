@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<title>sgp - sistema publicado e funcionando - equipe 8</title>
+<style>
+  @page { size: A4; margin: 2.5cm 2.2cm; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: Calibri, "Segoe UI", Arial, sans-serif;
+    font-size: 11.5pt;
+    line-height: 1.45;
+    color: #222;
+    max-width: 21cm;
+    margin: 0 auto;
+    padding: 2.5cm 2.2cm;
+    background: #fff;
+  }
+  h1, h2, h3 { color: #1f4e79; margin-bottom: .4em; }
+  h1 { font-size: 20pt; }
+  h2 { font-size: 14pt; margin-top: 1.6em; border-bottom: 1px solid #d0d7de; padding-bottom: .2em; }
+  h3 { font-size: 12pt; margin-top: 1.2em; }
+  p { margin: .5em 0; text-align: justify; }
+  ul { margin: .4em 0 .8em 0; padding-left: 1.4em; }
+  li { margin: .25em 0; }
+  table { border-collapse: collapse; width: 100%; margin: .8em 0 1.2em 0; font-size: 10.5pt; }
+  th { background: #1f4e79; color: #fff; text-align: left; padding: 6px 8px; font-weight: 600; }
+  td { border: 1px solid #c8d1da; padding: 6px 8px; vertical-align: top; }
+  tr:nth-child(even) td { background: #f6f8fa; }
+  .cod { white-space: nowrap; font-weight: 600; width: 62px; }
+  .capa { text-align: center; page-break-after: always; padding-top: 3cm; }
+  .capa .inst { font-size: 12pt; letter-spacing: .5px; color: #444; }
+  .capa .titulo { font-size: 24pt; color: #1f4e79; font-weight: bold; margin-top: 4cm; }
+  .capa .sub { font-size: 14pt; color: #444; margin-top: .4cm; }
+  .capa .equipe { margin-top: 3.5cm; font-size: 12pt; line-height: 1.9; }
+  .capa .rodape { margin-top: 3cm; font-size: 11pt; color: #555; }
+  .box { background: #eef3f8; border-left: 4px solid #1f4e79; padding: 10px 14px; margin: 1em 0; }
+  .sumario ol { padding-left: 1.4em; }
+  .sumario li { margin: .3em 0; }
+  @media print { body { padding: 0; } h2 { page-break-after: avoid; } table { page-break-inside: avoid; } }
+
+  img { max-width: 100%; height: auto; display: block; margin: 1em auto; }
+  figure { margin: 1.2em 0; text-align: center; page-break-inside: avoid; }
+  pre { background: #f6f8fa; border: 1px solid #d0d7de; padding: 10px 12px;
+        font-family: Consolas, "Courier New", monospace; font-size: 9.5pt;
+        line-height: 1.35; overflow-x: auto; page-break-inside: avoid; }
+  code { font-family: Consolas, "Courier New", monospace; font-size: 10pt;
+         background: #f0f3f6; padding: 1px 4px; border-radius: 3px; }
+  pre code { background: none; padding: 0; font-size: 9.5pt; }
+  h4 { color: #1f4e79; font-size: 11.5pt; margin-top: 1em; margin-bottom: .3em; }
+  hr { border: 0; border-top: 1px solid #d0d7de; margin: 1.6em 0; }
+  ol li, ul li { text-align: justify; }
+</style>
+</head>
+<body>
+
+<div class="capa">
+  <div class="inst">unicesumar<br>analise e desenvolvimento de sistemas<br>imersao profissional - projeto de software</div>
+  <div class="titulo">sgp - sistema de gestao de prestadores</div>
+  <div class="sub">sistema publicado e funcionando<br>2&ordf; entrega do 2&ordm; bimestre - equipe 8</div>
+  <div class="equipe">
+    <strong>integrantes</strong><br>
+    luis gustavo boratto de oliveira<br>
+    igor schiniegoski pallisser
+  </div>
+  <div class="rodape">novembro de 2026</div>
+</div>
+
+<h2>1. identificacao</h2>
+<table>
+<thead>
+<tr>
+<th>item</th>
+<th>valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>equipe</td>
+<td>8</td>
+</tr>
+<tr>
+<td>integrantes</td>
+<td>luis gustavo boratto de oliveira e igor schiniegoski pallisser</td>
+</tr>
+<tr>
+<td>projeto</td>
+<td>sgp - sistema de gestao de prestadores</td>
+</tr>
+<tr>
+<td>repositorio</td>
+<td>https://github.com/igorschiniegoski/Atividade-Sabine (o mesmo desde o 1º bimestre, publico)</td>
+</tr>
+<tr>
+<td>sistema publicado</td>
+<td>https://sgp-equipe8-sistema.vercel.app</td>
+</tr>
+<tr>
+<td>documentacao e prototipo</td>
+<td>https://sgp-equipe8.vercel.app</td>
+</tr>
+<tr>
+<td>versao avaliada</td>
+<td>branch main. o commit testado esta no <a href="testes.md">testes.md</a>, secao 2</td>
+</tr>
+<tr>
+<td>codigo</td>
+<td>pasta <a href="../sistema"><code>sistema/</code></a></td>
+</tr>
+</tbody>
+</table>
+<p>pra entrar no sistema publicado, todos os usuarios de teste usam a senha <code>sgp@2026</code>. a tela de login tem os botões "Entrar como" pra cada perfil.</p>
+<table>
+<thead>
+<tr>
+<th>perfil</th>
+<th>usuario</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>administrador</td>
+<td><code>luis@sgp.teste</code> ou <code>igor@sgp.teste</code></td>
+</tr>
+<tr>
+<td>prestador</td>
+<td><code>eletrica@sgp.teste</code> (elétrica santos) ou <code>treslagoas@sgp.teste</code> (hidráulica três lagoas)</td>
+</tr>
+<tr>
+<td>cliente</td>
+<td><code>zanin@sgp.teste</code> (supermercado zanin) ou <code>dombosco@sgp.teste</code> (padaria dom bosco)</td>
+</tr>
+</tbody>
+</table>
+<p>este documento é o indice da entrega. ele resume o que mudou desde 20/10 e aponta pra onde cada coisa esta.</p>
+<table>
+<thead>
+<tr>
+<th>o que a entrega pede</th>
+<th>onde esta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>o que mudou desde a entrega anterior e por que</td>
+<td>secao 2</td>
+</tr>
+<tr>
+<td>o que funciona agora e o que fica pra 27/11</td>
+<td>secao 3</td>
+</tr>
+<tr>
+<td>tecnologias e arquitetura</td>
+<td><a href="tecnologias-e-arquitetura.md">tecnologias-e-arquitetura.md</a>, versao 1.2, e o resumo na secao 4</td>
+</tr>
+<tr>
+<td>backlog atualizado</td>
+<td><a href="backlog.md">backlog.md</a>, versao 1.2</td>
+</tr>
+<tr>
+<td>codigo integrado e como executar</td>
+<td>pasta <code>sistema/</code> e o <a href="../README.md">readme</a></td>
+</tr>
+<tr>
+<td>sistema publicado</td>
+<td>https://sgp-equipe8-sistema.vercel.app</td>
+</tr>
+<tr>
+<td>testes, resultados e evidencias</td>
+<td><a href="testes.md">testes.md</a>, versao 1.1, e a pasta <a href="evidencias/entrega-06-11">evidencias/entrega-06-11</a></td>
+</tr>
+<tr>
+<td>rastreabilidade com codigo e teste</td>
+<td>secao 5</td>
+</tr>
+<tr>
+<td>pendencias pra 27/11</td>
+<td>secao 6</td>
+</tr>
+<tr>
+<td>checklist</td>
+<td>secao 8</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>2. o que mudou desde 20/10</h2>
+<p>o problema, os tres perfis, os 19 requisitos funcionais e as 12 regras de negocio continuam os mesmos. o que mudou foi o ritmo: com o recorte de 20/10 pronto antes do prazo, a equipe seguiu e fechou tambem o que era de 27/11 e o que estava "depois do mvp".</p>
+<table>
+<thead>
+<tr>
+<th>data</th>
+<th>item</th>
+<th>alteracao e motivo</th>
+<th>impacto</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>13/10</td>
+<td>banco gerenciado</td>
+<td>escolhido o supabase, na regiao de sao paulo. o sistema usa um schema proprio (<code>sgp</code>) com um usuario do banco que so enxerga esse schema</td>
+<td>tecnologias 1.2, readme</td>
+</tr>
+<tr>
+<td>13/10</td>
+<td>publicacao</td>
+<td>sistema publicado na vercel, com as funcões na regiao gru1 (sao paulo), perto do banco</td>
+<td>tecnologias 1.2, TA16 concluida</td>
+</tr>
+<tr>
+<td>13/10</td>
+<td>arquivos</td>
+<td>documentos e contratos ficam num bucket privado do supabase. o navegador envia direto pro storage com um link assinado, porque a funcao da vercel nao aceita mais que 4,5 mb e o RNF09 pede 10 mb. o servidor confere o conteudo depois e apaga o que nao for pdf, jpg ou png</td>
+<td>tecnologias 1.2</td>
+</tr>
+<tr>
+<td>13/10</td>
+<td>rotina do RN02</td>
+<td>roda uma vez por dia pelo agendador da vercel e tambem pelo botao "Aplicar RN02 agora" no painel de vencimentos</td>
+<td>tecnologias 1.2</td>
+</tr>
+<tr>
+<td>13/10</td>
+<td>escopo</td>
+<td>entraram a ordem de servico completa (release 3) e os complementos (release 4): contratos, aceite e recusa pelo prestador, historico, relatorios, log, exportacao e anonimizacao</td>
+<td>backlog 1.2, TA24 a TA57</td>
+</tr>
+<tr>
+<td>13/10</td>
+<td>cadastro pela tela de login</td>
+<td>o cliente e o prestador podem criar a propria conta. o cliente entra ativo e o prestador entra pendente, com o consentimento da lgpd</td>
+<td>backlog TA63</td>
+</tr>
+<tr>
+<td>13/10</td>
+<td>tela de usuarios</td>
+<td>o administrador cria outro administrador, gera senha provisoria, desbloqueia e desativa acesso</td>
+<td>backlog TA64</td>
+</tr>
+<tr>
+<td>13/10</td>
+<td>apis publicas</td>
+<td>cnpj pela receita (brasilapi), endereco pelo cep (viacep), municipios (ibge) e feriados no prazo da ordem (brasilapi). so ajudam a preencher, e se cairem a pessoa digita</td>
+<td>backlog TA65</td>
+</tr>
+<tr>
+<td>13/10</td>
+<td>acões rapidas</td>
+<td>atribuir, abrir ordem, novo cadastro, avaliar e alterar situacao abrem numa janela por cima da lista, sem trocar de pagina</td>
+<td>backlog TA66, tecnologias 1.2</td>
+</tr>
+<tr>
+<td>13/10</td>
+<td>visual</td>
+<td>mantidas as cores do prototipo (chumbo e laranja queimado). a barra escura com faixa laranja virou menu lateral claro, as tabelas ganharam espaco e a letra passou a ser a ibm plex sans</td>
+<td>tecnologias 1.2</td>
+</tr>
+<tr>
+<td>13/10</td>
+<td>modelo de dados</td>
+<td>migracao <code>20261013120000_log_anonimizacao</code>: a anonimizacao do RNF10 entra no log junto com as tres acões do RF19</td>
+<td>modelo de dados</td>
+</tr>
+<tr>
+<td>13/10</td>
+<td>revisao e integracao continua</td>
+<td>o igor revisou o codigo e corrigiu quatro defeitos (D08 a D11 do testes.md), e montou o github actions que confere tipos, lint, testes e build a cada push</td>
+<td>testes 1.1, backlog TA67 e TA68</td>
+</tr>
+<tr>
+<td>13/10</td>
+<td>backlog</td>
+<td>as telas que estavam com o igor foram feitas junto com o backend, e ele ficou com a revisao, o ci e o readme</td>
+<td>backlog 1.2</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>3. o que funciona agora</h2>
+<h3>3.1 por perfil</h3>
+<table>
+<thead>
+<tr>
+<th>perfil</th>
+<th>o que faz no sistema publicado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>administrador</td>
+<td>painel do dia, prestadores (cadastro, categorias, documentos, situacao, contratos, acesso e lgpd), clientes, categorias, servicos, ordens do pedido ao cancelamento, painel de vencimentos, relatorios de desempenho e por periodo com exportacao, log de acões e usuarios</td>
+</tr>
+<tr>
+<td>prestador</td>
+<td>ve so as ordens atribuidas a ele, aceita ou recusa, inicia, registra andamento e conclui. envia os proprios documentos</td>
+</tr>
+<tr>
+<td>cliente</td>
+<td>abre solicitacao, acompanha cada passo e avalia o atendimento concluido</td>
+</tr>
+</tbody>
+</table>
+<h3>3.2 por requisito</h3>
+<table>
+<thead>
+<tr>
+<th>requisito</th>
+<th>situacao</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RF01 a RF19</td>
+<td>todos implementados e testados pela tela</td>
+</tr>
+<tr>
+<td>RN01 a RN12</td>
+<td>todas implementadas. as das ordens (RN01 a RN08 e RN12) tambem tem teste automatico contra o banco</td>
+</tr>
+<tr>
+<td>RNF01 a RNF06, RNF09, RNF10, RNF12</td>
+<td>implementados e testados</td>
+</tr>
+<tr>
+<td>RNF07, compatibilidade</td>
+<td>testado no chrome. falta abrir no firefox e no edge</td>
+</tr>
+<tr>
+<td>RNF08, nuvem e backup</td>
+<td>publicado na nuvem, com o backup diario do supabase. falta testar uma restauracao</td>
+</tr>
+<tr>
+<td>RNF11, manutenibilidade</td>
+<td>github, readme, commits por integrante e o ci a cada push</td>
+</tr>
+</tbody>
+</table>
+<h3>3.3 o que fica pra 27/11</h3>
+<table>
+<thead>
+<tr>
+<th>item</th>
+<th>por que</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>firefox e edge (RNF07) e restauracao de backup (RNF08)</td>
+<td>conferencias que faltam, sem codigo novo previsto</td>
+</tr>
+<tr>
+<td>rodar o sistema do zero na maquina do igor seguindo o readme (TA58)</td>
+<td>o ci ja faz isso a cada push numa maquina limpa, mas a conferencia na maquina dele continua combinada</td>
+</tr>
+<tr>
+<td>roteiro da apresentacao final e ensaio (TA70)</td>
+<td>entrega de 27/11</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>4. decisões tecnicas confirmadas</h2>
+<p>o detalhe de cada escolha esta em <a href="tecnologias-e-arquitetura.md">tecnologias-e-arquitetura.md</a>. o resumo do que esta no codigo:</p>
+<table>
+<thead>
+<tr>
+<th>componente</th>
+<th>o que foi usado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>interface</td>
+<td>next.js 15.5 (app router), react 19 e tailwind 4, com a letra ibm plex sans</td>
+</tr>
+<tr>
+<td>logica</td>
+<td>typescript. regras de negocio em <code>sistema/lib/dominio</code>, validacao em <code>sistema/lib/validacao</code> (zod), permissao em <code>sistema/lib/permissao.ts</code> e o fluxo das ordens em <code>sistema/lib/ordens.ts</code></td>
+</tr>
+<tr>
+<td>persistencia</td>
+<td>postgresql com prisma 6. local pelo <code>embedded-postgres</code>, publicado no supabase (sao paulo)</td>
+</tr>
+<tr>
+<td>arquivos</td>
+<td>storage privado do supabase, com envio direto por link assinado</td>
+</tr>
+<tr>
+<td>autenticacao</td>
+<td>auth.js 5, email e senha, sessao em cookie de 30 minutos, conta conferida no banco a cada requisicao</td>
+</tr>
+<tr>
+<td>integracões</td>
+<td>brasilapi (cnpj e feriados), viacep e ibge</td>
+</tr>
+<tr>
+<td>hospedagem</td>
+<td>vercel, regiao gru1, com o agendador diario do RN02</td>
+</tr>
+<tr>
+<td>testes</td>
+<td>vitest (unitarios, seguranca e integracao com banco) e github actions</td>
+</tr>
+</tbody>
+</table>
+<h3>4.1 onde mexer em cada coisa</h3>
+<pre><code>sistema/
+  app/login/, app/cadastro/       entrar e criar conta
+  app/(admin)/                    telas do administrador (painel, ordens, prestadores, clientes...)
+  app/(prestador)/                minhas ordens e meus documentos
+  app/(cliente)/                  minhas solicitacoes
+  app/_componentes/               casca, menu, janela, campos e formularios usados por todas as telas
+  app/api/rotinas/vencimentos/    rotina diaria do RN02
+  app/arquivos/                   download de documento e contrato, conferindo quem pede
+  app/relatorios/exportar/        csv dos relatorios
+  lib/dominio/                    regras de negocio puras e os testes delas
+  lib/ordens.ts                   abrir, atribuir, aceitar, recusar, iniciar, concluir, cancelar e avaliar
+  lib/aptidao.ts                  quem pode receber a ordem (RN01 a RN04)
+  lib/documentos.ts, storage.ts   envio de arquivo e versao do documento
+  lib/permissao.ts                exigirPerfil, exigirPrestador e exigirCliente
+  prisma/                         modelo, migracões e carga inicial
+  scripts/carga-5mil.ts           5 mil prestadores pra medir o RNF06
+</code></pre>
+<hr />
+<h2>5. rastreabilidade com implementacao e teste</h2>
+<table>
+<thead>
+<tr>
+<th>requisito</th>
+<th>implementacao</th>
+<th>teste</th>
+<th>estado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RF01 - autenticar</td>
+<td><code>app/login/</code>, <code>auth.ts</code>, <code>lib/dominio/login.ts</code>, <code>app/(admin)/usuarios/</code></td>
+<td>CT01 a CT04, CT58, CT60</td>
+<td>pronto</td>
+</tr>
+<tr>
+<td>RF02 - prestadores</td>
+<td><code>app/(admin)/prestadores/</code></td>
+<td>CT07 a CT17, CT39</td>
+<td>pronto</td>
+</tr>
+<tr>
+<td>RF03 - clientes</td>
+<td><code>app/(admin)/clientes/</code>, <code>app/cadastro/</code></td>
+<td>CT22 a CT24, CT56, CT57</td>
+<td>pronto</td>
+</tr>
+<tr>
+<td>RF04 - categorias</td>
+<td><code>app/(admin)/categorias/</code></td>
+<td>CT25, CT26</td>
+<td>pronto</td>
+</tr>
+<tr>
+<td>RF05 - catalogo de servicos</td>
+<td><code>app/(admin)/servicos/</code></td>
+<td>CT27, CT28</td>
+<td>pronto</td>
+</tr>
+<tr>
+<td>RF06 - habilitacao</td>
+<td><code>app/(admin)/prestadores/[id]/categorias/</code></td>
+<td>CT29, CT30</td>
+<td>pronto</td>
+</tr>
+<tr>
+<td>RF07 - documentos</td>
+<td><code>lib/documentos.ts</code>, <code>lib/storage.ts</code>, <code>app/(prestador)/meus-documentos/</code></td>
+<td>CT31 a CT35</td>
+<td>pronto</td>
+</tr>
+<tr>
+<td>RF08 - vencidos</td>
+<td><code>app/(admin)/vencimentos/</code>, <code>lib/dominio/documento.ts</code></td>
+<td>CT36, unitarios</td>
+<td>pronto</td>
+</tr>
+<tr>
+<td>RF09 - situacao cadastral</td>
+<td><code>app/(admin)/prestadores/[id]/situacao/</code></td>
+<td>CT20, CT38, CT62</td>
+<td>pronto</td>
+</tr>
+<tr>
+<td>RF10 - contratos</td>
+<td><code>app/(admin)/prestadores/[id]/contratos/</code></td>
+<td>CT40</td>
+<td>pronto</td>
+</tr>
+<tr>
+<td>RF11 - registrar ordem</td>
+<td><code>lib/ordens.ts</code>, <code>app/(cliente)/minhas-solicitacoes/</code></td>
+<td>CT41, CT42, CT61, integracao</td>
+<td>pronto</td>
+</tr>
+<tr>
+<td>RF12 - atribuir</td>
+<td><code>lib/ordens.ts</code>, <code>lib/aptidao.ts</code>, <code>app/(admin)/ordens/formularios.tsx</code></td>
+<td>CT43, integracao</td>
+<td>pronto</td>
+</tr>
+<tr>
+<td>RF13 - acompanhar</td>
+<td><code>app/(admin)/ordens/[id]/</code>, <code>app/(cliente)/minhas-solicitacoes/[id]/</code></td>
+<td>CT45, CT47</td>
+<td>pronto</td>
+</tr>
+<tr>
+<td>RF14 - ordens do prestador</td>
+<td><code>app/(prestador)/minhas-ordens/</code></td>
+<td>CT45 a CT47, CT51</td>
+<td>pronto</td>
+</tr>
+<tr>
+<td>RF15 - avaliar</td>
+<td><code>lib/ordens.ts</code>, <code>lib/dominio/avaliacao.ts</code></td>
+<td>CT48, integracao</td>
+<td>pronto</td>
+</tr>
+<tr>
+<td>RF16 - historico</td>
+<td>filtros por prestador, cliente e periodo em <code>app/(admin)/ordens/</code></td>
+<td>CT63</td>
+<td>pronto</td>
+</tr>
+<tr>
+<td>RF17 - desempenho</td>
+<td><code>app/(admin)/relatorios/desempenho/</code>, <code>lib/relatorios.ts</code></td>
+<td>CT52</td>
+<td>pronto</td>
+</tr>
+<tr>
+<td>RF18 - servicos por periodo</td>
+<td><code>app/(admin)/relatorios/periodo/</code></td>
+<td>CT53</td>
+<td>pronto</td>
+</tr>
+<tr>
+<td>RF19 - log</td>
+<td><code>lib/log.ts</code>, <code>app/(admin)/log/</code></td>
+<td>CT54, integracao</td>
+<td>pronto</td>
+</tr>
+<tr>
+<td>RN01 a RN04 - aptidao</td>
+<td><code>lib/dominio/aptidao.ts</code>, <code>lib/aptidao.ts</code></td>
+<td>CT43, unitarios, integracao</td>
+<td>pronto</td>
+</tr>
+<tr>
+<td>RN02 - documento vencido</td>
+<td><code>app/api/rotinas/vencimentos/</code></td>
+<td>CT37, integracao</td>
+<td>pronto</td>
+</tr>
+<tr>
+<td>RN05 e RN06 - sequencia e ordem travada</td>
+<td><code>lib/dominio/ordem.ts</code></td>
+<td>CT45, CT47, unitarios, integracao</td>
+<td>pronto</td>
+</tr>
+<tr>
+<td>RN07 - cancelamento</td>
+<td><code>lib/ordens.ts</code></td>
+<td>CT49, integracao</td>
+<td>pronto</td>
+</tr>
+<tr>
+<td>RN08 e RN09 - avaliacao e nota</td>
+<td><code>lib/dominio/avaliacao.ts</code></td>
+<td>CT48, CT50, unitarios, integracao</td>
+<td>pronto</td>
+</tr>
+<tr>
+<td>RN10 - cpf e cnpj</td>
+<td><code>lib/dominio/cpf-cnpj.ts</code></td>
+<td>CT09 a CT11, CT23, unitarios</td>
+<td>pronto</td>
+</tr>
+<tr>
+<td>RN11 - inativar com ordem aberta</td>
+<td><code>app/(admin)/prestadores/actions.ts</code></td>
+<td>CT39</td>
+<td>pronto</td>
+</tr>
+<tr>
+<td>RN12 - prazo e atraso</td>
+<td><code>lib/dominio/ordem.ts</code></td>
+<td>CT47, unitarios</td>
+<td>pronto</td>
+</tr>
+<tr>
+<td>RNF02 - permissao no servidor</td>
+<td><code>middleware.ts</code>, <code>lib/permissao.ts</code></td>
+<td>CT05, CT46, <code>app/seguranca.test.ts</code>, <code>lib/permissao.test.ts</code></td>
+<td>pronto</td>
+</tr>
+<tr>
+<td>RNF04 - responsivo</td>
+<td>todas as telas</td>
+<td>CT19, CT59</td>
+<td>pronto</td>
+</tr>
+<tr>
+<td>RNF05 - confirmacao e retorno</td>
+<td>janelas, <code>confirm</code> e aviso no canto</td>
+<td>CT43, CT49, CT55</td>
+<td>pronto</td>
+</tr>
+<tr>
+<td>RNF06 - 5 mil registros</td>
+<td>paginacao no banco</td>
+<td>CT44</td>
+<td>pronto, a mais lenta em 716 ms</td>
+</tr>
+<tr>
+<td>RNF09 - formato e tamanho</td>
+<td><code>lib/dominio/documento.ts</code>, <code>lib/storage.ts</code></td>
+<td>CT32, CT33, unitarios</td>
+<td>pronto</td>
+</tr>
+<tr>
+<td>RNF10 - lgpd</td>
+<td>consentimento no cadastro, <code>lib/anonimizar.ts</code></td>
+<td>CT55, CT56</td>
+<td>pronto</td>
+</tr>
+<tr>
+<td>RNF12 - bloqueio</td>
+<td><code>lib/dominio/login.ts</code></td>
+<td>CT04, CT58, unitarios</td>
+<td>pronto</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>6. pendencias e proximos passos ate 27/11</h2>
+<table>
+<thead>
+<tr>
+<th>o que</th>
+<th>quem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>abrir o sistema publicado no firefox e no edge e repetir os casos principais</td>
+<td>igor</td>
+</tr>
+<tr>
+<td>restaurar um backup do supabase num banco de teste e conferir os dados</td>
+<td>luis</td>
+</tr>
+<tr>
+<td>rodar o sistema do zero seguindo o readme (TA58)</td>
+<td>igor</td>
+</tr>
+<tr>
+<td>roteiro da apresentacao final, divisao das falas e ensaio com o sistema publicado (TA70)</td>
+<td>os dois</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>7. roteiro da demonstracao</h2>
+<ol>
+<li>o problema em uma frase e o que mudou desde 20/10 (secao 2).</li>
+<li>no sistema publicado, como cliente: abrir uma solicitacao e ver o aviso de feriado no prazo.</li>
+<li>como administrador: no painel, atribuir a ordem e mostrar por que cada prestador nao apto ficou de fora.</li>
+<li>como prestador: aceitar, iniciar, registrar andamento e concluir. tentar abrir a ordem de outro prestador.</li>
+<li>como cliente: avaliar. como administrador: nota media, relatorio de desempenho e log.</li>
+<li>painel de vencimentos: enviar um documento vencido e rodar o RN02 na hora.</li>
+<li>os testes: o github actions verde, o <code>npm test</code> e a tabela do <a href="testes.md">testes.md</a>, com um defeito encontrado e corrigido.</li>
+</ol>
+<p>antes de apresentar: entrar uma vez em cada perfil pra deixar o sistema quente, e conferir que nenhum usuario de teste ficou bloqueado pelo ensaio.</p>
+<hr />
+<h2>8. checklist</h2>
+<table>
+<thead>
+<tr>
+<th>item</th>
+<th>situacao</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mantivemos o projeto e o repositorio</td>
+<td>sim, o mesmo desde o 1º bimestre</td>
+</tr>
+<tr>
+<td>registramos o que mudou e por que</td>
+<td>sim, secao 2</td>
+</tr>
+<tr>
+<td>o sistema esta publicado e acessivel</td>
+<td>sim, https://sgp-equipe8-sistema.vercel.app</td>
+</tr>
+<tr>
+<td>o banco esta em nuvem com dados de demonstracao</td>
+<td>sim, supabase em sao paulo, com a carga inicial</td>
+</tr>
+<tr>
+<td>o codigo da entrega esta integrado ao repositorio</td>
+<td>sim, na branch main</td>
+</tr>
+<tr>
+<td>conseguimos executar a aplicacao seguindo o readme</td>
+<td>sim, o ci faz isso a cada push. falta repetir na maquina do igor (TA58)</td>
+</tr>
+<tr>
+<td>executamos os testes e registramos resultados reais</td>
+<td>sim, testes.md 1.1</td>
+</tr>
+<tr>
+<td>registramos defeitos, correcões e pendencias</td>
+<td>sim, testes.md secao 5 e secao 6 deste documento</td>
+</tr>
+<tr>
+<td>atualizamos os documentos afetados e a rastreabilidade</td>
+<td>sim, secões 2 e 5</td>
+</tr>
+<tr>
+<td>atualizamos o backlog</td>
+<td>sim, backlog 1.2</td>
+</tr>
+<tr>
+<td>verificamos o acesso da professora</td>
+<td>sim, o repositorio e o sistema abrem sem pedir nada alem do login de teste</td>
+</tr>
+<tr>
+<td>cada integrante consegue explicar sua contribuicao</td>
+<td>a combinar entre os dois antes da apresentacao</td>
+</tr>
+<tr>
+<td>definimos os proximos passos ate 27/11</td>
+<td>sim, secao 6</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>historico de alteracões</h2>
+<table>
+<thead>
+<tr>
+<th>versao</th>
+<th>data</th>
+<th>alteracao</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.0</td>
+<td>13/10/2026</td>
+<td>primeira versao, para a entrega de 06/11/2026</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

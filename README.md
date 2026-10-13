@@ -96,11 +96,12 @@ as pastas vao sendo criadas conforme cada entrega.
 | [casos-de-uso.md](docs/casos-de-uso.md) | 2ª | atores, diagramas de caso de uso, especificacao dos 24 casos de uso, diagramas de atividade de UC13 e UC16, 23 historias de usuario, priorizacao moscow e matriz de rastreabilidade |
 | [modelo-de-dados.md](docs/modelo-de-dados.md) | 2ª | diagrama de classes do dominio, modelo conceitual, modelo logico e dicionario de dados das 14 tabelas |
 | [mvp-e-prototipos.md](docs/mvp-e-prototipos.md) | 3ª | revisao das entregas anteriores, definicao do mvp, fluxo completo, levantamento das telas, mapa de navegacao, prototipo e rastreabilidade |
-| [backlog.md](docs/backlog.md) | 3ª, atualizado em 20/10 | quadro com as 62 tarefas do projeto, com requisito, prioridade, responsavel, prazo, situacao e criterio de conclusao |
+| [backlog.md](docs/backlog.md) | 3ª, atualizado em 20/10 e em 06/11 | quadro com as 62 tarefas do projeto, com requisito, prioridade, responsavel, prazo, situacao e criterio de conclusao |
 | [apresentacao.md](docs/apresentacao.md) | 3ª | roteiro da apresentacao, divisao das falas, perguntas provaveis e checklist final |
-| [tecnologias-e-arquitetura.md](docs/tecnologias-e-arquitetura.md) | 2ª, atualizado em 20/10 | stack com as versões em uso, ajustes feitos na implementacao, arquitetura em camadas e como cada RNF é atendido |
+| [tecnologias-e-arquitetura.md](docs/tecnologias-e-arquitetura.md) | 2ª, atualizado em 20/10 e em 06/11 | stack com as versões em uso, ajustes feitos na implementacao, arquitetura em camadas e como cada RNF é atendido |
 | [entrega-20-10.md](docs/entrega-20-10.md) | 1ª do 2º bimestre | indice da entrega: revisao do 1º bimestre, recorte implementado, rastreabilidade com codigo e teste, pendencias e checklist |
-| [testes.md](docs/testes.md) | 1ª do 2º bimestre | casos de teste executados, resultados, evidencias e defeitos |
+| [entrega-06-11.md](docs/entrega-06-11.md) | 2ª do 2º bimestre | indice da entrega: o que foi feito desde 20/10, publicacao, rastreabilidade, testes e o que falta pra 27/11 |
+| [testes.md](docs/testes.md) | 1ª e 2ª do 2º bimestre | casos de teste executados, resultados, evidencias, medicao do RNF06 e defeitos |
 
 ### diagramas
 
@@ -158,8 +159,8 @@ python ferramentas/gerar-html.py
 | 2 | 08/09/2026 | casos de uso, diagramas de atividade, diagrama de classes e modelagem do banco | pronto |
 | 3 | 25/09/2026 | repositorio, backlog, mapa de navegacao, prototipos, mvp e apresentacao | pronto |
 | 4 | 20/10/2026 | planejamento tecnico e implementacao inicial: login e cadastro e consulta de prestadores, com testes. tag `entrega-20-10-2026` | pronto |
-| 5 | 06/11/2026 | implementacao, integracao e testes: resto da release 1 e release 2, publicado na vercel | em andamento |
-| 6 | 27/11/2026 | sistema funcionando e apresentacao final | a fazer |
+| 5 | 06/11/2026 | sistema parcialmente funcional, publicado na vercel. entrou alem do previsto o fluxo completo das ordens e o que era "depois do mvp" | pronto |
+| 6 | 27/11/2026 | sistema funcionando e apresentacao final | sistema pronto, falta o ensaio e a apresentacao |
 
 ## mvp
 
@@ -167,9 +168,9 @@ a primeira versao funcional entrega o fluxo completo do sistema, do pedido do cl
 autenticacao, cadastros de apoio, documentacao com controle de validade, situacao cadastral, abertura da ordem,
 atribuicao apenas a quem esta apto, execucao, conclusao e avaliacao. sao 17 dos 24 casos de uso e 18 telas.
 
-ficam para depois do mvp os contratos, o aceite da atribuicao pelo prestador, o historico consolidado, os relatorios
-e o log de acões criticas. o criterio de corte e a justificativa de cada item estao em
-[docs/mvp-e-prototipos.md](docs/mvp-e-prototipos.md).
+o que tinha ficado pra depois do mvp (contratos, aceite da atribuicao, historico consolidado, relatorios, log de acões
+criticas, exportacao e anonimizacao) acabou entrando tambem no 2º bimestre. o criterio de corte original esta em
+[docs/mvp-e-prototipos.md](docs/mvp-e-prototipos.md) e o que foi feito de cada um, em [docs/entrega-06-11.md](docs/entrega-06-11.md).
 
 ## como rodar
 
@@ -221,6 +222,13 @@ roda os testes das regras de negocio e das permissoes. com o `npm run banco` abe
 
 a cada push e pull request o github actions roda tipos, lint, todos os testes (com um postgres proprio) e o build de producao. a configuracao esta em `.github/workflows/sistema.yml`.
 
+pra medir o RNF06 com 5 mil prestadores:
+
+```
+npx tsx scripts/carga-5mil.ts            cria os 5 mil
+npx tsx scripts/carga-5mil.ts --apagar   tira de novo
+```
+
 ### variaveis de ambiente
 
 | variavel | pra que serve |
@@ -254,7 +262,7 @@ a cada push e pull request o github actions roda tipos, lint, todos os testes (c
 **cliente**
 - minhas solicitacoes: abrir pedido, acompanhar o andamento e avaliar o atendimento
 
-o que ainda falta ate 06/11 esta no [quadro de tarefas](docs/backlog.md).
+o detalhe de cada parte, com o requisito e o teste que confere, esta em [docs/entrega-06-11.md](docs/entrega-06-11.md).
 
 ### limitacoes conhecidas
 

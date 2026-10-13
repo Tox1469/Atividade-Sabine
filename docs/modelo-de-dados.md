@@ -1,7 +1,7 @@
 # sgp - sistema de gestao de prestadores
 ## diagrama de classes, modelo de dados e dicionario de dados
 
-**versao 1.2 - 06/10/2026 - revisado na 1ª entrega do 2º bimestre (20/10)**
+**versao 1.3 - 13/10/2026 - revisado na 2ª entrega do 2º bimestre (06/11)**
 unicesumar - analise e desenvolvimento de sistemas
 imersao profissional - projeto de software - equipe 8
 
@@ -400,7 +400,7 @@ tabela central do sistema. guarda o estado atual da ordem, enquanto o caminho pe
 |---|---|---|---|---|
 | id_log | serial | sim | identificador interno | chave primaria |
 | id_usuario | integer | sim | quem executou a acao | fk para usuario |
-| acao | varchar(40) | sim | alteracao de situacao, atribuicao ou cancelamento | check com as acões previstas |
+| acao | varchar(40) | sim | alteracao de situacao, atribuicao, cancelamento ou anonimizacao | check com as acões previstas |
 | entidade | varchar(40) | sim | nome da tabela afetada | - |
 | entidade_id | integer | sim | identificador do registro afetado | sem chave estrangeira, de proposito |
 | detalhe | text | nao | resumo do que mudou | - |
@@ -483,8 +483,8 @@ os demais dados de teste serao ficticios, conforme a restricao de LGPD definida 
 | item | quando |
 |---|---|
 | script de criacao das tabelas | feito: `sistema/prisma/migrations`, com os check do dicionario escritos no final da migracao inicial |
-| ajuste fino dos indices | depois da carga de teste, medindo com a base de 5 mil registros do RNF06 |
-| rotina de anonimizacao para a LGPD | junto do modulo de cadastro, na release 1 |
+| ajuste fino dos indices | medido com 5.008 prestadores no sistema publicado: a listagem mais lenta levou 716 ms, dentro dos 3 segundos do RNF06. nenhum indice novo foi preciso (testes.md, CT44) |
+| rotina de anonimizacao para a LGPD | feita em `sistema/lib/anonimizar.ts`: troca nome, documento, contato e endereco por valores sem identificacao, desativa o login e grava no log. as ordens continuam ligadas ao cadastro |
 
 ---
 
@@ -506,3 +506,4 @@ os demais dados de teste serao ficticios, conforme a restricao de LGPD definida 
 | 1.0 | 22/09/2026 | primeira versao, com o diagrama de classes, o modelo conceitual, o modelo logico e o dicionario de dados que estavam pendentes da 2ª entrega |
 | 1.1 | 22/09/2026 | acrescentados `nome_fantasia` em prestador e cliente e `local_atendimento` na ordem de servico. os tres apareciam nas telas do prototipo e nao existiam no modelo, o que quebrava a rastreabilidade entre tela e banco |
 | 1.2 | 06/10/2026 | `usuario` ganhou `tentativas_falhas` e `bloqueado_ate`, que faltavam pro RNF12. o status "em execucao" passou a ser gravado como `em_execucao`. o modelo virou a migracao inicial do prisma |
+| 1.3 | 13/10/2026 | migracao `20261013120000_log_anonimizacao`: o check de `log_acao.acao` passou a aceitar `anonimizacao`, pra pedido de remocao de dados (RNF10) ficar registrado como as outras acões criticas. indices conferidos com a carga de 5 mil |
