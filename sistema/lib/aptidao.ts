@@ -126,22 +126,26 @@ export async function aplicarVencimentos() {
     include: incluirParaAptidao(dia),
   });
 
+  // so muda quem ainda esta ativo na hora de gravar: se o administrador bloqueou ou inativou
+  // o prestador entre a busca e a gravacao, a rotina nao desfaz a decisao dele
+  let alterados = 0;
   for (const p of vencidos) {
     const doc = p.documentos[0];
-    await prisma.prestador.update({
-      where: { id_prestador: p.id_prestador },
-      data: {
-        situacao: "pendente",
-        historicos: {
-          create: {
-            situacao_anterior: "ativo",
-            situacao_nova: "pendente",
-            motivo: `Documento obrigatório vencido: ${doc.tipo.nome.toLowerCase()} (RN02).`,
-            id_usuario: null,
-          },
+    const mudou = await prisma.$transaction(async (tx) => {
+      const r = await tx.prestador.updateMany({ where: { id_prestador: p.id_prestador, situacao: "ativo" }, data: { situacao: "pendente" } });
+      if (r.count === 0) return false;
+      await tx.historico_situacao.create({
+        data: {
+          id_prestador: p.id_prestador,
+          situacao_anterior: "ativo",
+          situacao_nova: "pendente",
+          motivo: `Documento obrigatório vencido: ${doc.tipo.nome.toLowerCase()} (RN02).`,
+          id_usuario: null,
         },
-      },
+      });
+      return true;
     });
+    if (mudou) alterados++;
   }
-  return vencidos.length;
+  return alterados;
 }
