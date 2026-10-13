@@ -25,7 +25,14 @@ export async function GET(_req: Request, { params }: { params: Promise<{ tipo: s
   const aberto = await abrirArquivo(arquivo.caminho);
   if ("link" in aberto) return Response.redirect(aberto.link, 302);
   const tipoMime = arquivo.caminho.endsWith(".pdf") ? "application/pdf" : arquivo.caminho.endsWith(".png") ? "image/png" : "image/jpeg";
+  // filename* leva o nome com acento (RFC 6266). o filename simples fica de reserva, sem acento nem aspas.
+  // nosniff impede o navegador de tratar o arquivo como outro tipo alem do declarado
+  const reserva = arquivo.nome.normalize("NFD").replace(/[^\x20-\x7e]/g, "").replace(/["\\]/g, "") || "arquivo";
   return new Response(new Uint8Array(aberto.bytes), {
-    headers: { "Content-Type": tipoMime, "Content-Disposition": `inline; filename="${encodeURIComponent(arquivo.nome)}"` },
+    headers: {
+      "Content-Type": tipoMime,
+      "Content-Disposition": `inline; filename="${reserva}"; filename*=UTF-8''${encodeURIComponent(arquivo.nome)}`,
+      "X-Content-Type-Options": "nosniff",
+    },
   });
 }
