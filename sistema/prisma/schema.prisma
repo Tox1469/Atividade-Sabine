@@ -6,9 +6,13 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// DIRECT_URL so e usada pelo prisma migrate. no supabase o sistema conecta pelo pooler
+// (DATABASE_URL, porta 6543) e a migracao precisa da conexao de sessao (porta 5432).
+// no banco local as duas sao iguais
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model usuario {

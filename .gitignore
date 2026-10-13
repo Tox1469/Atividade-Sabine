@@ -24,6 +24,7 @@ coverage/
 *.sqlite
 *.sqlite3
 uploads/
+.arquivos/
 
 # ferramentas baixadas, nao fazem parte do trabalho
 plantuml*.jar
