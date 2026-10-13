@@ -1,0 +1,55 @@
+# confere o sistema a cada push e pull request: tipos, lint, testes (com os de banco,
+# num postgres de verdade) e o build de producao, o mesmo que a vercel roda
+name: sistema
+
+on:
+  push:
+    branches: [main]
+    paths: ["sistema/**", ".github/workflows/sistema.yml"]
+  pull_request:
+    paths: ["sistema/**", ".github/workflows/sistema.yml"]
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: sistema
+
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: sgp
+          POSTGRES_PASSWORD: sgp
+          POSTGRES_DB: sgp_teste
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U sgp"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgresql://sgp:sgp@localhost:5432/sgp_teste
+      DIRECT_URL: postgresql://sgp:sgp@localhost:5432/sgp_teste
+      DATABASE_URL_TESTE: postgresql://sgp:sgp@localhost:5432/sgp_teste
+      AUTH_SECRET: segredo-so-do-ci
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: sistema/package-lock.json
+      - run: npm ci
+      - run: npx prisma generate
+      - name: tipos
+        run: npx tsc --noEmit
+      - name: lint
+        run: npm run lint
+      - name: testes
+        run: npm test
+      - name: build
+        run: npx next build
