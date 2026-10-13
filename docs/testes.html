@@ -148,7 +148,7 @@
 </tbody>
 </table>
 <h2>3. testes automaticos</h2>
-<p>55 testes, todos passando. a saida completa do <code>npm test</code> esta em <a href="evidencias/entrega-06-11/testes-automaticos.txt">evidencias/entrega-06-11/testes-automaticos.txt</a>.</p>
+<p>56 testes, todos passando. a saida completa do <code>npm test</code> esta em <a href="evidencias/entrega-06-11/testes-automaticos.txt">evidencias/entrega-06-11/testes-automaticos.txt</a>.</p>
 <table>
 <thead>
 <tr>
@@ -185,8 +185,8 @@
 </tr>
 <tr>
 <td><code>lib/ordens.banco.test.ts</code></td>
-<td>contra o banco: numeracao e prazo padrao, nao atribui pra quem tem documento vencido e grava o log, duas atribuicões ao mesmo tempo gravam uma so, dois cliques em aceitar gravam um aceite so, outro prestador nao mexe na ordem, avaliacao unica do cliente titular, cancelamento com motivo e log, recusa devolve pra fila, a rotina do RN02 sem desfazer bloqueio, e cadastro que entra com conta de demonstracao nao é anonimizado</td>
-<td>12</td>
+<td>contra o banco: numeracao e prazo padrao, nao atribui pra quem tem documento vencido e grava o log, duas atribuicões ao mesmo tempo gravam uma so, dois cliques em aceitar gravam um aceite so, outro prestador nao mexe na ordem, avaliacao unica do cliente titular, cancelamento com motivo e log, recusa devolve pra fila, a rotina do RN02 sem desfazer bloqueio, cadastro que entra com conta de demonstracao nao é anonimizado, e login novo com e-mail @sgp.teste é recusado</td>
+<td>13</td>
 </tr>
 </tbody>
 </table>
@@ -978,7 +978,7 @@
 </tbody>
 </table>
 <p>os 5 mil prestadores ficticios foram criados com <code>npx tsx scripts/carga-5mil.ts</code> e saem com <code>--apagar</code>.</p>
-<p><strong>resumo:</strong> 68 casos, todos passando: 21 de 20/10 e 47 de 06/11 (CT22 a CT68). 55 testes automaticos passando.</p>
+<p><strong>resumo:</strong> 68 casos, todos passando: 21 de 20/10 e 47 de 06/11 (CT22 a CT68). 56 testes automaticos passando.</p>
 <h2>5. defeitos encontrados</h2>
 <table>
 <thead>
@@ -1200,7 +1200,7 @@
 <tr>
 <td>1.2</td>
 <td>13/10/2026</td>
-<td>contas de demonstracao travadas e comando que restaura a demonstracao (backlog TA71): CT64 a CT68 novos, CT58 refeito com uma conta que nao é de demonstracao, 55 testes automaticos e o defeito D17</td>
+<td>contas de demonstracao travadas e comando que restaura a demonstracao (backlog TA71): CT64 a CT68 novos, CT58 refeito com uma conta que nao é de demonstracao, 56 testes automaticos e o defeito D17. so a carga inicial cria contas @sgp.teste: o cadastro, o novo administrador e o liberar acesso recusam esse e-mail</td>
 </tr>
 </tbody>
 </table>

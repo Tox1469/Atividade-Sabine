@@ -3,7 +3,7 @@
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { contaDeDemonstracao, redefinirSenha, senhaProvisoria, trocarAtivoDoAcesso } from "@/lib/acesso";
+import { contaDeDemonstracao, RESERVADO, redefinirSenha, senhaProvisoria, trocarAtivoDoAcesso } from "@/lib/acesso";
 import { prisma } from "@/lib/db";
 import { comErros, erroNoCampo, valoresDo, type EstadoFormulario } from "@/lib/formulario";
 import { exigirPerfil } from "@/lib/permissao";
@@ -19,6 +19,7 @@ export async function criarAdministrador(_estado: EstadoFormulario, form: FormDa
   const valores = valoresDo(form);
   const validacao = adminSchema.safeParse(valores);
   if (!validacao.success) return comErros(validacao.error, valores);
+  if (contaDeDemonstracao(validacao.data.email)) return erroNoCampo("email", RESERVADO, valores);
   if (await prisma.usuario.findUnique({ where: { email: validacao.data.email } })) return erroNoCampo("email", "Já existe um usuário com este e-mail.", valores);
 
   const senha = senhaProvisoria();

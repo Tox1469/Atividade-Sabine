@@ -34,7 +34,7 @@ desde 13/10 o github actions roda os tipos, o lint, todos os testes automaticos 
 
 ## 3. testes automaticos
 
-55 testes, todos passando. a saida completa do `npm test` esta em [evidencias/entrega-06-11/testes-automaticos.txt](evidencias/entrega-06-11/testes-automaticos.txt).
+56 testes, todos passando. a saida completa do `npm test` esta em [evidencias/entrega-06-11/testes-automaticos.txt](evidencias/entrega-06-11/testes-automaticos.txt).
 
 | arquivo | o que testa | testes |
 |---|---|---|
@@ -43,7 +43,7 @@ desde 13/10 o github actions roda os tipos, o lint, todos os testes automaticos 
 | `lib/dominio/regras.test.ts` | a ordem anda um passo por vez e nao volta (RN05), concluida nao muda (RN06), cancelamento antes da conclusao (RN07), prazo padrao do servico, atraso (RN12), numero OS-ano-sequencia, aptidao com o motivo de cada recusa (RN01 a RN04), nota media so com tres avaliacões (RN09), validade e formato do documento (RF08, RNF09) e o dia de hoje no horario de brasilia | 18 |
 | `app/seguranca.test.ts` | actions do administrador sem sessao ou com outro perfil, actions do prestador e do cliente chamadas pelo administrador, cadastro tentando criar conta de administrador, download de documento e contrato, csv dos relatorios e a rotina do RN02 sem o segredo (RNF02) | 9 |
 | `lib/permissao.test.ts` | a conta é conferida no banco a cada requisicao: desativada, apagada ou com perfil trocado perde o acesso mesmo com o cookie antigo | 5 |
-| `lib/ordens.banco.test.ts` | contra o banco: numeracao e prazo padrao, nao atribui pra quem tem documento vencido e grava o log, duas atribuicões ao mesmo tempo gravam uma so, dois cliques em aceitar gravam um aceite so, outro prestador nao mexe na ordem, avaliacao unica do cliente titular, cancelamento com motivo e log, recusa devolve pra fila, a rotina do RN02 sem desfazer bloqueio, e cadastro que entra com conta de demonstracao nao é anonimizado | 12 |
+| `lib/ordens.banco.test.ts` | contra o banco: numeracao e prazo padrao, nao atribui pra quem tem documento vencido e grava o log, duas atribuicões ao mesmo tempo gravam uma so, dois cliques em aceitar gravam um aceite so, outro prestador nao mexe na ordem, avaliacao unica do cliente titular, cancelamento com motivo e log, recusa devolve pra fila, a rotina do RN02 sem desfazer bloqueio, cadastro que entra com conta de demonstracao nao é anonimizado, e login novo com e-mail @sgp.teste é recusado | 13 |
 
 ## 4. casos de teste pela tela
 
@@ -166,7 +166,7 @@ desde 13/10 o cadastro novo de prestador e de cliente abre numa janela por cima 
 
 os 5 mil prestadores ficticios foram criados com `npx tsx scripts/carga-5mil.ts` e saem com `--apagar`.
 
-**resumo:** 68 casos, todos passando: 21 de 20/10 e 47 de 06/11 (CT22 a CT68). 55 testes automaticos passando.
+**resumo:** 68 casos, todos passando: 21 de 20/10 e 47 de 06/11 (CT22 a CT68). 56 testes automaticos passando.
 
 ## 5. defeitos encontrados
 
@@ -208,4 +208,4 @@ nenhum defeito aberto nesta versao.
 |---|---|---|
 | 1.0 | 06/10/2026 | primeira versao, com os testes do recorte da 1ª entrega do 2º bimestre |
 | 1.1 | 13/10/2026 | testes da entrega de 06/11: CT22 a CT63 pela tela, 54 testes automaticos, medicao do RNF06 com 5 mil prestadores no sistema publicado e os defeitos D05 a D16 |
-| 1.2 | 13/10/2026 | contas de demonstracao travadas e comando que restaura a demonstracao (backlog TA71): CT64 a CT68 novos, CT58 refeito com uma conta que nao é de demonstracao, 55 testes automaticos e o defeito D17 |
+| 1.2 | 13/10/2026 | contas de demonstracao travadas e comando que restaura a demonstracao (backlog TA71): CT64 a CT68 novos, CT58 refeito com uma conta que nao é de demonstracao, 56 testes automaticos e o defeito D17. so a carga inicial cria contas @sgp.teste: o cadastro, o novo administrador e o liberar acesso recusam esse e-mail |

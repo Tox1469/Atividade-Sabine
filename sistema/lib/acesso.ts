@@ -9,10 +9,13 @@ const LETRAS = "abcdefghjkmnpqrstuvwxyz23456789";
 
 // as contas da tela de login (@sgp.teste) sao de todo mundo que abre a demonstracao.
 // senha e acesso delas nao mudam pelo sistema, senao o proximo a entrar fica de fora.
-// o resto dos dados volta ao original com npm run db:restaurar
-export const contaDeDemonstracao = (email: string) => email.endsWith("@sgp.teste");
+// o resto dos dados volta ao original com npm run db:restaurar.
+// so a carga inicial cria essas contas: login novo com @sgp.teste e recusado (RESERVADO),
+// senao qualquer um criaria pelo cadastro uma conta que o administrador nao consegue desativar
+export const contaDeDemonstracao = (email: string) => email.toLowerCase().endsWith("@sgp.teste");
 
 export const DEMONSTRACAO = "Este cadastro entra com uma conta de demonstração, que todo mundo usa. Para testar, use um cadastro sem login.";
+export const RESERVADO = "E-mails @sgp.teste são reservados às contas de demonstração. Use outro e-mail.";
 
 export async function loginDeDemonstracao(idUsuario: number | null) {
   if (!idUsuario) return false;
@@ -29,6 +32,7 @@ type Vinculo = { perfil: "prestador"; id_prestador: number } | { perfil: "client
 export async function liberarAcesso(vinculo: Vinculo, nome: string, email: string | null) {
   if (!email) return { erro: "Cadastre um e-mail antes de liberar o acesso. Ele é o login da pessoa." };
   const login = email.trim().toLowerCase();
+  if (contaDeDemonstracao(login)) return { erro: RESERVADO };
   if (await prisma.usuario.findUnique({ where: { email: login } })) {
     return { erro: `Já existe um usuário com o e-mail ${login}. Use outro e-mail no cadastro.` };
   }

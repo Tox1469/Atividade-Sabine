@@ -54,7 +54,7 @@ o mapa de pastas esta no [readme](README.md) e na secao 4.1 da [entrega de 06/11
 | acao rapida | abre na `Janela` (`app/_componentes/janela.tsx`) por cima da lista e, ao terminar, fecha e chama `avisar("...")` pro aviso no canto. a pagina so muda quando é uma ficha inteira |
 | mensagem pra pessoa | frase curta, com acento, dizendo o que aconteceu ou o que corrigir. sem emoji |
 | cores | so pelos nomes do `app/globals.css` (`tinta`, `papel`, `regua`, `caneta`...). o laranja (`caneta`) é so do que da pra clicar. verde, ocre, vermelho e cinza sao das situacões |
-| contas de demonstracao | as `@sgp.teste` da tela de login sao de todo mundo: nao trocam senha, nao sao desativadas nem anonimizadas (`contaDeDemonstracao` e `loginDeDemonstracao` em `lib/acesso.ts`). action nova que mexa em senha, login ou acesso tem que respeitar isso |
+| contas de demonstracao | as `@sgp.teste` da tela de login sao de todo mundo: nao trocam senha, nao sao desativadas nem anonimizadas (`contaDeDemonstracao` e `loginDeDemonstracao` em `lib/acesso.ts`). so a carga inicial cria essas contas, e todo lugar que cria login recusa e-mail @sgp.teste (`RESERVADO`). action nova que crie login ou mexa em senha ou acesso tem que respeitar isso |
 | banco | mudou o `schema.prisma`: `npm run db:migrar` cria a migracao em `prisma/migrations`, e o [modelo de dados](docs/modelo-de-dados.md) ganha uma linha no historico |
 
 ## documentos

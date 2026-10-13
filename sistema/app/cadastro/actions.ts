@@ -5,6 +5,7 @@ import { Prisma } from "@prisma/client";
 import { AuthError } from "next-auth";
 import { z } from "zod";
 import { signIn } from "@/auth";
+import { contaDeDemonstracao, RESERVADO } from "@/lib/acesso";
 import { prisma } from "@/lib/db";
 import { erroNoCampo, valoresDo, type EstadoFormulario } from "@/lib/formulario";
 import { pessoaSchema } from "@/lib/validacao/pessoa";
@@ -38,6 +39,7 @@ export async function criarConta(perfil: "cliente" | "prestador", _estado: Estad
     };
   }
   const dados = { ...pessoa.data, email: conta.data.email };
+  if (contaDeDemonstracao(dados.email)) return erroNoCampo("email", RESERVADO, devolver);
 
   if (await prisma.usuario.findUnique({ where: { email: dados.email } })) {
     return erroNoCampo("email", "Já existe uma conta com este e-mail. Use Esqueceu a senha na tela de login.", devolver);

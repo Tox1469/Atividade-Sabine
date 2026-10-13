@@ -1,64 +1,65 @@
 
  RUN  v5.0.3 C:/Users/Toxjo/Desktop/faculdade/Atividade-Sabine/sistema
 
- ✓ lib/dominio/cpf-cnpj.test.ts > cpf > aceita cpf valido com e sem mascara 2ms
+ ✓ lib/dominio/cpf-cnpj.test.ts > cpf > aceita cpf valido com e sem mascara 3ms
  ✓ lib/dominio/cpf-cnpj.test.ts > cpf > recusa digito verificador errado 0ms
  ✓ lib/dominio/cpf-cnpj.test.ts > cpf > recusa numeros repetidos e tamanho errado 0ms
- ✓ lib/dominio/cpf-cnpj.test.ts > cnpj > aceita cnpj valido 0ms
+ ✓ lib/dominio/cpf-cnpj.test.ts > cnpj > aceita cnpj valido 1ms
  ✓ lib/dominio/cpf-cnpj.test.ts > cnpj > recusa digito verificador errado 0ms
  ✓ lib/dominio/cpf-cnpj.test.ts > cnpj > recusa numeros repetidos 0ms
  ✓ lib/dominio/cpf-cnpj.test.ts > documento pelo tipo de pessoa > usa cpf para F e cnpj para J 1ms
  ✓ lib/dominio/cpf-cnpj.test.ts > documento pelo tipo de pessoa > formata para exibir 0ms
- ✓ lib/permissao.test.ts > conta conferida no banco a cada requisicao > conta ativa com o mesmo perfil passa 73ms
+ ✓ lib/permissao.test.ts > conta conferida no banco a cada requisicao > conta ativa com o mesmo perfil passa 105ms
  ✓ lib/permissao.test.ts > conta conferida no banco a cada requisicao > conta desativada depois do login e mandada pra sair 1ms
  ✓ lib/permissao.test.ts > conta conferida no banco a cada requisicao > perfil trocado no banco nao vale com o cookie antigo 0ms
  ✓ lib/permissao.test.ts > conta conferida no banco a cada requisicao > usuario apagado do banco e mandado pra sair 1ms
  ✓ lib/permissao.test.ts > conta conferida no banco a cada requisicao > perfil errado no cookie continua indo pra sem permissao 1ms
+ ✓ lib/dominio/login.test.ts > bloqueio por tentativas (RNF12) > soma o erro sem bloquear ate a quarta tentativa 2ms
+ ✓ lib/dominio/login.test.ts > bloqueio por tentativas (RNF12) > na quinta tentativa bloqueia por 15 minutos e zera a contagem 0ms
+ ✓ lib/dominio/login.test.ts > bloqueio por tentativas (RNF12) > considera bloqueado so enquanto o horario nao passou 0ms
  ✓ lib/dominio/regras.test.ts > sequencia de status da ordem (RN05, RN06, RN07) > anda so um passo pra frente 2ms
- ✓ lib/dominio/regras.test.ts > sequencia de status da ordem (RN05, RN06, RN07) > nao pula etapa nem volta 0ms
+ ✓ lib/dominio/regras.test.ts > sequencia de status da ordem (RN05, RN06, RN07) > nao pula etapa nem volta 1ms
  ✓ lib/dominio/regras.test.ts > sequencia de status da ordem (RN05, RN06, RN07) > a recusa do prestador devolve a atribuida pra aberta (UC14) 0ms
  ✓ lib/dominio/regras.test.ts > sequencia de status da ordem (RN05, RN06, RN07) > cancela qualquer uma antes da conclusao, nunca depois 0ms
  ✓ lib/dominio/regras.test.ts > prazo, atraso e numero da ordem > usa o prazo padrao do servico quando o cliente nao informa (UC12 A3.1) 1ms
- ✓ lib/dominio/regras.test.ts > prazo, atraso e numero da ordem > concluida no dia do prazo conta como no prazo, no dia seguinte e atraso (RN12) 18ms
+ ✓ lib/dominio/regras.test.ts > prazo, atraso e numero da ordem > concluida no dia do prazo conta como no prazo, no dia seguinte e atraso (RN12) 22ms
  ✓ lib/dominio/regras.test.ts > prazo, atraso e numero da ordem > em atraso so enquanto nao concluiu nem cancelou 0ms
  ✓ lib/dominio/regras.test.ts > prazo, atraso e numero da ordem > numera no formato OS-ano-sequencia 0ms
- ✓ lib/dominio/regras.test.ts > prazo, atraso e numero da ordem > sinaliza atribuida sem resposta depois de 24 horas (UC14 E3.1) 0ms
+ ✓ lib/dominio/regras.test.ts > prazo, atraso e numero da ordem > sinaliza atribuida sem resposta depois de 24 horas (UC14 E3.1) 1ms
  ✓ lib/dominio/regras.test.ts > aptidao do prestador (UC22) > ativo, habilitado, com documento e contrato em dia esta apto 0ms
  ✓ lib/dominio/regras.test.ts > aptidao do prestador (UC22) > cada regra barra com o motivo certo 1ms
  ✓ lib/dominio/regras.test.ts > aptidao do prestador (UC22) > a categoria e verificada antes da situacao, como no UC22 0ms
  ✓ lib/dominio/regras.test.ts > nota media (RN09) > com menos de tres avaliacoes nao tem nota 0ms
  ✓ lib/dominio/regras.test.ts > nota media (RN09) > com tres ou mais faz a media simples 4ms
- ✓ lib/dominio/regras.test.ts > documentos (RF08 e RNF09) > separa vencido, a vencer em 30 dias e em dia 2ms
+ ✓ lib/dominio/regras.test.ts > documentos (RF08 e RNF09) > separa vencido, a vencer em 30 dias e em dia 1ms
  ✓ lib/dominio/regras.test.ts > documentos (RF08 e RNF09) > aceita pdf, jpg e png pelo conteudo e recusa o resto 1ms
  ✓ lib/dominio/regras.test.ts > documentos (RF08 e RNF09) > recusa arquivo acima de 10 mb 0ms
- ✓ lib/dominio/regras.test.ts > documentos (RF08 e RNF09) > o dia de hoje e o de brasilia, mesmo depois das 21h 0ms
- ✓ lib/dominio/login.test.ts > bloqueio por tentativas (RNF12) > soma o erro sem bloquear ate a quarta tentativa 3ms
- ✓ lib/dominio/login.test.ts > bloqueio por tentativas (RNF12) > na quinta tentativa bloqueia por 15 minutos e zera a contagem 1ms
- ✓ lib/dominio/login.test.ts > bloqueio por tentativas (RNF12) > considera bloqueado so enquanto o horario nao passou 0ms
- ✓ app/seguranca.test.ts > actions do administrador > sem sessao, manda pro login sem tocar no banco 251ms
+ ✓ lib/dominio/regras.test.ts > documentos (RF08 e RNF09) > o dia de hoje e o de brasilia, mesmo depois das 21h 1ms
+ ✓ app/seguranca.test.ts > actions do administrador > sem sessao, manda pro login sem tocar no banco 282ms
  ✓ app/seguranca.test.ts > actions do administrador > com perfil de prestador ou cliente, recusa 9ms
- ✓ app/seguranca.test.ts > actions do prestador e do cliente > o administrador nao executa ordem nem avalia no lugar de ninguem 14ms
- ✓ app/seguranca.test.ts > actions do prestador e do cliente > sem sessao, nada 7ms
- ✓ app/seguranca.test.ts > cadastro pela tela de login > nao deixa criar conta de administrador trocando o perfil na requisicao 15ms
- ✓ app/seguranca.test.ts > rotas de arquivo e de exportacao > documento e contrato nao saem sem login 9ms
- ✓ app/seguranca.test.ts > rotas de arquivo e de exportacao > contrato e so do administrador: prestador recebe 404 sem nem consultar 0ms
- ✓ app/seguranca.test.ts > rotas de arquivo e de exportacao > relatorio em csv e so do administrador 14ms
- ✓ app/seguranca.test.ts > rotas de arquivo e de exportacao > a rotina do RN02 nao roda sem o segredo do agendamento 6ms
- ✓ lib/ordens.banco.test.ts > regras das ordens no banco > numera em sequencia no ano e aplica o prazo padrao do servico (RF11, UC12 A3.1) 172ms
- ✓ lib/ordens.banco.test.ts > regras das ordens no banco > nao atribui pra quem tem documento obrigatorio vencido (RN02) e grava log ao atribuir (RF19) 27ms
- ✓ lib/ordens.banco.test.ts > regras das ordens no banco > duas atribuicoes ao mesmo tempo: so uma grava (UC13 E7.1) 19ms
- ✓ lib/ordens.banco.test.ts > regras das ordens no banco > segue a sequencia: sem aceite nao inicia, concluida nao muda mais (RN05, RN06, UC14) 44ms
- ✓ lib/ordens.banco.test.ts > regras das ordens no banco > dois cliques em aceitar ao mesmo tempo gravam um aceite so (UC14) 35ms
- ✓ lib/ordens.banco.test.ts > regras das ordens no banco > outro prestador nao mexe na ordem que nao e dele (RNF02, UC15 E2.2) 18ms
- ✓ lib/ordens.banco.test.ts > regras das ordens no banco > avaliacao so pelo cliente titular, depois de concluida e uma vez so (RN08) 42ms
- ✓ lib/ordens.banco.test.ts > regras das ordens no banco > cancelamento exige motivo de 10 caracteres e vai pro log (RN07, RF19) 14ms
- ✓ lib/ordens.banco.test.ts > regras das ordens no banco > quem recusa devolve a ordem pra fila e nao aparece mais pra ela (UC14 A3.1) 66ms
- ✓ lib/ordens.banco.test.ts > regras das ordens no banco > a rotina diaria passa pra pendente quem esta ativo com documento obrigatorio vencido (RN02) 11ms
+ ✓ app/seguranca.test.ts > actions do prestador e do cliente > o administrador nao executa ordem nem avalia no lugar de ninguem 18ms
+ ✓ app/seguranca.test.ts > actions do prestador e do cliente > sem sessao, nada 9ms
+ ✓ app/seguranca.test.ts > cadastro pela tela de login > nao deixa criar conta de administrador trocando o perfil na requisicao 14ms
+ ✓ app/seguranca.test.ts > rotas de arquivo e de exportacao > documento e contrato nao saem sem login 13ms
+ ✓ app/seguranca.test.ts > rotas de arquivo e de exportacao > contrato e so do administrador: prestador recebe 404 sem nem consultar 1ms
+ ✓ app/seguranca.test.ts > rotas de arquivo e de exportacao > relatorio em csv e so do administrador 27ms
+ ✓ app/seguranca.test.ts > rotas de arquivo e de exportacao > a rotina do RN02 nao roda sem o segredo do agendamento 10ms
+ ✓ lib/ordens.banco.test.ts > regras das ordens no banco > numera em sequencia no ano e aplica o prazo padrao do servico (RF11, UC12 A3.1) 170ms
+ ✓ lib/ordens.banco.test.ts > regras das ordens no banco > nao atribui pra quem tem documento obrigatorio vencido (RN02) e grava log ao atribuir (RF19) 29ms
+ ✓ lib/ordens.banco.test.ts > regras das ordens no banco > duas atribuicoes ao mesmo tempo: so uma grava (UC13 E7.1) 16ms
+ ✓ lib/ordens.banco.test.ts > regras das ordens no banco > segue a sequencia: sem aceite nao inicia, concluida nao muda mais (RN05, RN06, UC14) 33ms
+ ✓ lib/ordens.banco.test.ts > regras das ordens no banco > dois cliques em aceitar ao mesmo tempo gravam um aceite so (UC14) 21ms
+ ✓ lib/ordens.banco.test.ts > regras das ordens no banco > outro prestador nao mexe na ordem que nao e dele (RNF02, UC15 E2.2) 11ms
+ ✓ lib/ordens.banco.test.ts > regras das ordens no banco > avaliacao so pelo cliente titular, depois de concluida e uma vez so (RN08) 30ms
+ ✓ lib/ordens.banco.test.ts > regras das ordens no banco > cancelamento exige motivo de 10 caracteres e vai pro log (RN07, RF19) 9ms
+ ✓ lib/ordens.banco.test.ts > regras das ordens no banco > quem recusa devolve a ordem pra fila e nao aparece mais pra ela (UC14 A3.1) 62ms
+ ✓ lib/ordens.banco.test.ts > regras das ordens no banco > a rotina diaria passa pra pendente quem esta ativo com documento obrigatorio vencido (RN02) 9ms
  ✓ lib/ordens.banco.test.ts > regras das ordens no banco > a rotina diaria nao mexe em quem ja saiu de ativo e nao grava historico repetido (RN02) 5ms
  ✓ lib/ordens.banco.test.ts > regras das ordens no banco > cadastro que entra com conta de demonstracao nao e anonimizado, senao o login dela some 10ms
+ ✓ lib/ordens.banco.test.ts > regras das ordens no banco > login novo com e-mail @sgp.teste e recusado: so a carga inicial cria conta de demonstracao 1ms
 
  Test Files  6 passed (6)
-      Tests  55 passed (55)
-   Start at  15:53:24
-   Duration  3.11s (tests 82%, transform 10%, import 7%, worker 1%)
+      Tests  56 passed (56)
+   Start at  15:59:41
+   Duration  3.38s (tests 81%, transform 10%, import 7%, worker 1%)
 

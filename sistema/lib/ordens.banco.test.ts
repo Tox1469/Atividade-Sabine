@@ -190,4 +190,10 @@ describe.skipIf(!URL_TESTE)("regras das ordens no banco", () => {
     expect(await anonimizarCliente(ids.intruso, ids.admin)).toHaveProperty("erro");
     expect((await prisma.usuario.findUniqueOrThrow({ where: { id_usuario: ids.u_intruso } })).email).toBe(`intruso-${sufixo}@sgp.teste`);
   });
+
+  it("login novo com e-mail @sgp.teste e recusado: so a carga inicial cria conta de demonstracao", async () => {
+    const { liberarAcesso } = await import("./acesso");
+    expect(await liberarAcesso({ perfil: "cliente", id_cliente: ids.cliente }, "x", `novo-${sufixo}@SGP.teste`)).toHaveProperty("erro");
+    expect(await prisma.usuario.count({ where: { email: `novo-${sufixo}@sgp.teste` } })).toBe(0);
+  });
 });
