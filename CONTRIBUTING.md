@@ -54,6 +54,7 @@ o mapa de pastas esta no [readme](README.md) e na secao 4.1 da [entrega de 06/11
 | acao rapida | abre na `Janela` (`app/_componentes/janela.tsx`) por cima da lista e, ao terminar, fecha e chama `avisar("...")` pro aviso no canto. a pagina so muda quando é uma ficha inteira |
 | mensagem pra pessoa | frase curta, com acento, dizendo o que aconteceu ou o que corrigir. sem emoji |
 | cores | so pelos nomes do `app/globals.css` (`tinta`, `papel`, `regua`, `caneta`...). o laranja (`caneta`) é so do que da pra clicar. verde, ocre, vermelho e cinza sao das situacões |
+| contas de demonstracao | as `@sgp.teste` da tela de login sao de todo mundo: nao trocam senha, nao sao desativadas nem anonimizadas (`contaDeDemonstracao` e `loginDeDemonstracao` em `lib/acesso.ts`). action nova que mexa em senha, login ou acesso tem que respeitar isso |
 | banco | mudou o `schema.prisma`: `npm run db:migrar` cria a migracao em `prisma/migrations`, e o [modelo de dados](docs/modelo-de-dados.md) ganha uma linha no historico |
 
 ## documentos
@@ -72,4 +73,4 @@ cd sistema && npx vercel deploy --prod      sistema
 npx vercel deploy --prod                    site, da raiz
 ```
 
-o banco publicado é o de demonstracao da apresentacao. migracao, carga ou teste contra ele so combinando antes.
+o banco publicado é o de demonstracao da apresentacao. migracao, carga ou teste contra ele so combinando antes. antes de cada apresentacao o luis roda `npm run db:restaurar` contra ele, que apaga tudo o que foi feito depois da carga inicial.

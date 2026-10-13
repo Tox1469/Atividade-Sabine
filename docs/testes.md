@@ -1,7 +1,7 @@
 # sgp - sistema de gestao de prestadores
 ## casos de teste e registro de defeitos
 
-**versao 1.1 - 13/10/2026 - 2ª entrega do 2º bimestre (06/11)**
+**versao 1.2 - 13/10/2026 - 2ª entrega do 2º bimestre (06/11)**
 unicesumar - analise e desenvolvimento de sistemas
 imersao profissional - projeto de software - equipe 8
 
@@ -22,19 +22,19 @@ desde 13/10 o github actions roda os tipos, o lint, todos os testes automaticos 
 
 ## 2. condicões de execucao
 
-| item | entrega de 20/10 (CT01 a CT21) | entrega de 06/11 (CT22 a CT62) |
+| item | entrega de 20/10 (CT01 a CT21) | entrega de 06/11 (CT22 a CT68) |
 |---|---|---|
 | data | 06/10/2026 | 13/10/2026 |
-| versao testada | commit `1239a07`. o reteste do D01 foi no `87a0287` | commit `6e0df72` |
+| versao testada | commit `1239a07`. o reteste do D01 foi no `87a0287` | commit `6e0df72`. o CT58 refeito e os casos CT64 a CT68 no `df4b653` |
 | ambiente | windows 11, node 22.14, google chrome, `npm run dev` | windows 11, node 22.14, chromium do playwright. o sistema rodou como em producao (`next build` e `next start`) |
-| banco | clone novo seguindo so o readme: `npm install`, `npm run banco`, `npm run db:migrar`, `npm run db:carga` | um banco criado so pra esta rodada (`sgp_evidencia`), migrado e com a carga inicial. assim o resultado nao depende do que sobrou de teste anterior |
+| banco | clone novo seguindo so o readme: `npm install`, `npm run banco`, `npm run db:migrar`, `npm run db:carga` | um banco criado so pra esta rodada (`sgp_evidencia`), migrado e com a carga inicial. assim o resultado nao depende do que sobrou de teste anterior. desde o `df4b653` ele é zerado com `npm run db:restaurar` |
 | telas | 1280x800 e 390x844 (celular) | 1280x800 e 390x844 (celular) |
 | dados | os da carga inicial (`prisma/seed.ts`), todos ficticios. senha de todos os usuarios de teste: `sgp@2026` | os mesmos |
 | desempenho (RNF06) | nao medido | medido no endereco publicado, https://sgp-equipe8-sistema.vercel.app, com 5.008 prestadores no banco |
 
 ## 3. testes automaticos
 
-54 testes, todos passando. a saida completa do `npm test` esta em [evidencias/entrega-06-11/testes-automaticos.txt](evidencias/entrega-06-11/testes-automaticos.txt).
+55 testes, todos passando. a saida completa do `npm test` esta em [evidencias/entrega-06-11/testes-automaticos.txt](evidencias/entrega-06-11/testes-automaticos.txt).
 
 | arquivo | o que testa | testes |
 |---|---|---|
@@ -43,7 +43,7 @@ desde 13/10 o github actions roda os tipos, o lint, todos os testes automaticos 
 | `lib/dominio/regras.test.ts` | a ordem anda um passo por vez e nao volta (RN05), concluida nao muda (RN06), cancelamento antes da conclusao (RN07), prazo padrao do servico, atraso (RN12), numero OS-ano-sequencia, aptidao com o motivo de cada recusa (RN01 a RN04), nota media so com tres avaliacões (RN09), validade e formato do documento (RF08, RNF09) e o dia de hoje no horario de brasilia | 18 |
 | `app/seguranca.test.ts` | actions do administrador sem sessao ou com outro perfil, actions do prestador e do cliente chamadas pelo administrador, cadastro tentando criar conta de administrador, download de documento e contrato, csv dos relatorios e a rotina do RN02 sem o segredo (RNF02) | 9 |
 | `lib/permissao.test.ts` | a conta é conferida no banco a cada requisicao: desativada, apagada ou com perfil trocado perde o acesso mesmo com o cookie antigo | 5 |
-| `lib/ordens.banco.test.ts` | contra o banco: numeracao e prazo padrao, nao atribui pra quem tem documento vencido e grava o log, duas atribuicões ao mesmo tempo gravam uma so, dois cliques em aceitar gravam um aceite so, outro prestador nao mexe na ordem, avaliacao unica do cliente titular, cancelamento com motivo e log, recusa devolve pra fila, e a rotina do RN02 sem desfazer bloqueio | 11 |
+| `lib/ordens.banco.test.ts` | contra o banco: numeracao e prazo padrao, nao atribui pra quem tem documento vencido e grava o log, duas atribuicões ao mesmo tempo gravam uma so, dois cliques em aceitar gravam um aceite so, outro prestador nao mexe na ordem, avaliacao unica do cliente titular, cancelamento com motivo e log, recusa devolve pra fila, a rotina do RN02 sem desfazer bloqueio, e cadastro que entra com conta de demonstracao nao é anonimizado | 12 |
 
 ## 4. casos de teste pela tela
 
@@ -138,8 +138,13 @@ desde 13/10 o cadastro novo de prestador e de cliente abre numa janela por cima 
 | CT54 | RF19 | abrir o log de acões | atribuicões, cancelamento e mudancas de situacao feitas nos casos anteriores | cancelamento de ordem, atribuições e alterações de situação, a mais recente em cima | passou | CT54-log-de-acoes.png |
 | CT55 | RNF10 | na cliente ana paula ribeiro (pessoa fisica), confirmar e anonimizar | apagar os dados pessoais e manter as ordens | "Dados pessoais removidos. As ordens do cliente continuam no histórico." a ficha virou "Cadastro anonimizado nº 5", documento ANON0000000005, telefone "dado removido" | passou | CT55-cliente-anonimizado.png |
 | CT60 | RF01 | no auto posto maringá, que nao tem login, "Liberar acesso" e entrar com a senha provisoria | a senha continuar na tela ate ser anotada e funcionar | "Acesso liberado. Login adm@autopostomga.com.br, senha provisória ..." continuou na tela 3 segundos depois, e com ela entrou em `/minhas-solicitacoes` | passou | CT60-acesso-liberado-com-senha-provisoria.png |
-| CT58 | RNF12, RF01 | errar 5 vezes a senha do igor. como luis, em usuarios, "Gerar senha provisória" e entrar com ela | bloquear, mostrar o bloqueio na tela de usuarios e liberar com a provisoria | "Muitas tentativas erradas para este e-mail. Tente de novo em 15 minutos.", na lista "Bloqueado até 14:12", e com a provisoria entrou em `/painel` | passou | CT58-desbloqueio-com-senha-provisoria.png |
+| CT58 | RNF12, RF01 | errar 5 vezes a senha do `adm@autopostomga.com.br` (login liberado no CT60). como luis, em usuarios, "Gerar senha provisória" e entrar com ela | bloquear, mostrar o bloqueio na tela de usuarios e liberar com a provisoria | "Muitas tentativas erradas para este e-mail. Tente de novo em 15 minutos.", na lista "Bloqueado até 16:00", e com a provisoria entrou em `/minhas-solicitacoes`. ate a versao 1.1 este caso usava o igor, que agora é conta de demonstracao (CT64) | passou | CT58-desbloqueio-com-senha-provisoria.png |
 | CT56 | RF03, RNF10 | sem login, "Criar conta" como cliente pessoa fisica, sem marcar o consentimento e depois marcando | exigir o consentimento e entrar como cliente | "Para criar a conta é preciso concordar com o uso dos dados." e depois entrou em `/minhas-solicitacoes` como Marina Souza Teixeira | passou | CT56-cadastro-pela-tela-de-login.png |
+| CT64 | RNF12, RNF02 | errar 5 vezes a senha do `igor@sgp.teste`. como luis, em usuarios, buscar `sgp.teste` e "Gerar senha provisória" na linha do igor | as contas de demonstracao sem o botao desativar. a geracao so desbloquear, sem trocar a senha da tela de login | "Bloqueado até 16:01", nenhum botao desativar nas 9 contas @sgp.teste, "Login de igor@sgp.teste desbloqueado. Por ser conta de demonstração, a senha continua a da tela de login." e o igor entrou com `sgp@2026` em `/painel` | passou | CT64-conta-de-demonstracao-so-desbloqueia.png |
+| CT65 | RNF02 | como elétrica santos, abrir minha conta | no lugar do formulario de troca de senha, o aviso de conta de demonstracao | nenhum campo de senha. "Esta é uma conta de demonstração, usada por todos que avaliam o sistema. A senha dela não muda, para ninguém ficar sem entrar." | passou | CT65-minha-conta-de-demonstracao.png |
+| CT66 | RNF10, RNF02 | como luis, na ficha da elétrica santos, confirmar e "Anonimizar dados" | recusar, porque o login dela é de demonstracao, e nao mudar nada | "Este cadastro entra com uma conta de demonstração, que todo mundo usa. Para testar, use um cadastro sem login." e a ficha continuou "Elétrica Santos" | passou | CT66-anonimizar-cadastro-de-demonstracao.png |
+| CT67 | RF01 | em usuarios, "Novo administrador", criar marta regina lopes (`marta.lopes@empresa.com.br`). entrar com a provisoria e trocar a senha em minha conta | abrir em janela, a senha provisoria ficar na janela, e a troca funcionar numa conta que nao é de demonstracao | a janela mostrou "Administrador criado. Login marta.lopes@empresa.com.br, senha provisória ..." e a marta apareceu na lista ao fechar. "Senha trocada. Use a nova no próximo acesso." e com a senha nova entrou em `/painel` | passou | CT67-novo-administrador-em-janela.png |
+| CT68 | - | no terminal, `npm run db:restaurar` duas vezes seguidas no banco `sgp_evidencia`, depois dos casos acima | voltar ao estado da carga inicial, sem sobrar nada dos testes | "28 arquivos e 14 tabelas limpos" e "carga feita: 14 ordens de demonstracao". no banco: 9 usuarios, 14 ordens, 22 documentos, 6 contratos, ids comecando do 1. a marta e o login do auto posto sumiram, e os arquivos antigos sairam da pasta de arquivos | passou | - |
 
 ### 4.7 celular e desempenho (RNF04, RNF06)
 
@@ -161,7 +166,7 @@ desde 13/10 o cadastro novo de prestador e de cliente abre numa janela por cima 
 
 os 5 mil prestadores ficticios foram criados com `npx tsx scripts/carga-5mil.ts` e saem com `--apagar`.
 
-**resumo:** 63 casos pela tela, todos passando: 21 de 20/10 e 42 de 06/11 (CT22 a CT63). 54 testes automaticos passando.
+**resumo:** 68 casos, todos passando: 21 de 20/10 e 47 de 06/11 (CT22 a CT68). 55 testes automaticos passando.
 
 ## 5. defeitos encontrados
 
@@ -183,6 +188,7 @@ os 5 mil prestadores ficticios foram criados com `npx tsx scripts/carga-5mil.ts`
 | D14 | bateria de 13/10, CT41 e CT42 | abrir nova solicitacao como cliente | botao "Enviar solicitação" | o botao dizia "Abrir ordem", o texto do administrador | corrigido e retestado | commit `d22d462` |
 | D15 | bateria de 13/10, CT55 | anonimizar um cliente | ver a confirmacao | a ficha mudava inteira e a mensagem ia junto | corrigido e retestado, CT55 passa | commit `d22d462`. a confirmacao vai pro canto da tela |
 | D16 | bateria de 13/10, CT31 | enviar uma apolice ou certidao | mensagem com o genero certo | "Apólice de seguro enviado" | corrigido e retestado | commit `d22d462`. "Documento enviado: Apólice de seguro." |
+| D17 | print do CT64 | abrir usuarios numa tela de 1280 px e gerar uma senha provisoria | a tabela inteira e a mensagem da linha legivel | a tabela nao cabia ao lado do formulario de novo administrador, rolava de lado e escondia o nome e o fim da mensagem. o print antigo do CT58 ja mostrava isso | corrigido e retestado, CT58 e CT64 passam | commit `df4b653`. novo administrador abre em janela (CT67), a tabela usa a largura toda e a mensagem quebra linha |
 
 nenhum defeito aberto nesta versao.
 
@@ -202,3 +208,4 @@ nenhum defeito aberto nesta versao.
 |---|---|---|
 | 1.0 | 06/10/2026 | primeira versao, com os testes do recorte da 1ª entrega do 2º bimestre |
 | 1.1 | 13/10/2026 | testes da entrega de 06/11: CT22 a CT63 pela tela, 54 testes automaticos, medicao do RNF06 com 5 mil prestadores no sistema publicado e os defeitos D05 a D16 |
+| 1.2 | 13/10/2026 | contas de demonstracao travadas e comando que restaura a demonstracao (backlog TA71): CT64 a CT68 novos, CT58 refeito com uma conta que nao é de demonstracao, 55 testes automaticos e o defeito D17 |

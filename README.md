@@ -206,11 +206,11 @@ npm run db:carga      administradores de teste, tipos de documento, categorias e
 npm run dev
 ```
 
-o sistema abre em http://localhost:3000. usuarios de teste, todos com a senha `sgp@2026`: `luis@sgp.teste` ou `igor@sgp.teste` (administrador), `eletrica@sgp.teste` (prestador) e `zanin@sgp.teste` (cliente). todos os dados da carga sao inventados.
+o sistema abre em http://localhost:3000. usuarios de teste, todos com a senha `sgp@2026`: `luis@sgp.teste` ou `igor@sgp.teste` (administrador), `eletrica@sgp.teste` (prestador) e `zanin@sgp.teste` (cliente). todos os dados da carga sao inventados. a senha dessas contas nao muda pelo sistema e elas nao podem ser desativadas, pra demonstracao abrir sempre pra quem for avaliar.
 
 ### no dia a dia
 
-`npm run banco` num terminal e `npm run dev` no outro. pra parar, `ctrl+c` nos dois. os dados ficam na pasta `sistema/.banco`, que nao vai pro git. apagar essa pasta zera o banco (depois é so rodar `db:migrar` e `db:carga` de novo).
+`npm run banco` num terminal e `npm run dev` no outro. pra parar, `ctrl+c` nos dois. os dados ficam na pasta `sistema/.banco`, que nao vai pro git. pra voltar os dados ao estado da carga, `npm run db:restaurar` (apaga tudo o que foi feito depois dela, inclusive os arquivos enviados). apagar essa pasta zera o banco (depois é so rodar `db:migrar` e `db:carga` de novo).
 
 ### testes
 

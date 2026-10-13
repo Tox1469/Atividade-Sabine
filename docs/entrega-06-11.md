@@ -1,7 +1,7 @@
 # sgp - sistema de gestao de prestadores
 ## 2ª entrega do 2º bimestre - sistema publicado e funcionando
 
-**versao 1.0 - 13/10/2026 - entrega de 06/11/2026**
+**versao 1.1 - 13/10/2026 - entrega de 06/11/2026**
 unicesumar - analise e desenvolvimento de sistemas
 imersao profissional - projeto de software - equipe 8
 
@@ -20,7 +20,7 @@ imersao profissional - projeto de software - equipe 8
 | versao avaliada | branch main. o commit testado esta no [testes.md](testes.md), secao 2 |
 | codigo | pasta [`sistema/`](../sistema) |
 
-pra entrar no sistema publicado, todos os usuarios de teste usam a senha `sgp@2026`. a tela de login tem os botões "Entrar como" pra cada perfil.
+pra entrar no sistema publicado, todos os usuarios de teste usam a senha `sgp@2026`. a tela de login tem os botões "Entrar como" pra cada perfil. essas contas sao de todo mundo que abre a demonstracao, entao a senha delas nao muda e elas nao podem ser desativadas nem anonimizadas. pra ver a troca de senha, criar um administrador novo em usuarios (CT67).
 
 | perfil | usuario |
 |---|---|
@@ -35,10 +35,10 @@ este documento é o indice da entrega. ele resume o que mudou desde 20/10 e apon
 | o que mudou desde a entrega anterior e por que | secao 2 |
 | o que funciona agora e o que fica pra 27/11 | secao 3 |
 | tecnologias e arquitetura | [tecnologias-e-arquitetura.md](tecnologias-e-arquitetura.md), versao 1.2, e o resumo na secao 4 |
-| backlog atualizado | [backlog.md](backlog.md), versao 1.2 |
+| backlog atualizado | [backlog.md](backlog.md), versao 1.3 |
 | codigo integrado e como executar | pasta `sistema/` e o [readme](../README.md) |
 | sistema publicado | https://sgp-equipe8-sistema.vercel.app |
-| testes, resultados e evidencias | [testes.md](testes.md), versao 1.1, e a pasta [evidencias/entrega-06-11](evidencias/entrega-06-11) |
+| testes, resultados e evidencias | [testes.md](testes.md), versao 1.2, e a pasta [evidencias/entrega-06-11](evidencias/entrega-06-11) |
 | rastreabilidade com codigo e teste | secao 5 |
 | pendencias pra 27/11 | secao 6 |
 | checklist | secao 8 |
@@ -64,6 +64,7 @@ o problema, os tres perfis, os 19 requisitos funcionais e as 12 regras de negoci
 | 13/10 | modelo de dados | migracao `20261013120000_log_anonimizacao`: a anonimizacao do RNF10 entra no log junto com as tres acões do RF19 | modelo de dados |
 | 13/10 | revisao e integracao continua | o igor revisou o codigo e corrigiu quatro defeitos (D08 a D11 do testes.md), e montou o github actions que confere tipos, lint, testes e build a cada push | testes 1.1, backlog TA67 e TA68 |
 | 13/10 | backlog | as telas que estavam com o igor foram feitas junto com o backend, e ele ficou com a revisao, o ci e o readme | backlog 1.2 |
+| 13/10 | demonstracao protegida | as contas da tela de login nao mudam de senha nem perdem o acesso, e `npm run db:restaurar` volta o banco e os arquivos pra carga inicial, com as datas contadas do dia. novo administrador passou a abrir em janela | backlog TA71, testes 1.2 (CT64 a CT68, D17) |
 
 ---
 
@@ -140,7 +141,7 @@ sistema/
 
 | requisito | implementacao | teste | estado |
 |---|---|---|---|
-| RF01 - autenticar | `app/login/`, `auth.ts`, `lib/dominio/login.ts`, `app/(admin)/usuarios/` | CT01 a CT04, CT58, CT60 | pronto |
+| RF01 - autenticar | `app/login/`, `auth.ts`, `lib/dominio/login.ts`, `app/(admin)/usuarios/` | CT01 a CT04, CT58, CT60, CT67 | pronto |
 | RF02 - prestadores | `app/(admin)/prestadores/` | CT07 a CT17, CT39 | pronto |
 | RF03 - clientes | `app/(admin)/clientes/`, `app/cadastro/` | CT22 a CT24, CT56, CT57 | pronto |
 | RF04 - categorias | `app/(admin)/categorias/` | CT25, CT26 | pronto |
@@ -167,13 +168,13 @@ sistema/
 | RN10 - cpf e cnpj | `lib/dominio/cpf-cnpj.ts` | CT09 a CT11, CT23, unitarios | pronto |
 | RN11 - inativar com ordem aberta | `app/(admin)/prestadores/actions.ts` | CT39 | pronto |
 | RN12 - prazo e atraso | `lib/dominio/ordem.ts` | CT47, unitarios | pronto |
-| RNF02 - permissao no servidor | `middleware.ts`, `lib/permissao.ts` | CT05, CT46, `app/seguranca.test.ts`, `lib/permissao.test.ts` | pronto |
+| RNF02 - permissao no servidor | `middleware.ts`, `lib/permissao.ts`, contas de demonstracao em `lib/acesso.ts` | CT05, CT46, CT64 a CT66, `app/seguranca.test.ts`, `lib/permissao.test.ts` | pronto |
 | RNF04 - responsivo | todas as telas | CT19, CT59 | pronto |
 | RNF05 - confirmacao e retorno | janelas, `confirm` e aviso no canto | CT43, CT49, CT55 | pronto |
 | RNF06 - 5 mil registros | paginacao no banco | CT44 | pronto, a mais lenta em 716 ms |
 | RNF09 - formato e tamanho | `lib/dominio/documento.ts`, `lib/storage.ts` | CT32, CT33, unitarios | pronto |
-| RNF10 - lgpd | consentimento no cadastro, `lib/anonimizar.ts` | CT55, CT56 | pronto |
-| RNF12 - bloqueio | `lib/dominio/login.ts` | CT04, CT58, unitarios | pronto |
+| RNF10 - lgpd | consentimento no cadastro, `lib/anonimizar.ts` | CT55, CT56, CT66 | pronto |
+| RNF12 - bloqueio | `lib/dominio/login.ts` | CT04, CT58, CT64, unitarios | pronto |
 
 ---
 
@@ -198,7 +199,7 @@ sistema/
 6. painel de vencimentos: enviar um documento vencido e rodar o RN02 na hora.
 7. os testes: o github actions verde, o `npm test` e a tabela do [testes.md](testes.md), com um defeito encontrado e corrigido.
 
-antes de apresentar: entrar uma vez em cada perfil pra deixar o sistema quente, e conferir que nenhum usuario de teste ficou bloqueado pelo ensaio.
+antes de apresentar: rodar `npm run db:restaurar` contra o banco publicado (o luis roda, porque as variaveis de producao ficam com ele), entrar uma vez em cada perfil pra deixar o sistema quente, e conferir que nenhum usuario de teste ficou bloqueado pelo ensaio.
 
 ---
 
@@ -209,13 +210,13 @@ antes de apresentar: entrar uma vez em cada perfil pra deixar o sistema quente, 
 | mantivemos o projeto e o repositorio | sim, o mesmo desde o 1º bimestre |
 | registramos o que mudou e por que | sim, secao 2 |
 | o sistema esta publicado e acessivel | sim, https://sgp-equipe8-sistema.vercel.app |
-| o banco esta em nuvem com dados de demonstracao | sim, supabase em sao paulo, com a carga inicial |
+| o banco esta em nuvem com dados de demonstracao | sim, supabase em sao paulo, com a carga inicial. `npm run db:restaurar` volta pra ela |
 | o codigo da entrega esta integrado ao repositorio | sim, na branch main |
 | conseguimos executar a aplicacao seguindo o readme | sim, o ci faz isso a cada push. falta repetir na maquina do igor (TA58) |
-| executamos os testes e registramos resultados reais | sim, testes.md 1.1 |
+| executamos os testes e registramos resultados reais | sim, testes.md 1.2 |
 | registramos defeitos, correcões e pendencias | sim, testes.md secao 5 e secao 6 deste documento |
 | atualizamos os documentos afetados e a rastreabilidade | sim, secões 2 e 5 |
-| atualizamos o backlog | sim, backlog 1.2 |
+| atualizamos o backlog | sim, backlog 1.3 |
 | verificamos o acesso da professora | sim, o repositorio e o sistema abrem sem pedir nada alem do login de teste |
 | cada integrante consegue explicar sua contribuicao | a combinar entre os dois antes da apresentacao |
 | definimos os proximos passos ate 27/11 | sim, secao 6 |
@@ -227,3 +228,4 @@ antes de apresentar: entrar uma vez em cada perfil pra deixar o sistema quente, 
 | versao | data | alteracao |
 |---|---|---|
 | 1.0 | 13/10/2026 | primeira versao, para a entrega de 06/11/2026 |
+| 1.1 | 13/10/2026 | demonstracao protegida (backlog TA71): contas de teste travadas, `npm run db:restaurar` e novo administrador em janela. testes 1.2 e backlog 1.3 |

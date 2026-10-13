@@ -106,7 +106,7 @@
 <tr>
 <th>item</th>
 <th>entrega de 20/10 (CT01 a CT21)</th>
-<th>entrega de 06/11 (CT22 a CT62)</th>
+<th>entrega de 06/11 (CT22 a CT68)</th>
 </tr>
 </thead>
 <tbody>
@@ -118,7 +118,7 @@
 <tr>
 <td>versao testada</td>
 <td>commit <code>1239a07</code>. o reteste do D01 foi no <code>87a0287</code></td>
-<td>commit <code>6e0df72</code></td>
+<td>commit <code>6e0df72</code>. o CT58 refeito e os casos CT64 a CT68 no <code>df4b653</code></td>
 </tr>
 <tr>
 <td>ambiente</td>
@@ -128,7 +128,7 @@
 <tr>
 <td>banco</td>
 <td>clone novo seguindo so o readme: <code>npm install</code>, <code>npm run banco</code>, <code>npm run db:migrar</code>, <code>npm run db:carga</code></td>
-<td>um banco criado so pra esta rodada (<code>sgp_evidencia</code>), migrado e com a carga inicial. assim o resultado nao depende do que sobrou de teste anterior</td>
+<td>um banco criado so pra esta rodada (<code>sgp_evidencia</code>), migrado e com a carga inicial. assim o resultado nao depende do que sobrou de teste anterior. desde o <code>df4b653</code> ele é zerado com <code>npm run db:restaurar</code></td>
 </tr>
 <tr>
 <td>telas</td>
@@ -148,7 +148,7 @@
 </tbody>
 </table>
 <h2>3. testes automaticos</h2>
-<p>54 testes, todos passando. a saida completa do <code>npm test</code> esta em <a href="evidencias/entrega-06-11/testes-automaticos.txt">evidencias/entrega-06-11/testes-automaticos.txt</a>.</p>
+<p>55 testes, todos passando. a saida completa do <code>npm test</code> esta em <a href="evidencias/entrega-06-11/testes-automaticos.txt">evidencias/entrega-06-11/testes-automaticos.txt</a>.</p>
 <table>
 <thead>
 <tr>
@@ -185,8 +185,8 @@
 </tr>
 <tr>
 <td><code>lib/ordens.banco.test.ts</code></td>
-<td>contra o banco: numeracao e prazo padrao, nao atribui pra quem tem documento vencido e grava o log, duas atribuicões ao mesmo tempo gravam uma so, dois cliques em aceitar gravam um aceite so, outro prestador nao mexe na ordem, avaliacao unica do cliente titular, cancelamento com motivo e log, recusa devolve pra fila, e a rotina do RN02 sem desfazer bloqueio</td>
-<td>11</td>
+<td>contra o banco: numeracao e prazo padrao, nao atribui pra quem tem documento vencido e grava o log, duas atribuicões ao mesmo tempo gravam uma so, dois cliques em aceitar gravam um aceite so, outro prestador nao mexe na ordem, avaliacao unica do cliente titular, cancelamento com motivo e log, recusa devolve pra fila, a rotina do RN02 sem desfazer bloqueio, e cadastro que entra com conta de demonstracao nao é anonimizado</td>
+<td>12</td>
 </tr>
 </tbody>
 </table>
@@ -812,9 +812,9 @@
 <tr>
 <td>CT58</td>
 <td>RNF12, RF01</td>
-<td>errar 5 vezes a senha do igor. como luis, em usuarios, "Gerar senha provisória" e entrar com ela</td>
+<td>errar 5 vezes a senha do <code>adm@autopostomga.com.br</code> (login liberado no CT60). como luis, em usuarios, "Gerar senha provisória" e entrar com ela</td>
 <td>bloquear, mostrar o bloqueio na tela de usuarios e liberar com a provisoria</td>
-<td>"Muitas tentativas erradas para este e-mail. Tente de novo em 15 minutos.", na lista "Bloqueado até 14:12", e com a provisoria entrou em <code>/painel</code></td>
+<td>"Muitas tentativas erradas para este e-mail. Tente de novo em 15 minutos.", na lista "Bloqueado até 16:00", e com a provisoria entrou em <code>/minhas-solicitacoes</code>. ate a versao 1.1 este caso usava o igor, que agora é conta de demonstracao (CT64)</td>
 <td>passou</td>
 <td>CT58-desbloqueio-com-senha-provisoria.png</td>
 </tr>
@@ -826,6 +826,51 @@
 <td>"Para criar a conta é preciso concordar com o uso dos dados." e depois entrou em <code>/minhas-solicitacoes</code> como Marina Souza Teixeira</td>
 <td>passou</td>
 <td>CT56-cadastro-pela-tela-de-login.png</td>
+</tr>
+<tr>
+<td>CT64</td>
+<td>RNF12, RNF02</td>
+<td>errar 5 vezes a senha do <code>igor@sgp.teste</code>. como luis, em usuarios, buscar <code>sgp.teste</code> e "Gerar senha provisória" na linha do igor</td>
+<td>as contas de demonstracao sem o botao desativar. a geracao so desbloquear, sem trocar a senha da tela de login</td>
+<td>"Bloqueado até 16:01", nenhum botao desativar nas 9 contas @sgp.teste, "Login de igor@sgp.teste desbloqueado. Por ser conta de demonstração, a senha continua a da tela de login." e o igor entrou com <code>sgp@2026</code> em <code>/painel</code></td>
+<td>passou</td>
+<td>CT64-conta-de-demonstracao-so-desbloqueia.png</td>
+</tr>
+<tr>
+<td>CT65</td>
+<td>RNF02</td>
+<td>como elétrica santos, abrir minha conta</td>
+<td>no lugar do formulario de troca de senha, o aviso de conta de demonstracao</td>
+<td>nenhum campo de senha. "Esta é uma conta de demonstração, usada por todos que avaliam o sistema. A senha dela não muda, para ninguém ficar sem entrar."</td>
+<td>passou</td>
+<td>CT65-minha-conta-de-demonstracao.png</td>
+</tr>
+<tr>
+<td>CT66</td>
+<td>RNF10, RNF02</td>
+<td>como luis, na ficha da elétrica santos, confirmar e "Anonimizar dados"</td>
+<td>recusar, porque o login dela é de demonstracao, e nao mudar nada</td>
+<td>"Este cadastro entra com uma conta de demonstração, que todo mundo usa. Para testar, use um cadastro sem login." e a ficha continuou "Elétrica Santos"</td>
+<td>passou</td>
+<td>CT66-anonimizar-cadastro-de-demonstracao.png</td>
+</tr>
+<tr>
+<td>CT67</td>
+<td>RF01</td>
+<td>em usuarios, "Novo administrador", criar marta regina lopes (<code>marta.lopes@empresa.com.br</code>). entrar com a provisoria e trocar a senha em minha conta</td>
+<td>abrir em janela, a senha provisoria ficar na janela, e a troca funcionar numa conta que nao é de demonstracao</td>
+<td>a janela mostrou "Administrador criado. Login marta.lopes@empresa.com.br, senha provisória ..." e a marta apareceu na lista ao fechar. "Senha trocada. Use a nova no próximo acesso." e com a senha nova entrou em <code>/painel</code></td>
+<td>passou</td>
+<td>CT67-novo-administrador-em-janela.png</td>
+</tr>
+<tr>
+<td>CT68</td>
+<td>-</td>
+<td>no terminal, <code>npm run db:restaurar</code> duas vezes seguidas no banco <code>sgp_evidencia</code>, depois dos casos acima</td>
+<td>voltar ao estado da carga inicial, sem sobrar nada dos testes</td>
+<td>"28 arquivos e 14 tabelas limpos" e "carga feita: 14 ordens de demonstracao". no banco: 9 usuarios, 14 ordens, 22 documentos, 6 contratos, ids comecando do 1. a marta e o login do auto posto sumiram, e os arquivos antigos sairam da pasta de arquivos</td>
+<td>passou</td>
+<td>-</td>
 </tr>
 </tbody>
 </table>
@@ -933,7 +978,7 @@
 </tbody>
 </table>
 <p>os 5 mil prestadores ficticios foram criados com <code>npx tsx scripts/carga-5mil.ts</code> e saem com <code>--apagar</code>.</p>
-<p><strong>resumo:</strong> 63 casos pela tela, todos passando: 21 de 20/10 e 42 de 06/11 (CT22 a CT63). 54 testes automaticos passando.</p>
+<p><strong>resumo:</strong> 68 casos, todos passando: 21 de 20/10 e 47 de 06/11 (CT22 a CT68). 55 testes automaticos passando.</p>
 <h2>5. defeitos encontrados</h2>
 <table>
 <thead>
@@ -1092,6 +1137,15 @@
 <td>corrigido e retestado</td>
 <td>commit <code>d22d462</code>. "Documento enviado: Apólice de seguro."</td>
 </tr>
+<tr>
+<td>D17</td>
+<td>print do CT64</td>
+<td>abrir usuarios numa tela de 1280 px e gerar uma senha provisoria</td>
+<td>a tabela inteira e a mensagem da linha legivel</td>
+<td>a tabela nao cabia ao lado do formulario de novo administrador, rolava de lado e escondia o nome e o fim da mensagem. o print antigo do CT58 ja mostrava isso</td>
+<td>corrigido e retestado, CT58 e CT64 passam</td>
+<td>commit <code>df4b653</code>. novo administrador abre em janela (CT67), a tabela usa a largura toda e a mensagem quebra linha</td>
+</tr>
 </tbody>
 </table>
 <p>nenhum defeito aberto nesta versao.</p>
@@ -1142,6 +1196,11 @@
 <td>1.1</td>
 <td>13/10/2026</td>
 <td>testes da entrega de 06/11: CT22 a CT63 pela tela, 54 testes automaticos, medicao do RNF06 com 5 mil prestadores no sistema publicado e os defeitos D05 a D16</td>
+</tr>
+<tr>
+<td>1.2</td>
+<td>13/10/2026</td>
+<td>contas de demonstracao travadas e comando que restaura a demonstracao (backlog TA71): CT64 a CT68 novos, CT58 refeito com uma conta que nao é de demonstracao, 55 testes automaticos e o defeito D17</td>
 </tr>
 </tbody>
 </table>

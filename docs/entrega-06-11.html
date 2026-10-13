@@ -109,7 +109,7 @@
 </tr>
 </tbody>
 </table>
-<p>pra entrar no sistema publicado, todos os usuarios de teste usam a senha <code>sgp@2026</code>. a tela de login tem os botões "Entrar como" pra cada perfil.</p>
+<p>pra entrar no sistema publicado, todos os usuarios de teste usam a senha <code>sgp@2026</code>. a tela de login tem os botões "Entrar como" pra cada perfil. essas contas sao de todo mundo que abre a demonstracao, entao a senha delas nao muda e elas nao podem ser desativadas nem anonimizadas. pra ver a troca de senha, criar um administrador novo em usuarios (CT67).</p>
 <table>
 <thead>
 <tr>
@@ -155,7 +155,7 @@
 </tr>
 <tr>
 <td>backlog atualizado</td>
-<td><a href="backlog.md">backlog.md</a>, versao 1.2</td>
+<td><a href="backlog.md">backlog.md</a>, versao 1.3</td>
 </tr>
 <tr>
 <td>codigo integrado e como executar</td>
@@ -167,7 +167,7 @@
 </tr>
 <tr>
 <td>testes, resultados e evidencias</td>
-<td><a href="testes.md">testes.md</a>, versao 1.1, e a pasta <a href="evidencias/entrega-06-11">evidencias/entrega-06-11</a></td>
+<td><a href="testes.md">testes.md</a>, versao 1.2, e a pasta <a href="evidencias/entrega-06-11">evidencias/entrega-06-11</a></td>
 </tr>
 <tr>
 <td>rastreabilidade com codigo e teste</td>
@@ -273,6 +273,12 @@
 <td>backlog</td>
 <td>as telas que estavam com o igor foram feitas junto com o backend, e ele ficou com a revisao, o ci e o readme</td>
 <td>backlog 1.2</td>
+</tr>
+<tr>
+<td>13/10</td>
+<td>demonstracao protegida</td>
+<td>as contas da tela de login nao mudam de senha nem perdem o acesso, e <code>npm run db:restaurar</code> volta o banco e os arquivos pra carga inicial, com as datas contadas do dia. novo administrador passou a abrir em janela</td>
+<td>backlog TA71, testes 1.2 (CT64 a CT68, D17)</td>
 </tr>
 </tbody>
 </table>
@@ -437,7 +443,7 @@
 <tr>
 <td>RF01 - autenticar</td>
 <td><code>app/login/</code>, <code>auth.ts</code>, <code>lib/dominio/login.ts</code>, <code>app/(admin)/usuarios/</code></td>
-<td>CT01 a CT04, CT58, CT60</td>
+<td>CT01 a CT04, CT58, CT60, CT67</td>
 <td>pronto</td>
 </tr>
 <tr>
@@ -598,8 +604,8 @@
 </tr>
 <tr>
 <td>RNF02 - permissao no servidor</td>
-<td><code>middleware.ts</code>, <code>lib/permissao.ts</code></td>
-<td>CT05, CT46, <code>app/seguranca.test.ts</code>, <code>lib/permissao.test.ts</code></td>
+<td><code>middleware.ts</code>, <code>lib/permissao.ts</code>, contas de demonstracao em <code>lib/acesso.ts</code></td>
+<td>CT05, CT46, CT64 a CT66, <code>app/seguranca.test.ts</code>, <code>lib/permissao.test.ts</code></td>
 <td>pronto</td>
 </tr>
 <tr>
@@ -629,13 +635,13 @@
 <tr>
 <td>RNF10 - lgpd</td>
 <td>consentimento no cadastro, <code>lib/anonimizar.ts</code></td>
-<td>CT55, CT56</td>
+<td>CT55, CT56, CT66</td>
 <td>pronto</td>
 </tr>
 <tr>
 <td>RNF12 - bloqueio</td>
 <td><code>lib/dominio/login.ts</code></td>
-<td>CT04, CT58, unitarios</td>
+<td>CT04, CT58, CT64, unitarios</td>
 <td>pronto</td>
 </tr>
 </tbody>
@@ -679,7 +685,7 @@
 <li>painel de vencimentos: enviar um documento vencido e rodar o RN02 na hora.</li>
 <li>os testes: o github actions verde, o <code>npm test</code> e a tabela do <a href="testes.md">testes.md</a>, com um defeito encontrado e corrigido.</li>
 </ol>
-<p>antes de apresentar: entrar uma vez em cada perfil pra deixar o sistema quente, e conferir que nenhum usuario de teste ficou bloqueado pelo ensaio.</p>
+<p>antes de apresentar: rodar <code>npm run db:restaurar</code> contra o banco publicado (o luis roda, porque as variaveis de producao ficam com ele), entrar uma vez em cada perfil pra deixar o sistema quente, e conferir que nenhum usuario de teste ficou bloqueado pelo ensaio.</p>
 <hr />
 <h2>8. checklist</h2>
 <table>
@@ -704,7 +710,7 @@
 </tr>
 <tr>
 <td>o banco esta em nuvem com dados de demonstracao</td>
-<td>sim, supabase em sao paulo, com a carga inicial</td>
+<td>sim, supabase em sao paulo, com a carga inicial. <code>npm run db:restaurar</code> volta pra ela</td>
 </tr>
 <tr>
 <td>o codigo da entrega esta integrado ao repositorio</td>
@@ -716,7 +722,7 @@
 </tr>
 <tr>
 <td>executamos os testes e registramos resultados reais</td>
-<td>sim, testes.md 1.1</td>
+<td>sim, testes.md 1.2</td>
 </tr>
 <tr>
 <td>registramos defeitos, correcões e pendencias</td>
@@ -728,7 +734,7 @@
 </tr>
 <tr>
 <td>atualizamos o backlog</td>
-<td>sim, backlog 1.2</td>
+<td>sim, backlog 1.3</td>
 </tr>
 <tr>
 <td>verificamos o acesso da professora</td>
@@ -759,6 +765,11 @@
 <td>1.0</td>
 <td>13/10/2026</td>
 <td>primeira versao, para a entrega de 06/11/2026</td>
+</tr>
+<tr>
+<td>1.1</td>
+<td>13/10/2026</td>
+<td>demonstracao protegida (backlog TA71): contas de teste travadas, <code>npm run db:restaurar</code> e novo administrador em janela. testes 1.2 e backlog 1.3</td>
 </tr>
 </tbody>
 </table>

@@ -1,7 +1,7 @@
 # sgp - sistema de gestao de prestadores
 ## backlog e quadro de tarefas
 
-**versao 1.2 - 13/10/2026 - 2ª entrega do 2º bimestre (06/11)**
+**versao 1.3 - 13/10/2026 - 2ª entrega do 2º bimestre (06/11)**
 unicesumar - analise e desenvolvimento de sistemas
 imersao profissional - projeto de software - equipe 8
 
@@ -169,12 +169,13 @@ surgiu durante a implementacao do 2º bimestre e foi feito junto, porque deixava
 | TA67 | revisao de seguranca do que foi feito: conta desativada perde o acesso na hora, aceite nao grava duas vezes, RN02 nao desfaz bloqueio, nome com acento no download e cabecalhos de seguranca | RNF02, RN02, UC15 | alta | igor | 13/10 | concluida |
 | TA68 | integracao continua no github actions: tipos, lint, testes com um postgres proprio e build a cada push | qualidade | media | igor | 13/10 | concluida |
 | TA69 | reescrever o readme com o que ja funciona, o endereco publicado e todas as variaveis | 3ª entrega | media | igor | 13/10 | concluida |
+| TA71 | proteger a demonstracao: contas @sgp.teste sem troca de senha, sem desativar e sem anonimizar, e o `npm run db:restaurar`, que volta o banco e os arquivos pra carga inicial antes de cada apresentacao | RNF02, apresentacao final | media | luis | 13/10 | concluida |
 
 ## 7.2 ate 27/11
 
 | id | tarefa | requisito | prioridade | responsavel | prazo | situacao |
 |---|---|---|---|---|---|---|
-| TA70 | montar o roteiro da apresentacao final, dividir as falas e ensaiar com o sistema publicado | apresentacao final | alta | ambos | 27/11 | a fazer |
+| TA70 | montar o roteiro da apresentacao final, dividir as falas e ensaiar com o sistema publicado, restaurado com `npm run db:restaurar` antes | apresentacao final | alta | ambos | 27/11 | a fazer |
 
 ---
 
@@ -182,14 +183,14 @@ surgiu durante a implementacao do 2º bimestre e foi feito junto, porque deixava
 
 | situacao | tarefas |
 |---|---|
-| concluidas | 68 |
+| concluidas | 69 |
 | a fazer ate 20/10 | 1 (TA58, rodar do zero na maquina do igor seguindo o readme) |
 | a fazer ate 27/11 | 1 (TA70, a apresentacao final) |
-| **total** | **70** |
+| **total** | **71** |
 
 | responsavel | tarefas atribuidas |
 |---|---|
-| luis gustavo boratto de oliveira | 59 |
+| luis gustavo boratto de oliveira | 60 |
 | igor schiniegoski pallisser | 10 |
 | os dois | 1 |
 | ambos, em revisao cruzada | todas |
@@ -203,3 +204,4 @@ surgiu durante a implementacao do 2º bimestre e foi feito junto, porque deixava
 | 1.0 | 22/09/2026 | primeira versao do quadro de tarefas, com as 15 tarefas ja concluidas e as 42 planejadas |
 | 1.1 | 06/10/2026 | coluna de prazo, criterios de conclusao do recorte de 20/10, TA17 a TA23 concluidas. TA20 a TA22 foram feitas junto com o backend pra fechar o recorte, e o igor assumiu TA24 a TA26 pra 06/11. entraram TA58 a TA62 |
 | 1.2 | 13/10/2026 | TA16, TA24 a TA57, TA61 e TA62 concluidas, adiantando o que era de 27/11 e o que estava depois do mvp. as telas que estavam com o igor foram feitas junto com o backend, e ele ficou com a revisao de seguranca, a integracao continua e o readme (TA67 a TA69). entraram TA63 a TA70 |
+| 1.3 | 13/10/2026 | entrou e foi concluida a TA71, protecao da demonstracao. a TA70 passa a incluir restaurar a demonstracao antes do ensaio |
