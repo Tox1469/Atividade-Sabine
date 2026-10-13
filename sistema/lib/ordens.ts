@@ -122,9 +122,24 @@ export async function aceitar(p: DoPrestador): Promise<Resultado> {
   const ordem = await ordemDoPrestador(p);
   if (!ordem) return { erro: "Ordem não encontrada." };
   if (ordem.status !== "atribuida") return { erro: await mudou(p.idOrdem) };
-  await prisma.andamento_ordem.create({
-    data: { id_ordem: p.idOrdem, status_anterior: "atribuida", status_novo: "atribuida", observacao: "O prestador aceitou a ordem.", id_usuario: p.idUsuario },
+
+  // a linha da ordem fica travada ate o fim da transacao: dois cliques seguidos em Aceitar
+  // esperam um pelo outro e o segundo ja encontra o aceite gravado
+  const resultado = await prisma.$transaction(async (tx) => {
+    await tx.$queryRaw`SELECT id_ordem FROM ordem_servico WHERE id_ordem = ${p.idOrdem} FOR UPDATE`;
+    const atual = await tx.ordem_servico.findFirst({
+      where: { id_ordem: p.idOrdem, id_prestador: p.idPrestador, status: "atribuida" },
+      include: { andamentos: { where: FILTRO_ACEITE } },
+    });
+    if (!atual) return null;
+    if (foiAceita(atual.data_atribuicao, atual.andamentos)) return "ja aceita";
+    await tx.andamento_ordem.create({
+      data: { id_ordem: p.idOrdem, status_anterior: "atribuida", status_novo: "atribuida", observacao: "O prestador aceitou a ordem.", id_usuario: p.idUsuario },
+    });
+    return "aceita";
   });
+  if (resultado === null) return { erro: await mudou(p.idOrdem) };
+  if (resultado === "ja aceita") return { erro: "Esta ordem já foi aceita. Quando começar o serviço, use Iniciar execução." };
   return { ok: "Ordem aceita. Quando começar o serviço, use Iniciar execução." };
 }
 

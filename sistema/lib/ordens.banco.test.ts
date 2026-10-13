@@ -122,6 +122,15 @@ describe.skipIf(!URL_TESTE)("regras das ordens no banco", () => {
     expect(await ordens.registrarAndamento(doPrestador(o.id), "mais uma observacao")).toHaveProperty("erro");
   });
 
+  it("dois cliques em aceitar ao mesmo tempo gravam um aceite so (UC14)", async () => {
+    const o = (await nova()) as { id: number };
+    await ordens.atribuir(o.id, ids.apto, ids.admin);
+    const resultados = await Promise.all([ordens.aceitar(doPrestador(o.id)), ordens.aceitar(doPrestador(o.id))]);
+    expect(resultados.filter((r) => "ok" in r)).toHaveLength(1);
+    expect(await prisma.andamento_ordem.count({ where: { id_ordem: o.id, ...ordens.FILTRO_ACEITE } })).toBe(1);
+    expect(await ordens.aceitar(doPrestador(o.id))).toMatchObject({ erro: expect.stringContaining("já foi aceita") });
+  });
+
   it("outro prestador nao mexe na ordem que nao e dele (RNF02, UC15 E2.2)", async () => {
     const o = (await nova()) as { id: number };
     await ordens.atribuir(o.id, ids.apto, ids.admin);
@@ -165,5 +174,13 @@ describe.skipIf(!URL_TESTE)("regras das ordens no banco", () => {
     expect(p.situacao).toBe("pendente");
     expect(p.historicos.some((h) => h.id_usuario === null && h.situacao_nova === "pendente")).toBe(true);
     expect((await prisma.prestador.findUniqueOrThrow({ where: { id_prestador: ids.apto } })).situacao).toBe("ativo");
+  });
+
+  it("a rotina diaria nao mexe em quem ja saiu de ativo e nao grava historico repetido (RN02)", async () => {
+    await prisma.prestador.update({ where: { id_prestador: ids.vencido }, data: { situacao: "bloqueado" } });
+    const antes = await prisma.historico_situacao.count({ where: { id_prestador: ids.vencido } });
+    await aptidao.aplicarVencimentos();
+    expect((await prisma.prestador.findUniqueOrThrow({ where: { id_prestador: ids.vencido } })).situacao).toBe("bloqueado");
+    expect(await prisma.historico_situacao.count({ where: { id_prestador: ids.vencido } })).toBe(antes);
   });
 });
