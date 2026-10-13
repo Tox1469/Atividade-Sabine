@@ -31,7 +31,7 @@ export function Janela({ titulo, aoFechar, largura = 760, children }: { titulo: 
       <div ref={caixa} className="modal" style={{ maxWidth: largura }}>
         <div className="flex items-center justify-between gap-4 border-b border-regua-clara px-5 py-4">
           <h2 className="text-[17px] font-semibold">{titulo}</h2>
-          <button type="button" onClick={aoFechar} className="-mr-1 flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-xl leading-none text-tinta2 transition-colors hover:bg-[#f2f4f3] hover:text-tinta" aria-label="Fechar">
+          <button type="button" onClick={aoFechar} className="-mr-1 flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-xl leading-none text-tinta2 transition-colors hover:bg-[#f4f3f0] hover:text-tinta" aria-label="Fechar">
             ×
           </button>
         </div>

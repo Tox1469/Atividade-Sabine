@@ -26,7 +26,7 @@ export function AvisosFlutuantes() {
   return (
     <div className="pointer-events-none fixed right-4 bottom-4 z-30 flex max-w-sm flex-col gap-2" role="status" aria-live="polite">
       {avisos.map((a) => (
-        <div key={a.id} className="aviso-flutuante pointer-events-auto rounded-lg bg-tinta px-4 py-3 text-sm text-white shadow-[0_6px_20px_rgba(20,30,28,.25)]">
+        <div key={a.id} className="aviso-flutuante pointer-events-auto rounded-lg bg-tinta px-4 py-3 text-sm text-white shadow-[0_6px_20px_rgba(30,32,35,.25)]">
           {a.texto}
         </div>
       ))}

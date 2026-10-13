@@ -17,14 +17,14 @@ export function MenuLateral({ grupos }: { grupos: GrupoMenu[] }) {
     <nav aria-label="Menu" className="flex min-w-0 gap-1 overflow-x-auto px-3 pb-2 md:block md:space-y-5 md:overflow-visible md:px-3 md:pb-0">
       {grupos.map((grupo) => (
         <div key={grupo.titulo} className="flex shrink-0 gap-1 md:block md:space-y-0.5">
-          <p className="hidden px-3 pb-1.5 text-xs font-medium text-[#8a938f] md:block">{grupo.titulo}</p>
+          <p className="hidden px-3 pb-1.5 text-xs font-medium text-[#8d8982] md:block">{grupo.titulo}</p>
           {grupo.itens.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               aria-current={ativo === item.href ? "page" : undefined}
               className={`block rounded-lg px-3 py-2 text-sm whitespace-nowrap transition-colors ${
-                ativo === item.href ? "bg-caneta-clara font-medium text-caneta" : "text-tinta hover:bg-[#f2f4f3]"
+                ativo === item.href ? "bg-caneta-clara font-medium text-caneta" : "text-tinta hover:bg-[#f4f3f0]"
               }`}
             >
               {item.nome}

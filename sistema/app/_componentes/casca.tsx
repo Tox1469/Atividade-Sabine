@@ -67,7 +67,7 @@ function Sair() {
         await signOut({ redirectTo: "/login" });
       }}
     >
-      <button className="cursor-pointer rounded-md px-2 py-1 text-sm text-tinta2 transition-colors hover:bg-[#f2f4f3] hover:text-tinta">Sair</button>
+      <button className="cursor-pointer rounded-md px-2 py-1 text-sm text-tinta2 transition-colors hover:bg-[#f4f3f0] hover:text-tinta">Sair</button>
     </form>
   );
 }
