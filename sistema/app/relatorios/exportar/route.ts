@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import { contaValida } from "@/lib/permissao";
 import { textoNota } from "@/lib/dominio/avaliacao";
 import { dataHoraBR, paraCampoData } from "@/lib/formato";
 import { desempenho, lerPeriodo, servicosPorPeriodo } from "@/lib/relatorios";
@@ -13,6 +14,7 @@ const celula = (v: string | number) => {
 export async function GET(req: Request) {
   const sessao = await auth();
   if (sessao?.user?.perfil !== "administrador") return new Response("não autorizado", { status: 403 });
+  if (!(await contaValida(sessao.user))) return new Response("não autorizado", { status: 403 });
 
   const url = new URL(req.url);
   const tipo = url.searchParams.get("tipo");

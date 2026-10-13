@@ -4,12 +4,22 @@ import { prisma } from "@/lib/db";
 
 export type Perfil = "administrador" | "prestador" | "cliente";
 
+// o cookie da sessao guarda o perfil do momento do login e e renovado a cada requisicao.
+// sem olhar o banco, quem foi desativado (ou mudou de perfil) seguiria usando o sistema
+// enquanto continuasse clicando. por isso a conta e conferida de novo a cada tela e action
+export async function contaValida(user: { id: string; perfil: string }) {
+  const conta = await prisma.usuario.findUnique({ where: { id_usuario: Number(user.id) || 0 }, select: { ativo: true, perfil: true } });
+  return !!conta && conta.ativo && conta.perfil === user.perfil;
+}
+
 // RNF02: a permissao e decidida aqui no servidor, nunca so escondendo botao na tela.
-// toda pagina e toda action chamam uma dessas funcoes antes de fazer qualquer coisa
+// toda pagina e toda action chamam uma dessas funcoes antes de fazer qualquer coisa.
+// o perfil do cookie e conferido antes, pra recusar sem nem consultar o banco
 export async function exigirPerfil(perfil: Perfil) {
   const sessao = await auth();
   if (!sessao?.user) redirect("/login");
   if (sessao.user.perfil !== perfil) redirect("/sem-permissao");
+  if (!(await contaValida(sessao.user))) redirect("/sair");
   return sessao.user;
 }
 
@@ -32,5 +42,6 @@ export async function exigirCliente() {
 export async function usuarioLogado() {
   const sessao = await auth();
   if (!sessao?.user) redirect("/login");
+  if (!(await contaValida(sessao.user))) redirect("/sair");
   return sessao.user;
 }

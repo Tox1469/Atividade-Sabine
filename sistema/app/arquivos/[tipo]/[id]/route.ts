@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
+import { contaValida } from "@/lib/permissao";
 import { abrirArquivo } from "@/lib/storage";
 
 // unica porta de saida dos arquivos. documento: o administrador ou o proprio prestador.
@@ -19,6 +20,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ tipo: s
     if (c) arquivo = { caminho: c.arquivo_url, nome: `contrato-${c.numero}.pdf` };
   }
   if (!arquivo) return new Response("não encontrado", { status: 404 });
+  if (!(await contaValida(sessao.user))) return new Response("faça login", { status: 401 });
 
   const aberto = await abrirArquivo(arquivo.caminho);
   if ("link" in aberto) return Response.redirect(aberto.link, 302);
