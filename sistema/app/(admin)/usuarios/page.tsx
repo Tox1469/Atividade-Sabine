@@ -2,10 +2,11 @@ import Link from "next/link";
 import { Prisma } from "@prisma/client";
 import { Chip, Paginacao, paginaAtual, Titulo } from "@/app/_componentes/ui";
 import { auth } from "@/auth";
+import { contaDeDemonstracao } from "@/lib/acesso";
 import { prisma } from "@/lib/db";
 import { dataHoraBR, plural } from "@/lib/formato";
 import { exigirPerfil } from "@/lib/permissao";
-import { AcoesUsuario, FormAdministrador } from "./formularios";
+import { AcoesUsuario, BotaoNovoAdministrador } from "./formularios";
 
 export const metadata = { title: "Usuários" };
 
@@ -39,59 +40,56 @@ export default async function Usuarios({ searchParams }: { searchParams: Promise
 
   return (
     <div className="w-full">
-      <Titulo titulo="Usuários" subtitulo="Quem entra no sistema e com qual perfil" />
-      <div className="colunas">
-        <div style={{ flexGrow: 3 }}>
-          <form className="cartao mb-4 flex flex-wrap items-end gap-3 p-4">
-            <div className="min-w-48 flex-1">
-              <label htmlFor="busca" className="rotulo">Buscar</label>
-              <input id="busca" name="busca" defaultValue={busca} placeholder="Nome ou e-mail" className="campo" />
-            </div>
-            <div className="w-40">
-              <label htmlFor="perfil" className="rotulo">Perfil</label>
-              <select id="perfil" name="perfil" defaultValue={perfil} className="campo">
-                <option value="">Todos</option>
-                {Object.entries(PERFIS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-              </select>
-            </div>
-            <button className="botao">Filtrar</button>
-          </form>
-
-          <div className="cartao overflow-x-auto">
-            <p className="cartao-titulo">{plural(total, "usuário", "usuários")}</p>
-            <table className="tabela min-w-[760px]">
-              <thead>
-                <tr><th>Usuário</th><th>Perfil</th><th>Último acesso</th><th>Situação</th><th></th></tr>
-              </thead>
-              <tbody>
-                {usuarios.map((u) => {
-                  const bloqueado = u.bloqueado_ate && u.bloqueado_ate > agora;
-                  const ficha = u.prestador ? `/prestadores/${u.prestador.id_prestador}` : u.cliente ? `/clientes/${u.cliente.id_cliente}` : null;
-                  return (
-                    <tr key={u.id_usuario}>
-                      <td>
-                        {ficha ? <Link href={ficha} className="hover:underline">{u.nome}</Link> : u.nome}
-                        <span className="secundario">{u.email}</span>
-                      </td>
-                      <td>{PERFIS[u.perfil]}</td>
-                      <td className="whitespace-nowrap">{u.ultimo_acesso_em ? dataHoraBR(u.ultimo_acesso_em) : <span className="text-tinta2">Nunca entrou</span>}</td>
-                      <td className="whitespace-nowrap">
-                        {!u.ativo ? <Chip tom="inativo">Desativado</Chip> : bloqueado ? <Chip tom="bloqueado">Bloqueado até {dataHoraBR(u.bloqueado_ate!).split(" às ")[1]}</Chip> : <Chip tom="ativo">Ativo</Chip>}
-                      </td>
-                      <td className="acoes">
-                        <AcoesUsuario id={u.id_usuario} ativo={u.ativo} proprio={String(u.id_usuario) === eu.id} />
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-          <Paginacao pagina={pagina} total={total} porPagina={POR_PAGINA} base="/usuarios" params={params} />
+      <Titulo titulo="Usuários" subtitulo="Quem entra no sistema e com qual perfil">
+        <BotaoNovoAdministrador />
+      </Titulo>
+      <form className="cartao mb-4 flex flex-wrap items-end gap-3 p-4">
+        <div className="min-w-48 flex-1">
+          <label htmlFor="busca" className="rotulo">Buscar</label>
+          <input id="busca" name="busca" defaultValue={busca} placeholder="Nome ou e-mail" className="campo" />
         </div>
-        <FormAdministrador />
+        <div className="w-40">
+          <label htmlFor="perfil" className="rotulo">Perfil</label>
+          <select id="perfil" name="perfil" defaultValue={perfil} className="campo">
+            <option value="">Todos</option>
+            {Object.entries(PERFIS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+          </select>
+        </div>
+        <button className="botao">Filtrar</button>
+      </form>
+
+      <div className="cartao overflow-x-auto">
+        <p className="cartao-titulo">{plural(total, "usuário", "usuários")}</p>
+        <table className="tabela min-w-[760px]">
+          <thead>
+            <tr><th>Usuário</th><th>Perfil</th><th>Último acesso</th><th>Situação</th><th></th></tr>
+          </thead>
+          <tbody>
+            {usuarios.map((u) => {
+              const bloqueado = u.bloqueado_ate && u.bloqueado_ate > agora;
+              const ficha = u.prestador ? `/prestadores/${u.prestador.id_prestador}` : u.cliente ? `/clientes/${u.cliente.id_cliente}` : null;
+              return (
+                <tr key={u.id_usuario}>
+                  <td>
+                    {ficha ? <Link href={ficha} className="hover:underline">{u.nome}</Link> : u.nome}
+                    <span className="secundario">{u.email}</span>
+                  </td>
+                  <td>{PERFIS[u.perfil]}</td>
+                  <td className="whitespace-nowrap">{u.ultimo_acesso_em ? dataHoraBR(u.ultimo_acesso_em) : <span className="text-tinta2">Nunca entrou</span>}</td>
+                  <td className="whitespace-nowrap">
+                    {!u.ativo ? <Chip tom="inativo">Desativado</Chip> : bloqueado ? <Chip tom="bloqueado">Bloqueado até {dataHoraBR(u.bloqueado_ate!).split(" às ")[1]}</Chip> : <Chip tom="ativo">Ativo</Chip>}
+                  </td>
+                  <td className="acoes">
+                    <AcoesUsuario id={u.id_usuario} ativo={u.ativo} desativavel={String(u.id_usuario) !== eu.id && !(u.ativo && contaDeDemonstracao(u.email))} />
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
-      <p className="ajuda mt-2">Gerar senha provisória também desbloqueia quem errou a senha cinco vezes seguidas (RNF12).</p>
+      <Paginacao pagina={pagina} total={total} porPagina={POR_PAGINA} base="/usuarios" params={params} />
+      <p className="ajuda mt-2">Gerar senha provisória também desbloqueia quem errou a senha cinco vezes seguidas (RNF12). Nas contas de demonstração (@sgp.teste) ele só desbloqueia: a senha e o acesso delas não mudam.</p>
     </div>
   );
 }

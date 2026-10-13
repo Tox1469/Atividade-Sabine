@@ -1,4 +1,5 @@
 import { Titulo } from "@/app/_componentes/ui";
+import { contaDeDemonstracao } from "@/lib/acesso";
 import { prisma } from "@/lib/db";
 import { dataHoraBR } from "@/lib/formato";
 import { usuarioLogado } from "@/lib/permissao";
@@ -15,7 +16,14 @@ export default async function MinhaConta() {
     <div className="w-full">
       <Titulo titulo="Minha conta" subtitulo={usuario.nome} />
       <div className="colunas">
-        <FormSenha />
+        {contaDeDemonstracao(usuario.email) ? (
+          <section className="cartao">
+            <h2 className="cartao-titulo">Trocar senha</h2>
+            <p className="p-5 text-sm text-tinta2">Esta é uma conta de demonstração, usada por todos que avaliam o sistema. A senha dela não muda, para ninguém ficar sem entrar. Nas outras contas a troca funciona normalmente.</p>
+          </section>
+        ) : (
+          <FormSenha />
+        )}
         <section className="cartao">
           <h2 className="cartao-titulo">Sua conta</h2>
           <dl className="grid gap-x-6 gap-y-4 p-5 text-sm sm:grid-cols-2">

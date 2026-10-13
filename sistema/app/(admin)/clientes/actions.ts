@@ -2,7 +2,7 @@
 
 import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
-import { liberarAcesso } from "@/lib/acesso";
+import { DEMONSTRACAO, liberarAcesso, loginDeDemonstracao } from "@/lib/acesso";
 import { anonimizarCliente } from "@/lib/anonimizar";
 import { prisma } from "@/lib/db";
 import { EM_ABERTO } from "@/lib/dominio/ordem";
@@ -39,6 +39,7 @@ export async function alternarAtivo(id: number, _estado: EstadoFormulario, form:
 
   if (cliente.ativo) {
     if (form.get("confirmo") !== "sim") return { mensagem: "Marque a confirmação para inativar." };
+    if (await loginDeDemonstracao(cliente.id_usuario)) return { mensagem: DEMONSTRACAO };
     const abertas = await prisma.ordem_servico.findMany({ where: { id_cliente: id, status: { in: EM_ABERTO } }, select: { numero: true } });
     if (abertas.length > 0) {
       return { mensagem: `Não dá para inativar: o cliente tem ordem em aberto (${abertas.map((o) => o.numero).join(", ")}). Conclua ou cancele antes.` };

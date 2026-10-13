@@ -1,14 +1,31 @@
 "use client";
 
+import { useState } from "react";
 import { BotaoEnviar, Campo, MensagemFormulario, useFormulario } from "@/app/_componentes/campos";
+import { Janela } from "@/app/_componentes/janela";
 import { acaoUsuario, criarAdministrador } from "./actions";
 
-export function FormAdministrador() {
+// abre por cima da lista. depois de criar a janela continua aberta: a senha provisoria
+// aparece uma vez so e tem que ficar na tela ate ser anotada
+export function BotaoNovoAdministrador() {
+  const [aberta, setAberta] = useState(false);
+  return (
+    <>
+      <button type="button" onClick={() => setAberta(true)} className="botao-principal">Novo administrador</button>
+      {aberta && (
+        <Janela titulo="Novo administrador" aoFechar={() => setAberta(false)} largura={480}>
+          <FormAdministrador />
+        </Janela>
+      )}
+    </>
+  );
+}
+
+function FormAdministrador() {
   const { estado, enviar, enviando, valor, erro } = useFormulario(criarAdministrador);
   return (
-    <form onSubmit={enviar} className="cartao" style={{ flex: "0 1 340px" }} noValidate>
-      <h2 className="cartao-titulo">Novo administrador</h2>
-      <div className="space-y-3 p-4">
+    <form onSubmit={enviar} noValidate>
+      <div className="space-y-3 p-5">
         <MensagemFormulario estado={estado} />
         <Campo nome="nome" rotulo="Nome" obrigatorio valor={estado.ok ? "" : valor("nome")} erro={erro("nome")} />
         <Campo nome="email" rotulo="E-mail" type="email" obrigatorio valor={estado.ok ? "" : valor("email")} erro={erro("email")} ajuda="A senha provisória aparece uma vez, depois de criar." />
@@ -20,13 +37,13 @@ export function FormAdministrador() {
   );
 }
 
-export function AcoesUsuario({ id, ativo, proprio }: { id: number; ativo: boolean; proprio: boolean }) {
+export function AcoesUsuario({ id, ativo, desativavel }: { id: number; ativo: boolean; desativavel: boolean }) {
   const { estado, enviar, enviando } = useFormulario(acaoUsuario.bind(null, id));
   return (
     <form onSubmit={enviar} className="flex flex-col items-end gap-1">
       <div className="flex flex-wrap justify-end gap-1">
         <button type="submit" name="acao" value="senha" disabled={enviando} className="botao botao-pequeno">Gerar senha provisória</button>
-        {!proprio && (
+        {desativavel && (
           <button
             type="submit"
             name="acao"
@@ -42,7 +59,7 @@ export function AcoesUsuario({ id, ativo, proprio }: { id: number; ativo: boolea
         )}
       </div>
       {(estado.ok || estado.mensagem) && (
-        <p className={`max-w-xs text-right text-xs font-semibold ${estado.ok ? "text-verde" : "text-carimbo"}`} role="status">
+        <p className={`max-w-xs text-right text-xs font-semibold whitespace-normal ${estado.ok ? "text-verde" : "text-carimbo"}`} role="status">
           {estado.ok ?? estado.mensagem}
         </p>
       )}

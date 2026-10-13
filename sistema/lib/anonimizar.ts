@@ -1,3 +1,4 @@
+import { DEMONSTRACAO, loginDeDemonstracao } from "@/lib/acesso";
 import { prisma } from "@/lib/db";
 import { EM_ABERTO, EM_ANDAMENTO } from "@/lib/dominio/ordem";
 import { registrarLog } from "@/lib/log";
@@ -35,6 +36,7 @@ async function desativarUsuario(idUsuario: number | null) {
 
 export async function anonimizarPrestador(id: number, idAdmin: number) {
   const prestador = await prisma.prestador.findUniqueOrThrow({ where: { id_prestador: id } });
+  if (await loginDeDemonstracao(prestador.id_usuario)) return { erro: DEMONSTRACAO };
   const presas = await prisma.ordem_servico.findMany({ where: { id_prestador: id, status: { in: EM_ANDAMENTO } }, select: { numero: true } });
   if (presas.length > 0) {
     return { erro: `Não dá para anonimizar com ordem em andamento: ${presas.map((o) => o.numero).join(", ")}. Conclua ou realoque antes.` };
@@ -64,6 +66,7 @@ export async function anonimizarPrestador(id: number, idAdmin: number) {
 
 export async function anonimizarCliente(id: number, idAdmin: number) {
   const cliente = await prisma.cliente.findUniqueOrThrow({ where: { id_cliente: id } });
+  if (await loginDeDemonstracao(cliente.id_usuario)) return { erro: DEMONSTRACAO };
   const abertas = await prisma.ordem_servico.findMany({ where: { id_cliente: id, status: { in: EM_ABERTO } }, select: { numero: true } });
   if (abertas.length > 0) {
     return { erro: `Não dá para anonimizar com ordem em aberto: ${abertas.map((o) => o.numero).join(", ")}. Conclua ou cancele antes.` };

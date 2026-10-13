@@ -3,7 +3,7 @@
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { redefinirSenha, senhaProvisoria, trocarAtivoDoAcesso } from "@/lib/acesso";
+import { contaDeDemonstracao, redefinirSenha, senhaProvisoria, trocarAtivoDoAcesso } from "@/lib/acesso";
 import { prisma } from "@/lib/db";
 import { comErros, erroNoCampo, valoresDo, type EstadoFormulario } from "@/lib/formulario";
 import { exigirPerfil } from "@/lib/permissao";
@@ -32,7 +32,14 @@ export async function acaoUsuario(idUsuario: number, _estado: EstadoFormulario, 
   const eu = await exigirPerfil("administrador");
   const usuario = await prisma.usuario.findUniqueOrThrow({ where: { id_usuario: idUsuario } });
   const acao = form.get("acao");
+  const demonstracao = contaDeDemonstracao(usuario.email);
 
+  if (acao === "senha" && demonstracao) {
+    // conta de demonstracao so desbloqueia: a senha continua a da tela de login
+    await prisma.usuario.update({ where: { id_usuario: idUsuario }, data: { tentativas_falhas: 0, bloqueado_ate: null } });
+    revalidatePath("/usuarios");
+    return { ok: `Login de ${usuario.email} desbloqueado. Por ser conta de demonstração, a senha continua a da tela de login.` };
+  }
   if (acao === "senha") {
     const senha = await redefinirSenha(idUsuario);
     revalidatePath("/usuarios");
@@ -40,6 +47,7 @@ export async function acaoUsuario(idUsuario: number, _estado: EstadoFormulario, 
   }
   if (acao === "ativo") {
     if (idUsuario === Number(eu.id)) return { mensagem: "Você não pode desativar o seu próprio acesso." };
+    if (demonstracao && usuario.ativo) return { mensagem: "Conta de demonstração não pode ser desativada, para todo mundo continuar entrando." };
     if (usuario.email.endsWith("@sgp.invalido")) return { mensagem: "Login de cadastro anonimizado não pode ser reativado." };
     await trocarAtivoDoAcesso(idUsuario, !usuario.ativo);
     revalidatePath("/usuarios");

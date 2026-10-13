@@ -7,6 +7,19 @@ import { prisma } from "@/lib/db";
 // passar pra pessoa, que troca em "minha conta" no primeiro acesso
 const LETRAS = "abcdefghjkmnpqrstuvwxyz23456789";
 
+// as contas da tela de login (@sgp.teste) sao de todo mundo que abre a demonstracao.
+// senha e acesso delas nao mudam pelo sistema, senao o proximo a entrar fica de fora.
+// o resto dos dados volta ao original com npm run db:restaurar
+export const contaDeDemonstracao = (email: string) => email.endsWith("@sgp.teste");
+
+export const DEMONSTRACAO = "Este cadastro entra com uma conta de demonstração, que todo mundo usa. Para testar, use um cadastro sem login.";
+
+export async function loginDeDemonstracao(idUsuario: number | null) {
+  if (!idUsuario) return false;
+  const usuario = await prisma.usuario.findUnique({ where: { id_usuario: idUsuario }, select: { email: true } });
+  return !!usuario && contaDeDemonstracao(usuario.email);
+}
+
 export function senhaProvisoria() {
   return Array.from({ length: 10 }, () => LETRAS[randomInt(LETRAS.length)]).join("");
 }

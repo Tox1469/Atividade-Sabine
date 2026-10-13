@@ -2,6 +2,7 @@
 
 import bcrypt from "bcryptjs";
 import { z } from "zod";
+import { contaDeDemonstracao } from "@/lib/acesso";
 import { prisma } from "@/lib/db";
 import { comErros, erroNoCampo, type EstadoFormulario } from "@/lib/formulario";
 import { usuarioLogado } from "@/lib/permissao";
@@ -22,6 +23,7 @@ export async function trocarSenha(_estado: EstadoFormulario, form: FormData): Pr
   if (!validacao.success) return comErros(validacao.error, {});
 
   const usuario = await prisma.usuario.findUniqueOrThrow({ where: { id_usuario: Number(sessao.id) } });
+  if (contaDeDemonstracao(usuario.email)) return { mensagem: "A senha das contas de demonstração não muda, para todo mundo continuar entrando." };
   if (!(await bcrypt.compare(validacao.data.atual, usuario.senha_hash))) return erroNoCampo("atual", "Senha atual incorreta.", {});
 
   await prisma.usuario.update({ where: { id_usuario: usuario.id_usuario }, data: { senha_hash: await bcrypt.hash(validacao.data.nova, 10) } });

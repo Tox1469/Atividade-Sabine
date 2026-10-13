@@ -183,4 +183,11 @@ describe.skipIf(!URL_TESTE)("regras das ordens no banco", () => {
     expect((await prisma.prestador.findUniqueOrThrow({ where: { id_prestador: ids.vencido } })).situacao).toBe("bloqueado");
     expect(await prisma.historico_situacao.count({ where: { id_prestador: ids.vencido } })).toBe(antes);
   });
+
+  it("cadastro que entra com conta de demonstracao nao e anonimizado, senao o login dela some", async () => {
+    const { anonimizarCliente } = await import("./anonimizar");
+    await prisma.usuario.update({ where: { id_usuario: ids.u_intruso }, data: { email: `intruso-${sufixo}@sgp.teste` } });
+    expect(await anonimizarCliente(ids.intruso, ids.admin)).toHaveProperty("erro");
+    expect((await prisma.usuario.findUniqueOrThrow({ where: { id_usuario: ids.u_intruso } })).email).toBe(`intruso-${sufixo}@sgp.teste`);
+  });
 });

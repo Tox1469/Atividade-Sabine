@@ -11,6 +11,7 @@
     "banco": "node scripts/banco.mjs",
     "db:migrar": "prisma migrate dev",
     "db:carga": "prisma db seed",
+    "db:restaurar": "tsx scripts/restaurar-demonstracao.ts && prisma db seed",
     "prepare": "git config core.hooksPath ferramentas/git || exit 0"
   },
   "dependencies": {
