@@ -1,0 +1,2 @@
+# o gancho de commit roda no sh, que nao entende a quebra de linha do windows
+ferramentas/git/* text eol=lf

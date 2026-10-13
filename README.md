@@ -264,6 +264,10 @@ npx tsx scripts/carga-5mil.ts --apagar   tira de novo
 
 o detalhe de cada parte, com o requisito e o teste que confere, esta em [docs/entrega-06-11.md](docs/entrega-06-11.md).
 
+### trabalhando em dupla
+
+o combinado de git, commits, testes antes do push e onde fica cada padrao do codigo esta em [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ### limitacoes conhecidas
 
 - o bloqueio depois de 5 senhas erradas é por email (RNF12). quem souber o email de alguem consegue travar o login dessa pessoa por 15 minutos, e a mensagem de bloqueio mostra que o email existe. limitar tambem por endereco ip resolveria, mas ficou fora do escopo
