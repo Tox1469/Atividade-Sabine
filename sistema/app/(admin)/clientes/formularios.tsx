@@ -19,7 +19,7 @@ export function FormCliente({ id, inicial }: { id: number | null; inicial?: Reco
 export function FormAtivo({ id, ativo }: { id: number; ativo: boolean }) {
   const { estado, enviar, enviando } = useFormulario(alternarAtivo.bind(null, id));
   return (
-    <form action={enviar} className="space-y-3">
+    <form onSubmit={enviar} className="space-y-3">
       <MensagemFormulario estado={estado} />
       {ativo && (
         <label className="marcador text-sm">
@@ -34,7 +34,7 @@ export function FormAtivo({ id, ativo }: { id: number; ativo: boolean }) {
 export function BotaoLiberarAcesso({ id }: { id: number }) {
   const { estado, enviar, enviando } = useFormulario(liberarAcessoCliente.bind(null, id));
   return (
-    <form action={enviar}>
+    <form onSubmit={enviar}>
       <MensagemFormulario estado={estado} />
       {!estado.ok && <BotaoEnviar enviando={enviando} texto="Liberar acesso" enviandoTexto="Liberando..." />}
     </form>
@@ -44,14 +44,14 @@ export function BotaoLiberarAcesso({ id }: { id: number }) {
 export function FormAnonimizar({ id }: { id: number }) {
   const { estado, enviar, enviando } = useFormulario(anonimizar.bind(null, id));
   return (
-    <form action={enviar} className="space-y-3">
+    <form onSubmit={enviar} className="space-y-3">
       <MensagemFormulario estado={estado} />
       {!estado.ok && (
         <>
           <label className="marcador text-sm">
             <input type="checkbox" name="confirmo" value="sim" /> Confirmo que o titular pediu a remoção dos dados pessoais. Não tem volta.
           </label>
-          <BotaoEnviar enviando={enviando} texto="Anonimizar dados" perigo />
+          <BotaoEnviar enviando={enviando} texto="Anonimizar dados" perigo confirmar="Anonimizar os dados pessoais deste cliente? Não tem volta." />
         </>
       )}
     </form>

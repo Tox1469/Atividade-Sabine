@@ -29,7 +29,7 @@ export function FormPrestador({ id, inicial }: { id: number | null; inicial?: Re
 export function FormCategorias({ id, categorias }: { id: number; categorias: { id: number; nome: string; marcada: boolean }[] }) {
   const { estado, enviar, enviando } = useFormulario(salvarCategorias.bind(null, id));
   return (
-    <form action={enviar} className="cartao mb-4">
+    <form onSubmit={enviar} className="cartao mb-4">
       <h2 className="cartao-titulo">Categorias em que atua</h2>
       <div className="p-4">
         <MensagemFormulario estado={estado} />
@@ -66,7 +66,7 @@ export function FormDocumento({
   const exige = tipos.find((t) => String(t.id) === tipo)?.exige_validade ?? true;
 
   return (
-    <form action={enviar} className="cartao" noValidate>
+    <form onSubmit={enviar} className="cartao" noValidate>
       <h2 className="cartao-titulo">Enviar documento</h2>
       <div className="space-y-3 p-4">
         <MensagemFormulario estado={estado} />
@@ -111,7 +111,7 @@ export function FormSituacao({ id, atual }: { id: number; atual: string }) {
   const { estado, enviar, enviando, valor, erro } = useFormulario(alterarSituacao.bind(null, id));
   const opcoes = ["ativo", "pendente", "bloqueado", "inativo"].filter((s) => s !== atual);
   return (
-    <form action={enviar} className="cartao" noValidate>
+    <form onSubmit={enviar} className="cartao" noValidate>
       <h2 className="cartao-titulo">Alterar situação cadastral</h2>
       <div className="space-y-3 p-4">
         <MensagemFormulario estado={estado} />
@@ -145,7 +145,7 @@ export function FormSituacao({ id, atual }: { id: number; atual: string }) {
 export function FormContrato({ id }: { id: number }) {
   const { estado, enviar, enviando, valor, erro } = useFormulario(salvarContrato.bind(null, id), {}, prepararEnvio.bind(null, id, "contratos"));
   return (
-    <form action={enviar} className="cartao" noValidate>
+    <form onSubmit={enviar} className="cartao" noValidate>
       <h2 className="cartao-titulo">Novo contrato</h2>
       <div className="space-y-3 p-4">
         <MensagemFormulario estado={estado} />
@@ -167,7 +167,7 @@ export function FormContrato({ id }: { id: number }) {
 export function BotaoLiberarAcesso({ id }: { id: number }) {
   const { estado, enviar, enviando } = useFormulario(liberarAcessoPrestador.bind(null, id));
   return (
-    <form action={enviar}>
+    <form onSubmit={enviar}>
       <MensagemFormulario estado={estado} />
       {!estado.ok && <BotaoEnviar enviando={enviando} texto="Liberar acesso" enviandoTexto="Liberando..." />}
     </form>
@@ -177,14 +177,14 @@ export function BotaoLiberarAcesso({ id }: { id: number }) {
 export function FormAnonimizar({ id }: { id: number }) {
   const { estado, enviar, enviando } = useFormulario(anonimizar.bind(null, id));
   return (
-    <form action={enviar} className="space-y-3">
+    <form onSubmit={enviar} className="space-y-3">
       <MensagemFormulario estado={estado} />
       {!estado.ok && (
         <>
           <label className="marcador text-sm">
             <input type="checkbox" name="confirmo" value="sim" /> Confirmo que o titular pediu a remoção dos dados pessoais. Não tem volta.
           </label>
-          <BotaoEnviar enviando={enviando} texto="Anonimizar dados" perigo />
+          <BotaoEnviar enviando={enviando} texto="Anonimizar dados" perigo confirmar="Anonimizar os dados pessoais deste prestador? Não tem volta." />
         </>
       )}
     </form>

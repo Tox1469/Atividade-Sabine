@@ -4,6 +4,8 @@ import { dataHoraBR } from "@/lib/formato";
 import { exigirPerfil } from "@/lib/permissao";
 import { FormSituacao } from "../../formularios";
 
+export const metadata = { title: "Situação cadastral" };
+
 const nome = (s: string) => s[0].toUpperCase() + s.slice(1);
 
 // T04d - situacao cadastral com motivo e historico (UC11, TA33)

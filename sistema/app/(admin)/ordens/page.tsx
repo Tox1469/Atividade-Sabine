@@ -6,6 +6,8 @@ import { emAtraso, NOME_STATUS, STATUS } from "@/lib/dominio/ordem";
 import { dataBR, hoje, lerData, plural, somarDias } from "@/lib/formato";
 import { exigirPerfil } from "@/lib/permissao";
 
+export const metadata = { title: "Ordens de serviço" };
+
 const POR_PAGINA = 20;
 
 type Busca = { busca?: string; status?: string; de?: string; ate?: string; categoria?: string; prestador?: string; cliente?: string; pagina?: string };

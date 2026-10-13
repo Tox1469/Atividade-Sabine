@@ -4,6 +4,8 @@ import { dataHoraBR } from "@/lib/formato";
 import { usuarioLogado } from "@/lib/permissao";
 import { FormSenha } from "./formulario";
 
+export const metadata = { title: "Minha conta" };
+
 export default async function MinhaConta() {
   const sessao = await usuarioLogado();
   const usuario = await prisma.usuario.findUniqueOrThrow({ where: { id_usuario: Number(sessao.id) } });

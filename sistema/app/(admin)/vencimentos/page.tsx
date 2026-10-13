@@ -7,6 +7,8 @@ import { dataBR, hoje, plural, somarDias } from "@/lib/formato";
 import { exigirPerfil } from "@/lib/permissao";
 import { BotaoRotina } from "./botao";
 
+export const metadata = { title: "Vencimentos" };
+
 type Busca = { categoria?: string; situacao?: string; ordem?: string };
 
 // T10 - painel de vencimentos (UC09, TA31): vencidos e os que vencem nos proximos 30 dias

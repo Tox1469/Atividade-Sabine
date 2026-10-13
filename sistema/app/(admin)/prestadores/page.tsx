@@ -8,6 +8,8 @@ import { formatarCpfCnpj, soDigitos } from "@/lib/dominio/cpf-cnpj";
 import { exigirPerfil } from "@/lib/permissao";
 import { SITUACOES } from "@/lib/validacao/pessoa";
 
+export const metadata = { title: "Prestadores" };
+
 // RNF06: a listagem e paginada no banco, nunca trazendo tudo de uma vez
 const POR_PAGINA = 20;
 

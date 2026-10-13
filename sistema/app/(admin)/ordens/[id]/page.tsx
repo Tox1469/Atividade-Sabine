@@ -9,7 +9,10 @@ import { emAtraso, foiAceita, semRespostaHaMaisDe24h } from "@/lib/dominio/ordem
 import { dataBR, dataHoraBR, diasEntre, hoje, plural } from "@/lib/formato";
 import { FILTRO_ACEITE } from "@/lib/ordens";
 import { exigirPerfil } from "@/lib/permissao";
+import { BotaoImprimir } from "@/app/_componentes/imprimir";
 import { FormAtribuir, FormCancelar } from "../formularios";
+
+export const metadata = { title: "Ordem de serviço" };
 
 const PRIORIDADE: Record<string, string> = { baixa: "neutro", normal: "aberta", alta: "pendente", urgente: "atraso" };
 
@@ -44,9 +47,10 @@ export default async function OrdemAdmin({ params, searchParams }: { params: Pro
 
   return (
     <div className="mx-auto max-w-6xl">
-      <Titulo titulo={`Ordem ${ordem.numero}`} subtitulo={`${ordem.servico.nome}, para ${nome(ordem.cliente)}`}>
+      <Titulo voltar={["/ordens", "ordens de serviço"]} titulo={`Ordem ${ordem.numero}`} subtitulo={`${ordem.servico.nome}, para ${nome(ordem.cliente)}`}>
         <ChipStatus status={ordem.status} />
         {atrasada && <Chip tom="atraso">Em atraso</Chip>}
+        <BotaoImprimir texto="Imprimir" />
       </Titulo>
 
       {ok && <Aviso tom="ok" titulo={ok} />}

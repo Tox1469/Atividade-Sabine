@@ -7,7 +7,7 @@ import { avaliarAtendimento } from "./actions";
 export function FormAvaliacao({ idOrdem }: { idOrdem: number }) {
   const { estado, enviar, enviando, valor } = useFormulario(avaliarAtendimento.bind(null, idOrdem));
   return (
-    <form action={enviar} className="cartao" style={{ flex: "0 1 400px" }}>
+    <form onSubmit={enviar} className="cartao" style={{ flex: "0 1 400px" }}>
       <h2 className="cartao-titulo">Avaliar o atendimento</h2>
       <div className="space-y-3 p-4">
         <MensagemFormulario estado={estado} />

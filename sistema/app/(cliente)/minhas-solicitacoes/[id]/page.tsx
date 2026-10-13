@@ -6,6 +6,8 @@ import { dataBR, dataHoraBR } from "@/lib/formato";
 import { exigirCliente } from "@/lib/permissao";
 import { FormAvaliacao } from "../avaliacao";
 
+export const metadata = { title: "Acompanhar solicitação" };
+
 // T18 - acompanhar e avaliar. so abre ordem do cliente logado (RN08, RNF02)
 export default async function OrdemCliente({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ nova?: string }> }) {
   const { cliente } = await exigirCliente();
@@ -19,7 +21,7 @@ export default async function OrdemCliente({ params, searchParams }: { params: P
 
   return (
     <div className="mx-auto max-w-5xl">
-      <Titulo titulo={`Solicitação ${ordem.numero}`} subtitulo={ordem.servico.nome}>
+      <Titulo voltar={["/minhas-solicitacoes", "minhas solicitações"]} titulo={`Solicitação ${ordem.numero}`} subtitulo={ordem.servico.nome}>
         <ChipStatus status={ordem.status} />
       </Titulo>
 

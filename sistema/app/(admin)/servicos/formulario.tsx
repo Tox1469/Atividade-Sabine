@@ -12,7 +12,7 @@ export function FormServico({ id, inicial = {}, categorias }: Props) {
   const ativo = estado.valores ? estado.valores.ativo === "sim" : inicial.ativo !== "nao";
 
   return (
-    <form action={enviar} className="cartao" noValidate>
+    <form onSubmit={enviar} className="cartao" noValidate>
       <h2 className="cartao-titulo">Dados do serviço</h2>
       <div className="space-y-3 p-4">
         <MensagemFormulario estado={estado} />

@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect, useRef, useTransition } from "react";
 import { LIMITE_ARQUIVO } from "@/lib/dominio/documento";
 import { erroNoCampo, valoresDo, type EstadoFormulario } from "@/lib/formulario";
 
@@ -31,15 +31,34 @@ async function subirArquivo(form: FormData, preparar: Preparar): Promise<string 
   return null;
 }
 
-// estado do formulario + leitura do valor e do erro de cada campo
+// estado do formulario + leitura do valor e do erro de cada campo.
+// o envio vai pelo onSubmit, e nao pelo <form action>: com action o react 19 limpa o formulario
+// depois de qualquer resposta, inclusive de erro, e os selects voltavam pro valor inicial por baixo
+// do que a tela mostrava (o tipo pessoa fisica virava juridica e o cpf era validado como cnpj).
+// assim o que foi digitado fica, e o formulario so e limpo quando a acao deu certo
 export function useFormulario(acao: Acao, inicial: Record<string, string> = {}, preparar?: Preparar) {
-  const [estado, enviar, enviando] = useActionState<EstadoFormulario, FormData>(async (anterior, form) => {
+  const [estado, despachar, enviando] = useActionState<EstadoFormulario, FormData>(async (anterior, form) => {
     if (preparar) {
       const erro = await subirArquivo(form, preparar);
       if (erro) return erroNoCampo("arquivo", erro, valoresDo(form));
     }
     return acao(anterior, form);
   }, {});
+  const [, iniciar] = useTransition();
+  const ultimo = useRef<HTMLFormElement | null>(null);
+
+  useEffect(() => {
+    if (estado.ok) ultimo.current?.reset();
+  }, [estado]);
+
+  function enviar(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    ultimo.current = e.currentTarget;
+    // o submitter leva junto o name/value do botao clicado (ex.: qual prestador na atribuicao)
+    const dados = new FormData(e.currentTarget, (e.nativeEvent as SubmitEvent).submitter);
+    iniciar(() => despachar(dados));
+  }
+
   return {
     estado,
     enviar,
@@ -120,11 +139,12 @@ export function Selecao(props: Base & { valor: string; opcoes: { valor: string; 
   return (
     <div className={props.className}>
       <Rotulo {...props} />
+      {/* com onChange o select e controlado pelo estado da tela. sem isso, quando o react limpa o
+          formulario depois de um erro, o select voltava pro valor inicial por baixo do que a tela mostrava */}
       <select
         id={props.nome}
         name={props.nome}
-        defaultValue={props.valor}
-        onChange={props.onChange ? (e) => props.onChange!(e.target.value) : undefined}
+        {...(props.onChange ? { value: props.valor, onChange: (e: React.ChangeEvent<HTMLSelectElement>) => props.onChange!(e.target.value) } : { defaultValue: props.valor })}
         aria-invalid={!!props.erro}
         className={`campo ${props.erro ? "campo-erro" : ""}`}
       >
@@ -155,9 +175,15 @@ export function CampoArquivo(props: Omit<Base, "nome"> & { aceita?: string }) {
   );
 }
 
-export function BotaoEnviar({ enviando, texto, enviandoTexto, perigo }: { enviando: boolean; texto: string; enviandoTexto?: string; perigo?: boolean }) {
+// confirmar: pergunta antes de enviar, pra acao que nao tem volta (RNF05)
+export function BotaoEnviar({ enviando, texto, enviandoTexto, perigo, confirmar }: { enviando: boolean; texto: string; enviandoTexto?: string; perigo?: boolean; confirmar?: string }) {
   return (
-    <button type="submit" disabled={enviando} className={perigo ? "botao-perigo" : "botao-principal"}>
+    <button
+      type="submit"
+      disabled={enviando}
+      onClick={confirmar ? (e) => !confirm(confirmar) && e.preventDefault() : undefined}
+      className={perigo ? "botao-perigo" : "botao-principal"}
+    >
       {enviando ? (enviandoTexto ?? "Salvando...") : texto}
     </button>
   );

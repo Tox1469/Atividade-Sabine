@@ -5,6 +5,8 @@ import { prisma } from "@/lib/db";
 import { dinheiro, plural } from "@/lib/formato";
 import { exigirPerfil } from "@/lib/permissao";
 
+export const metadata = { title: "Serviços" };
+
 const POR_PAGINA = 20;
 
 type Busca = { busca?: string; categoria?: string; pagina?: string; ok?: string };

@@ -4,6 +4,8 @@ import { prisma } from "@/lib/db";
 import { dataBR, plural } from "@/lib/formato";
 import { exigirCliente } from "@/lib/permissao";
 
+export const metadata = { title: "Minhas solicitações" };
+
 const POR_PAGINA = 20;
 
 // T16 - minhas solicitacoes. so as ordens do cliente logado (RNF02)

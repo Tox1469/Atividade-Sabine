@@ -7,6 +7,8 @@ import { dataHoraBR } from "@/lib/formato";
 import { exigirPerfil } from "@/lib/permissao";
 import { BotaoLiberarAcesso, FormAnonimizar, FormAtivo, FormCliente } from "../formularios";
 
+export const metadata = { title: "Ficha do cliente" };
+
 // T06 - ficha do cliente
 export default async function FichaCliente({ params }: { params: Promise<{ id: string }> }) {
   await exigirPerfil("administrador");
@@ -22,7 +24,7 @@ export default async function FichaCliente({ params }: { params: Promise<{ id: s
 
   return (
     <div className="mx-auto max-w-5xl space-y-4">
-      <Titulo titulo={cliente.nome_fantasia ?? cliente.nome_razao_social} subtitulo={`Cadastro do cliente, ${formatarCpfCnpj(cliente.cpf_cnpj)}`}>
+      <Titulo voltar={["/clientes", "clientes"]} titulo={cliente.nome_fantasia ?? cliente.nome_razao_social} subtitulo={`Cadastro do cliente, ${formatarCpfCnpj(cliente.cpf_cnpj)}`}>
         {cliente.ativo ? <Chip tom="ativo">Ativo</Chip> : <Chip tom="inativo">Inativo</Chip>}
       </Titulo>
 

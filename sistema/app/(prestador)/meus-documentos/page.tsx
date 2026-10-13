@@ -6,6 +6,8 @@ import { dataBR, hoje } from "@/lib/formato";
 import { exigirPrestador } from "@/lib/permissao";
 import { FormMeuDocumento } from "./formulario";
 
+export const metadata = { title: "Meus documentos" };
+
 // T15 - meus documentos (UC08 pelo prestador, TA29)
 export default async function MeusDocumentos() {
   const { prestador } = await exigirPrestador();

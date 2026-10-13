@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { signOut } from "@/auth";
 
+export const metadata = { title: "Acesso não liberado" };
+
 export default function SemPermissao() {
   return (
     <main className="flex min-h-screen items-center justify-center px-4">

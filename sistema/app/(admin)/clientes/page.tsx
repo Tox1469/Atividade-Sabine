@@ -6,6 +6,8 @@ import { formatarCpfCnpj, soDigitos } from "@/lib/dominio/cpf-cnpj";
 import { EM_ABERTO } from "@/lib/dominio/ordem";
 import { exigirPerfil } from "@/lib/permissao";
 
+export const metadata = { title: "Clientes" };
+
 const POR_PAGINA = 20;
 
 type Busca = { busca?: string; situacao?: string; pagina?: string; ok?: string };

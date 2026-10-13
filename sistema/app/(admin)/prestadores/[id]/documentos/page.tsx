@@ -7,6 +7,8 @@ import { dataBR, hoje, tamanhoArquivo } from "@/lib/formato";
 import { exigirPerfil } from "@/lib/permissao";
 import { FormDocumentoAdmin } from "../../formularios";
 
+export const metadata = { title: "Documentos do prestador" };
+
 // T04c - documentos do prestador, com validade e versoes anteriores (UC08, TA28 a TA30)
 export default async function DocumentosPrestador({ params }: { params: Promise<{ id: string }> }) {
   await exigirPerfil("administrador");

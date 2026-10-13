@@ -5,6 +5,8 @@ import { dataHoraBR } from "@/lib/formato";
 import { exigirPerfil } from "@/lib/permissao";
 import { BotaoLiberarAcesso, FormAnonimizar, FormPrestador } from "../formularios";
 
+export const metadata = { title: "Ficha do prestador" };
+
 // T04 - dados cadastrais (o layout ja garantiu que o prestador existe)
 export default async function DadosPrestador({ params }: { params: Promise<{ id: string }> }) {
   await exigirPerfil("administrador");

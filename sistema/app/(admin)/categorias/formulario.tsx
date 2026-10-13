@@ -9,7 +9,7 @@ export function FormCategoria({ id, inicial }: { id: number | null; inicial: Rec
   const ativa = estado.valores ? estado.valores.ativa === "sim" : inicial.ativa !== "nao";
 
   return (
-    <form action={enviar} className="cartao" style={{ flex: "0 1 340px" }} noValidate>
+    <form onSubmit={enviar} className="cartao" style={{ flex: "0 1 340px" }} noValidate>
       <h2 className="cartao-titulo">{id === null ? "Nova categoria" : "Editar categoria"}</h2>
       <div className="space-y-3 p-4">
         <MensagemFormulario estado={estado} />

@@ -4,6 +4,8 @@ import { prisma } from "@/lib/db";
 import { exigirPerfil } from "@/lib/permissao";
 import { FormCategoria } from "./formulario";
 
+export const metadata = { title: "Categorias" };
+
 // T07 - categorias (UC05, TA25). sao poucas, entao a lista nao pagina
 export default async function Categorias({ searchParams }: { searchParams: Promise<{ editar?: string; ok?: string }> }) {
   await exigirPerfil("administrador");

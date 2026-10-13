@@ -35,3 +35,13 @@ export async function liberarAcesso(vinculo: Vinculo, nome: string, email: strin
 export async function trocarAtivoDoAcesso(idUsuario: number, ativo: boolean) {
   await prisma.usuario.update({ where: { id_usuario: idUsuario }, data: { ativo, tentativas_falhas: 0, bloqueado_ate: null } });
 }
+
+// "esqueci a senha": o administrador gera uma provisoria nova e desbloqueia o login
+export async function redefinirSenha(idUsuario: number) {
+  const senha = senhaProvisoria();
+  await prisma.usuario.update({
+    where: { id_usuario: idUsuario },
+    data: { senha_hash: await bcrypt.hash(senha, 10), tentativas_falhas: 0, bloqueado_ate: null },
+  });
+  return senha;
+}

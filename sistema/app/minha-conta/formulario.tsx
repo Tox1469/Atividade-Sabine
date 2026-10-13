@@ -6,7 +6,7 @@ import { trocarSenha } from "./actions";
 export function FormSenha() {
   const { estado, enviar, enviando, erro } = useFormulario(trocarSenha);
   return (
-    <form action={enviar} className="cartao" noValidate>
+    <form onSubmit={enviar} className="cartao" noValidate>
       <h2 className="cartao-titulo">Trocar senha</h2>
       <div className="space-y-3 p-4">
         <MensagemFormulario estado={estado} />

@@ -2,7 +2,9 @@ import { Aviso, Titulo, Vazio } from "@/app/_componentes/ui";
 import { dataHoraBR, paraCampoData } from "@/lib/formato";
 import { exigirPerfil } from "@/lib/permissao";
 import { lerPeriodo, servicosPorPeriodo } from "@/lib/relatorios";
-import { BotaoImprimir } from "../imprimir";
+import { BotaoImprimir } from "@/app/_componentes/imprimir";
+
+export const metadata = { title: "Serviços por período" };
 
 // UC21 / RF18 - servicos por periodo, agrupados por categoria
 export default async function ServicosPorPeriodo({ searchParams }: { searchParams: Promise<{ de?: string; ate?: string }> }) {

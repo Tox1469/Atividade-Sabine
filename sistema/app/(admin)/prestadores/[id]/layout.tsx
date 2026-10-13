@@ -15,6 +15,7 @@ export default async function FichaPrestador({ params, children }: { params: Pro
   return (
     <div className="mx-auto max-w-6xl">
       <Titulo
+        voltar={["/prestadores", "prestadores"]}
         titulo={prestador.nome_fantasia ?? prestador.nome_razao_social}
         subtitulo={`${prestador.nome_fantasia ? prestador.nome_razao_social + ", " : ""}${formatarCpfCnpj(prestador.cpf_cnpj)}`}
       >

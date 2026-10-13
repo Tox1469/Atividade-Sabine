@@ -5,6 +5,8 @@ import { exigirCliente } from "@/lib/permissao";
 import { prazoMinimo } from "@/lib/validacao/ordem";
 import { abrirSolicitacao } from "../actions";
 
+export const metadata = { title: "Nova solicitação" };
+
 // T17 - nova solicitacao (UC12)
 export default async function NovaSolicitacao() {
   const { cliente } = await exigirCliente();
@@ -12,7 +14,7 @@ export default async function NovaSolicitacao() {
 
   return (
     <div className="mx-auto max-w-4xl">
-      <Titulo titulo="Nova solicitação" subtitulo="Escolha o serviço e descreva o que precisa" />
+      <Titulo voltar={["/minhas-solicitacoes", "minhas solicitações"]} titulo="Nova solicitação" subtitulo="Escolha o serviço e descreva o que precisa" />
       {cliente.ativo ? (
         <FormularioOrdem acao={abrirSolicitacao} categorias={categorias} voltar="/minhas-solicitacoes" prazoMinimo={prazoMinimo()} localPadrao={enderecoDe(cliente)} />
       ) : (

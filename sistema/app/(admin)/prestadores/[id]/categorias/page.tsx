@@ -4,6 +4,8 @@ import { dataBR } from "@/lib/formato";
 import { exigirPerfil } from "@/lib/permissao";
 import { FormCategorias } from "../../formularios";
 
+export const metadata = { title: "Categorias do prestador" };
+
 // T04b - habilitacao por categoria (UC07, TA27)
 export default async function CategoriasPrestador({ params }: { params: Promise<{ id: string }> }) {
   await exigirPerfil("administrador");

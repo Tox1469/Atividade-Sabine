@@ -6,6 +6,8 @@ import { exigirPerfil } from "@/lib/permissao";
 import { prazoMinimo } from "@/lib/validacao/ordem";
 import { abrirPeloAdmin } from "../actions";
 
+export const metadata = { title: "Abrir ordem" };
+
 // UC12 A1.1 - abertura pelo administrador, quando o pedido chega por telefone
 export default async function NovaOrdem({ searchParams }: { searchParams: Promise<{ cliente?: string }> }) {
   await exigirPerfil("administrador");
@@ -17,7 +19,7 @@ export default async function NovaOrdem({ searchParams }: { searchParams: Promis
 
   return (
     <div className="mx-auto max-w-4xl">
-      <Titulo titulo="Abrir ordem de serviço" subtitulo="Em nome de um cliente ativo" />
+      <Titulo voltar={["/ordens", "ordens de serviço"]} titulo="Abrir ordem de serviço" subtitulo="Em nome de um cliente ativo" />
       <FormularioOrdem
         acao={abrirPeloAdmin}
         categorias={categorias}

@@ -8,6 +8,8 @@ import { enderecoDe, FILTRO_ACEITE } from "@/lib/ordens";
 import { exigirPrestador } from "@/lib/permissao";
 import { FormAndamento, FormConcluir, FormIniciar, FormResposta } from "../formularios";
 
+export const metadata = { title: "Execução da ordem" };
+
 // T14 - execucao da ordem. so abre ordem que e do prestador logado (UC15 E2.2)
 export default async function ExecucaoOrdem({ params }: { params: Promise<{ id: string }> }) {
   const { prestador } = await exigirPrestador();
@@ -26,7 +28,7 @@ export default async function ExecucaoOrdem({ params }: { params: Promise<{ id: 
 
   return (
     <div className="mx-auto max-w-6xl">
-      <Titulo titulo={`Ordem ${ordem.numero}`} subtitulo={ordem.servico.nome}>
+      <Titulo voltar={["/minhas-ordens", "minhas ordens"]} titulo={`Ordem ${ordem.numero}`} subtitulo={ordem.servico.nome}>
         <ChipStatus status={ordem.status} />
         {emAtraso(ordem.status, ordem.prazo, dia) && <Chip tom="atraso">Em atraso</Chip>}
       </Titulo>

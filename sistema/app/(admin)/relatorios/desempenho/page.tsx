@@ -4,7 +4,9 @@ import { textoNota } from "@/lib/dominio/avaliacao";
 import { dataHoraBR, paraCampoData } from "@/lib/formato";
 import { exigirPerfil } from "@/lib/permissao";
 import { desempenho, lerPeriodo } from "@/lib/relatorios";
-import { BotaoImprimir } from "../imprimir";
+import { BotaoImprimir } from "@/app/_componentes/imprimir";
+
+export const metadata = { title: "Desempenho dos prestadores" };
 
 const COLUNAS = [
   ["prestador", "Prestador"],

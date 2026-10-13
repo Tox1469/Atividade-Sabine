@@ -138,7 +138,7 @@ body {
 .nota-opcao input:focus-visible + span { outline: 2px solid var(--color-caneta); outline-offset: 2px; }
 
 @media print {
-  header, nav, .nao-imprimir { display: none !important; }
+  header, nav, .nao-imprimir, .rodape-form, .modal-fundo { display: none !important; }
   body { background: #fff; }
   .cartao { border: 0; }
 }

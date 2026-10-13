@@ -10,7 +10,7 @@ type Apto = { id: number; nome: string; detalhe: string; nota: string; emAndamen
 export function FormAtribuir({ idOrdem, aptos, troca, children }: { idOrdem: number; aptos: Apto[]; troca: boolean; children: React.ReactNode }) {
   const { estado, enviar, enviando, valor } = useFormulario(atribuirOrdem.bind(null, idOrdem));
   return (
-    <form action={enviar}>
+    <form onSubmit={enviar}>
       <div className="modal-corpo">
         <MensagemFormulario estado={estado} />
         {children}
@@ -64,7 +64,7 @@ export function FormAtribuir({ idOrdem, aptos, troca, children }: { idOrdem: num
 export function FormCancelar({ idOrdem, voltar }: { idOrdem: number; voltar: string }) {
   const { estado, enviar, enviando, valor, erro } = useFormulario(cancelarOrdem.bind(null, idOrdem));
   return (
-    <form action={enviar} noValidate>
+    <form onSubmit={enviar} noValidate>
       <div className="modal-corpo">
         <p className="aviso atencao">
           <strong>O cancelamento não apaga a ordem.</strong>
@@ -82,7 +82,7 @@ export function FormCancelar({ idOrdem, voltar }: { idOrdem: number; voltar: str
       </div>
       <div className="rodape-form">
         <Link href={voltar} className="botao">Voltar</Link>
-        <BotaoEnviar enviando={enviando} texto="Confirmar cancelamento" enviandoTexto="Cancelando..." perigo />
+        <BotaoEnviar enviando={enviando} texto="Confirmar cancelamento" enviandoTexto="Cancelando..." perigo confirmar="Cancelar a ordem? O cancelamento não pode ser desfeito." />
       </div>
     </form>
   );

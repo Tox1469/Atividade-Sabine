@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SGP - gestão de prestadores",
+  title: { default: "SGP - gestão de prestadores", template: "%s | SGP" },
   description: "Sistema de gestão de prestadores de serviço terceirizados",
 };
 

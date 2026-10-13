@@ -14,7 +14,7 @@ export function FormResposta({ idOrdem }: { idOrdem: number }) {
   const recusa = useAcao(idOrdem);
   return (
     <div className="colunas">
-      <form action={aceite.enviar} className="cartao">
+      <form onSubmit={aceite.enviar} className="cartao">
         <h2 className="cartao-titulo">Aceitar a ordem</h2>
         <div className="p-4 text-sm">
           <MensagemFormulario estado={aceite.estado} />
@@ -25,7 +25,7 @@ export function FormResposta({ idOrdem }: { idOrdem: number }) {
           <BotaoEnviar enviando={aceite.enviando} texto="Aceitar ordem" enviandoTexto="Aceitando..." />
         </div>
       </form>
-      <form action={recusa.enviar} className="cartao" noValidate>
+      <form onSubmit={recusa.enviar} className="cartao" noValidate>
         <h2 className="cartao-titulo">Recusar</h2>
         <div className="p-4">
           <MensagemFormulario estado={recusa.estado} />
@@ -40,7 +40,7 @@ export function FormResposta({ idOrdem }: { idOrdem: number }) {
         </div>
         <input type="hidden" name="acao" value="recusar" />
         <div className="rodape-form">
-          <BotaoEnviar enviando={recusa.enviando} texto="Recusar ordem" enviandoTexto="Recusando..." perigo />
+          <BotaoEnviar enviando={recusa.enviando} texto="Recusar ordem" enviandoTexto="Recusando..." perigo confirmar="Recusar esta ordem? Ela volta para o administrador e não é oferecida de novo para você." />
         </div>
       </form>
     </div>
@@ -50,7 +50,7 @@ export function FormResposta({ idOrdem }: { idOrdem: number }) {
 export function FormIniciar({ idOrdem }: { idOrdem: number }) {
   const { estado, enviar, enviando } = useAcao(idOrdem);
   return (
-    <form action={enviar} className="cartao mb-4">
+    <form onSubmit={enviar} className="cartao mb-4">
       <h2 className="cartao-titulo">Iniciar a execução</h2>
       <div className="p-4 text-sm">
         <MensagemFormulario estado={estado} />
@@ -67,7 +67,7 @@ export function FormIniciar({ idOrdem }: { idOrdem: number }) {
 export function FormAndamento({ idOrdem }: { idOrdem: number }) {
   const { estado, enviar, enviando, valor, erro } = useAcao(idOrdem);
   return (
-    <form action={enviar} className="cartao" style={{ flex: "0 1 400px" }} noValidate>
+    <form onSubmit={enviar} className="cartao" style={{ flex: "0 1 400px" }} noValidate>
       <h2 className="cartao-titulo">Registrar andamento</h2>
       <div className="p-4">
         <MensagemFormulario estado={estado} />
@@ -84,7 +84,7 @@ export function FormAndamento({ idOrdem }: { idOrdem: number }) {
 export function FormConcluir({ idOrdem }: { idOrdem: number }) {
   const { estado, enviar, enviando, valor, erro } = useAcao(idOrdem);
   return (
-    <form action={enviar} className="cartao mt-4" noValidate>
+    <form onSubmit={enviar} className="cartao mt-4" noValidate>
       <h2 className="cartao-titulo">Concluir o serviço</h2>
       <div className="p-4">
         <MensagemFormulario estado={estado} />
@@ -102,7 +102,7 @@ export function FormConcluir({ idOrdem }: { idOrdem: number }) {
       <input type="hidden" name="acao" value="concluir" />
       <div className="rodape-form">
         <Link href="/minhas-ordens" className="botao">Voltar</Link>
-        <BotaoEnviar enviando={enviando} texto="Concluir ordem" enviandoTexto="Concluindo..." />
+        <BotaoEnviar enviando={enviando} texto="Concluir ordem" enviandoTexto="Concluindo..." confirmar="Concluir a ordem? Depois de concluída ela não pode mais ser alterada (RN06)." />
       </div>
     </form>
   );

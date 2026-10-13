@@ -24,10 +24,15 @@ export function Aviso({ tom, titulo, children }: { tom?: "ok" | "atencao" | "err
   );
 }
 
-export function Titulo({ titulo, subtitulo, children }: { titulo: string; subtitulo?: React.ReactNode; children?: React.ReactNode }) {
+export function Titulo({ titulo, subtitulo, voltar, children }: { titulo: string; subtitulo?: React.ReactNode; voltar?: [string, string]; children?: React.ReactNode }) {
   return (
     <div className="mb-4 flex flex-wrap items-start justify-between gap-3 border-b border-regua pb-3">
       <div>
+        {voltar && (
+          <Link href={voltar[0]} className="nao-imprimir mb-1 inline-block text-sm text-tinta2 hover:text-tinta hover:underline">
+            Voltar para {voltar[1]}
+          </Link>
+        )}
         <h1 className="text-xl font-semibold">{titulo}</h1>
         {subtitulo && <p className="text-sm text-tinta2">{subtitulo}</p>}
       </div>

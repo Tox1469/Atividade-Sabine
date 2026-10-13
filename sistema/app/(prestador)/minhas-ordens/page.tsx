@@ -1,9 +1,11 @@
 import Link from "next/link";
-import { Chip, ChipStatus, Paginacao, paginaAtual, Titulo, Vazio } from "@/app/_componentes/ui";
+import { Aviso, Chip, ChipStatus, Paginacao, paginaAtual, Titulo, Vazio } from "@/app/_componentes/ui";
 import { prisma } from "@/lib/db";
 import { emAtraso } from "@/lib/dominio/ordem";
 import { dataBR, diasEntre, hoje, plural } from "@/lib/formato";
 import { exigirPrestador } from "@/lib/permissao";
+
+export const metadata = { title: "Minhas ordens" };
 
 const POR_PAGINA = 20;
 
@@ -37,6 +39,16 @@ export default async function MinhasOrdens({ searchParams }: { searchParams: Pro
   return (
     <div className="mx-auto max-w-6xl">
       <Titulo titulo="Minhas ordens" subtitulo="As ordens atribuídas a você" />
+
+      {prestador.situacao === "pendente" && (
+        <Aviso tom="atencao" titulo="Seu cadastro está pendente, por isso você não recebe ordens novas.">
+          Envie ou renove os documentos obrigatórios em <Link href="/meus-documentos" className="underline">Meus documentos</Link>. Depois da conferência o
+          administrador libera você (RN01 e RN02).
+        </Aviso>
+      )}
+      {prestador.situacao === "bloqueado" && (
+        <Aviso tom="erro" titulo="Seu cadastro está bloqueado pelo administrador.">As ordens que já estavam com você continuam aqui. Para saber o motivo, fale com a administração.</Aviso>
+      )}
 
       <div className="indicadores">
         <div className="indicador">

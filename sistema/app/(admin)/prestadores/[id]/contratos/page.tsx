@@ -4,6 +4,8 @@ import { dataBR, dinheiro, hoje } from "@/lib/formato";
 import { exigirPerfil } from "@/lib/permissao";
 import { FormContrato } from "../../formularios";
 
+export const metadata = { title: "Contratos do prestador" };
+
 // contratos do prestador (UC10, TA50). a vigencia entra na aptidao pela RN03 (TA51)
 export default async function ContratosPrestador({ params }: { params: Promise<{ id: string }> }) {
   await exigirPerfil("administrador");

@@ -4,6 +4,8 @@ import { prisma } from "@/lib/db";
 import { exigirPerfil } from "@/lib/permissao";
 import { FormServico } from "../formulario";
 
+export const metadata = { title: "Ficha do serviço" };
+
 // T09 - ficha do servico
 export default async function FichaServico({ params }: { params: Promise<{ id: string }> }) {
   await exigirPerfil("administrador");
@@ -26,7 +28,7 @@ export default async function FichaServico({ params }: { params: Promise<{ id: s
 
   return (
     <div className="mx-auto max-w-4xl">
-      <Titulo titulo={servico.nome} subtitulo="Ficha do serviço" />
+      <Titulo voltar={["/servicos", "serviços"]} titulo={servico.nome} subtitulo="Ficha do serviço" />
       <FormServico id={servico.id_servico} inicial={inicial} categorias={categorias.map((c) => ({ id: c.id_categoria, nome: c.nome }))} />
     </div>
   );

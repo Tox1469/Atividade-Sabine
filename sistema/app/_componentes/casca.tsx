@@ -21,6 +21,7 @@ const MENUS: Record<Perfil, GrupoMenu[]> = {
         { nome: "Clientes", href: "/clientes" },
         { nome: "Serviços", href: "/servicos" },
         { nome: "Categorias", href: "/categorias" },
+        { nome: "Usuários", href: "/usuarios" },
       ],
     },
     {

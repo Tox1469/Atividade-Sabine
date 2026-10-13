@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { feriados } from "@/lib/apis-publicas";
 import { dinheiro, plural } from "@/lib/formato";
 import type { EstadoFormulario } from "@/lib/formulario";
 import { BotaoEnviar, Campo, CampoTexto, MensagemFormulario, Selecao, useFormulario } from "./campos";
@@ -32,8 +33,34 @@ export function FormularioOrdem({ acao, categorias, voltar, prazoMinimo, localPa
   const escolhido = daCategoria.find((s) => String(s.id) === servico);
   const local = clientes?.find((c) => String(c.id) === cliente)?.local ?? localPadrao;
 
+  // UC12 A3.1: sem prazo informado, mostra ja a data calculada pelo prazo padrao do servico.
+  // e avisa se a data cai em fim de semana ou feriado nacional (api de feriados da brasilapi)
+  const [prazo, setPrazo] = useState(valor("prazo"));
+  const [listaFeriados, setListaFeriados] = useState<Map<string, string>>(new Map());
+  const hojeBR = new Date().toLocaleDateString("en-CA", { timeZone: "America/Sao_Paulo" });
+  const calculado = escolhido ? new Date(Date.parse(hojeBR + "T00:00:00Z") + escolhido.prazo * 86400000).toISOString().slice(0, 10) : "";
+  const alvo = prazo || calculado;
+  const ano = Number(alvo.slice(0, 4));
+  useEffect(() => {
+    if (!ano) return;
+    let vivo = true;
+    feriados(ano).then((m) => vivo && setListaFeriados(m));
+    return () => {
+      vivo = false;
+    };
+  }, [ano]);
+  const br = (iso: string) => iso.split("-").reverse().join("/");
+  const diaSemana = alvo ? new Date(alvo + "T12:00:00Z").getUTCDay() : -1;
+  const alertaData = !alvo
+    ? ""
+    : listaFeriados.get(alvo)
+      ? `${br(alvo)} é feriado nacional (${listaFeriados.get(alvo)}). Confirme se o prestador atende nesse dia.`
+      : diaSemana === 0 || diaSemana === 6
+        ? `${br(alvo)} cai num ${diaSemana === 0 ? "domingo" : "sábado"}.`
+        : "";
+
   return (
-    <form action={enviar} className="cartao" noValidate>
+    <form onSubmit={enviar} className="cartao" noValidate>
       <h2 className="cartao-titulo">O que você precisa</h2>
       <div className="space-y-3 p-4">
         <MensagemFormulario estado={estado} />
@@ -103,15 +130,26 @@ export function FormularioOrdem({ acao, categorias, voltar, prazoMinimo, localPa
         />
 
         <div className="grid gap-3 sm:grid-cols-2">
-          <Campo
-            nome="prazo"
-            rotulo="Prazo desejado"
-            type="date"
-            min={prazoMinimo}
-            valor={valor("prazo")}
-            erro={erro("prazo")}
-            ajuda="Se ficar em branco, o sistema aplica o prazo padrão do serviço e mostra a data calculada."
-          />
+          <div>
+            <label htmlFor="prazo" className="rotulo">Prazo desejado</label>
+            <input
+              id="prazo"
+              name="prazo"
+              type="date"
+              min={prazoMinimo}
+              value={prazo}
+              onChange={(e) => setPrazo(e.target.value)}
+              aria-invalid={!!erro("prazo")}
+              className={`campo ${erro("prazo") ? "campo-erro" : ""}`}
+            />
+            {erro("prazo") && <p className="msg-erro">{erro("prazo")}</p>}
+            <p className="ajuda">
+              {prazo || !calculado
+                ? "Se ficar em branco, o sistema aplica o prazo padrão do serviço."
+                : `Em branco vale o prazo padrão do serviço: ${br(calculado)}.`}
+            </p>
+            {alertaData && <p className="mt-1 text-xs font-semibold text-ocre">{alertaData}</p>}
+          </div>
           <Campo key={cliente} nome="local_atendimento" rotulo="Local do atendimento" valor={valor("local_atendimento") || local} erro={erro("local_atendimento")} />
         </div>
       </div>

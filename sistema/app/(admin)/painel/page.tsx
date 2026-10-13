@@ -1,11 +1,13 @@
 import Link from "next/link";
-import { Chip, ChipStatus, Titulo, Vazio } from "@/app/_componentes/ui";
+import { Aviso, Chip, ChipStatus, Titulo, Vazio } from "@/app/_componentes/ui";
 import { prisma } from "@/lib/db";
 import { situacaoDocumento } from "@/lib/dominio/documento";
 import { emAtraso, foiAceita, semRespostaHaMaisDe24h } from "@/lib/dominio/ordem";
 import { FILTRO_ACEITE } from "@/lib/ordens";
 import { dataBR, diasEntre, hoje, plural, somarDias } from "@/lib/formato";
 import { exigirPerfil } from "@/lib/permissao";
+
+export const metadata = { title: "Painel do dia" };
 
 // T02 - painel do dia: o que o administrador precisa resolver hoje
 export default async function Painel() {
@@ -14,7 +16,7 @@ export default async function Painel() {
   const agora = new Date();
   const inicioMes = new Date(Date.UTC(dia.getUTCFullYear(), dia.getUTCMonth(), 1));
 
-  const [vencidos, aVencer, abertas, emAndamento, concluidasMes] = await Promise.all([
+  const [vencidos, aVencer, abertas, emAndamento, concluidasMes, pendentes] = await Promise.all([
     prisma.documento.findMany({ where: { versao_atual: true, data_validade: { lt: dia } }, include: { tipo: true, prestador: true }, orderBy: { data_validade: "asc" } }),
     prisma.documento.findMany({ where: { versao_atual: true, data_validade: { gte: dia, lte: somarDias(dia, 30) } }, include: { tipo: true, prestador: true }, orderBy: { data_validade: "asc" } }),
     prisma.ordem_servico.findMany({ where: { status: "aberta" }, include: { cliente: true, servico: { include: { categoria: true } } }, orderBy: { prazo: "asc" } }),
@@ -24,6 +26,8 @@ export default async function Painel() {
       orderBy: { prazo: "asc" },
     }),
     prisma.ordem_servico.findMany({ where: { status: "concluida", data_conclusao: { gte: inicioMes } }, select: { entregue_no_prazo: true } }),
+    // prestador pendente que ja mandou documento: esta esperando alguem conferir
+    prisma.prestador.count({ where: { situacao: "pendente", documentos: { some: { versao_atual: true } } } }),
   ]);
 
   // precisa de acao: aberta (atribuir), atrasada, ou atribuida sem resposta ha mais de 24h (UC14 E3.1)
@@ -53,6 +57,12 @@ export default async function Painel() {
       <Titulo titulo="Painel do dia" subtitulo={`Situação em ${dataBR(dia)}`}>
         <Link href="/ordens/nova" className="botao-principal">Abrir ordem</Link>
       </Titulo>
+
+      {pendentes > 0 && (
+        <Aviso titulo={`${plural(pendentes, "prestador pendente já enviou documentos", "prestadores pendentes já enviaram documentos")} e espera conferência.`}>
+          <Link href="/prestadores?situacao=pendente" className="underline">Ver os pendentes</Link> e, com a documentação em dia, mudar a situação para ativo.
+        </Aviso>
+      )}
 
       <div className="indicadores">
         <Link className="indicador alerta" href="/vencimentos">

@@ -5,6 +5,8 @@ import { prisma } from "@/lib/db";
 import { dataHoraBR, plural } from "@/lib/formato";
 import { exigirPerfil } from "@/lib/permissao";
 
+export const metadata = { title: "Log de ações" };
+
 const POR_PAGINA = 30;
 const ACOES: Record<string, string> = {
   alteracao_situacao: "Alteração de situação",
