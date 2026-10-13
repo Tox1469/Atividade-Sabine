@@ -55,7 +55,7 @@ export default async function FichaCliente({ params }: { params: Promise<{ id: s
             <p>{ordens === 0 ? "Nenhuma ordem aberta para este cliente até agora." : `${ordens} ${ordens === 1 ? "ordem" : "ordens"} no histórico.`}</p>
             <div className="flex flex-wrap gap-2">
               {ordens > 0 && <Link href={`/ordens?cliente=${cliente.id_cliente}`} className="botao">Ver ordens do cliente</Link>}
-              {cliente.ativo && <Link href={`/ordens/nova?cliente=${cliente.id_cliente}`} className="botao">Abrir ordem para ele</Link>}
+              {cliente.ativo && <Link href={`/ordens/nova?cliente=${cliente.id_cliente}`} className="botao">Abrir ordem para este cliente</Link>}
             </div>
             {!anonimizado && <FormAtivo id={cliente.id_cliente} ativo={cliente.ativo} />}
           </div>

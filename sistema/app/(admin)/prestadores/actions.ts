@@ -135,6 +135,8 @@ export async function alterarSituacao(id: number, _estado: EstadoFormulario, for
 // UC08 A1: o administrador envia em nome do prestador
 export async function prepararEnvio(id: number, pasta: "documentos" | "contratos", tipo: string) {
   await exigirPerfil("administrador");
+  // pasta e id vem do navegador: so valem as duas pastas conhecidas e um id numerico
+  if ((pasta !== "documentos" && pasta !== "contratos") || !Number.isInteger(id)) return null;
   return linkDeEnvio(`${pasta}/${id}`, tipo);
 }
 

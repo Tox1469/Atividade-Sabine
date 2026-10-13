@@ -15,7 +15,7 @@ const abas = [
 export function AbasPrestador({ id }: { id: number }) {
   const caminho = usePathname();
   return (
-    <div className="mb-4 flex gap-1 overflow-x-auto border-b border-regua text-sm">
+    <div className="mb-4 flex gap-1 overflow-x-auto border-b border-regua text-sm md:overflow-visible">
       {abas.map(([sufixo, nome]) => {
         const href = `/prestadores/${id}${sufixo}`;
         return caminho === href ? (

@@ -23,11 +23,14 @@ if (!existsSync(pasta)) {
 
 await pg.start();
 
-try {
-  await pg.createDatabase("sgp");
-  console.log("banco sgp criado");
-} catch {
-  // ja existe, segue
+// sgp e o banco de uso. sgp_teste e so dos testes de integracao, que criam e sujam dados a vontade
+for (const nome of ["sgp", "sgp_teste"]) {
+  try {
+    await pg.createDatabase(nome);
+    console.log(`banco ${nome} criado`);
+  } catch {
+    // ja existe, segue
+  }
 }
 
 console.log(`postgres rodando: postgresql://sgp:sgp@localhost:${porta}/sgp`);

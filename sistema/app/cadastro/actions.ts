@@ -21,6 +21,9 @@ const contaSchema = z
 // cadastro pela tela de login. cliente entra ativo e ja pode pedir servico.
 // prestador entra pendente, como todo prestador novo, ate o administrador conferir os documentos
 export async function criarConta(perfil: "cliente" | "prestador", _estado: EstadoFormulario, form: FormData): Promise<EstadoFormulario> {
+  // o perfil chega do navegador (bind no formulario) e pode ser trocado na mao.
+  // sem essa conferencia alguem criaria a propria conta como administrador (RNF02)
+  if (perfil !== "cliente" && perfil !== "prestador") return { mensagem: "Escolha se vai pedir ou prestar serviço." };
   const valores = valoresDo(form);
   // senha nao volta pra tela
   const devolver = { ...valores, senha: "", confirmacao: "" };
