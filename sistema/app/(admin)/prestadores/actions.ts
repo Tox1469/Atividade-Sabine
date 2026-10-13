@@ -196,7 +196,7 @@ export async function liberarAcessoPrestador(id: number): Promise<EstadoFormular
   if (p.id_usuario) return { mensagem: "Este prestador já tem acesso." };
   const r = await liberarAcesso({ perfil: "prestador", id_prestador: id }, p.nome_fantasia ?? p.nome_razao_social, p.email);
   if ("erro" in r) return { mensagem: r.erro };
-  revalidatePath(caminho(id));
+  // sem revalidar: redesenhar o cartao tiraria da tela a senha provisoria antes dela ser anotada
   return { ok: `Acesso liberado. Login ${r.login}, senha provisória ${r.senha}. Passe ao prestador: a senha não aparece de novo.` };
 }
 

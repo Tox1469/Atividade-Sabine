@@ -1,17 +1,24 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { avisar } from "@/app/_componentes/aviso-flutuante";
 import { BotaoEnviar, CampoTexto, MensagemFormulario, useFormulario } from "@/app/_componentes/campos";
 import { acaoPrestador } from "./actions";
 
-// cada acao da T14 e um formulario pequeno com o campo "acao" escondido
-function useAcao(idOrdem: number) {
-  return useFormulario(acaoPrestador.bind(null, idOrdem));
+// cada acao da T14 e um formulario pequeno com o campo "acao" escondido. o aviso vai pro canto
+// porque o proprio formulario some da tela quando a ordem muda de status
+function useAcao(idOrdem: number, aoConcluir: (ok: string) => void = avisar) {
+  return useFormulario(acaoPrestador.bind(null, idOrdem), {}, undefined, aoConcluir);
 }
 
 export function FormResposta({ idOrdem }: { idOrdem: number }) {
+  const router = useRouter();
   const aceite = useAcao(idOrdem);
-  const recusa = useAcao(idOrdem);
+  const recusa = useAcao(idOrdem, (ok) => {
+    avisar(ok);
+    router.push("/minhas-ordens");
+  });
   return (
     <div className="colunas">
       <form onSubmit={aceite.enviar} className="cartao">

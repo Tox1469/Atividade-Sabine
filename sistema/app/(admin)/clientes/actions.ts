@@ -59,7 +59,7 @@ export async function liberarAcessoCliente(id: number): Promise<EstadoFormulario
   if (!c.ativo) return { mensagem: "Reative o cliente antes de liberar o acesso." };
   const r = await liberarAcesso({ perfil: "cliente", id_cliente: id }, c.nome_fantasia ?? c.nome_razao_social, c.email);
   if ("erro" in r) return { mensagem: r.erro };
-  revalidatePath(`/clientes/${id}`);
+  // sem revalidar: redesenhar o cartao tiraria da tela a senha provisoria antes dela ser anotada
   return { ok: `Acesso liberado. Login ${r.login}, senha provisória ${r.senha}. Passe ao cliente: a senha não aparece de novo.` };
 }
 

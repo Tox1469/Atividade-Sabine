@@ -17,7 +17,7 @@ type Props = {
   localPadrao?: string;
   clientes?: { id: number; nome: string; local: string }[]; // so na abertura pelo administrador (UC12 A1.1)
   clienteInicial?: string;
-  emJanela?: boolean; // dentro da janela do administrador, sem a moldura de cartao
+  emJanela?: boolean; // dentro de uma janela, sem a moldura de cartao
   aoConcluir?: (ok: string) => void;
   aoCancelar?: () => void;
 };
@@ -162,7 +162,7 @@ export function FormularioOrdem({ acao, categorias, voltar, prazoMinimo, localPa
         ) : (
           <Link href={voltar} className="botao">Cancelar</Link>
         )}
-        <BotaoEnviar enviando={enviando} texto={emJanela ? "Abrir ordem" : "Enviar solicitação"} enviandoTexto="Enviando..." />
+        <BotaoEnviar enviando={enviando} texto={clientes ? "Abrir ordem" : "Enviar solicitação"} enviandoTexto="Enviando..." />
       </div>
     </form>
   );

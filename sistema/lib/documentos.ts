@@ -56,9 +56,9 @@ export async function gravarDocumento(idPrestador: number, idUsuario: number, fo
 
   // E6.3: aceita, mas avisa que ja entrou vencido
   if (validade && validade < hoje()) {
-    return { ok: `${tipo.nome} enviado, mas a validade (${dataBR(validade)}) já passou: ele entra como vencido.` };
+    return { ok: `Documento enviado: ${tipo.nome}. A validade (${dataBR(validade)}) já passou, então ele entra como vencido.` };
   }
-  return { ok: `${tipo.nome} enviado.` };
+  return { ok: `Documento enviado: ${tipo.nome}.` };
 }
 
 // T04c e T15: a versao atual de cada tipo e as substituidas, mais recentes primeiro

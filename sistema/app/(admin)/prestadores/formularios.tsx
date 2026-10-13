@@ -215,7 +215,7 @@ export function BotaoLiberarAcesso({ id }: { id: number }) {
 }
 
 export function FormAnonimizar({ id }: { id: number }) {
-  const { estado, enviar, enviando } = useFormulario(anonimizar.bind(null, id));
+  const { estado, enviar, enviando } = useFormulario(anonimizar.bind(null, id), {}, undefined, avisar);
   return (
     <form onSubmit={enviar} className="space-y-3">
       <MensagemFormulario estado={estado} />

@@ -97,7 +97,7 @@ function JanelaAtribuir({ idOrdem, fechar }: { idOrdem: number; fechar: () => vo
               <h3 className="mb-1 text-sm font-semibold">Não disponíveis para esta ordem</h3>
               <p className="ajuda mb-2">A lista evita a dúvida de por que um prestador conhecido não aparece. Nenhum deles pode ser selecionado.</p>
               <div className="overflow-x-auto">
-                <table className="tabela min-w-[520px]">
+                <table className="tabela">
                   <thead>
                     <tr><th>Prestador</th><th>Motivo do impedimento</th></tr>
                   </thead>
