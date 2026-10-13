@@ -14,8 +14,8 @@ const obrigatorio = (max: number) =>
 const opcional = (max: number) =>
   z.string().trim().max(max, `Máximo de ${max} caracteres.`).transform((v) => (v === "" ? null : v));
 
-// RF02 + RN10. o mesmo esquema e usado no formulario e na action do servidor (RNF02)
-export const prestadorSchema = z
+// RF02, RF03 e RN10. prestador e cliente usam o mesmo esquema, no formulario e na action (RNF02)
+export const pessoaSchema = z
   .object({
     tipo_pessoa: z.enum(["F", "J"], { message: "Escolha o tipo." }),
     nome_razao_social: obrigatorio(150).pipe(z.string().min(3, "Informe o nome completo.")),
@@ -40,4 +40,4 @@ export const prestadorSchema = z
     }
   });
 
-export type DadosPrestador = z.infer<typeof prestadorSchema>;
+export type DadosPessoa = z.infer<typeof pessoaSchema>;
