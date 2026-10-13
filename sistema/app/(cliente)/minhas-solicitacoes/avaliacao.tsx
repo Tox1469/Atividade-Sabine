@@ -1,14 +1,19 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { avisar } from "@/app/_componentes/aviso-flutuante";
 import { BotaoEnviar, CampoTexto, MensagemFormulario, useFormulario } from "@/app/_componentes/campos";
+import { Janela } from "@/app/_componentes/janela";
 import { avaliarAtendimento } from "./actions";
 
 // T18 - nota de 1 a 5 (botoes de radio com cara de botao) e comentario opcional
-export function FormAvaliacao({ idOrdem, voltar }: { idOrdem: number; voltar?: string }) {
-  const { estado, enviar, enviando, valor } = useFormulario(avaliarAtendimento.bind(null, idOrdem));
+export function FormAvaliacao({ idOrdem, aoConcluir }: { idOrdem: number; aoConcluir?: (ok: string) => void }) {
+  const emJanela = !!aoConcluir;
+  const { estado, enviar, enviando, valor } = useFormulario(avaliarAtendimento.bind(null, idOrdem), {}, undefined, aoConcluir);
   return (
-    <form onSubmit={enviar} className={voltar ? "" : "cartao"} style={voltar ? undefined : { flex: "0 1 400px" }}>
-      {voltar ? <input type="hidden" name="voltar" value={voltar} /> : <h2 className="cartao-titulo">Avaliar o atendimento</h2>}
+    <form onSubmit={enviar} className={emJanela ? "" : "cartao"} style={emJanela ? undefined : { flex: "0 1 400px" }}>
+      {!emJanela && <h2 className="cartao-titulo">Avaliar o atendimento</h2>}
       <div className="space-y-3 p-4">
         <MensagemFormulario estado={estado} />
         <fieldset>
@@ -31,5 +36,27 @@ export function FormAvaliacao({ idOrdem, voltar }: { idOrdem: number; voltar?: s
         <BotaoEnviar enviando={enviando} texto="Enviar avaliação" enviandoTexto="Enviando..." />
       </div>
     </form>
+  );
+}
+
+// T16: avaliar direto da lista, numa janela por cima dela
+export function BotaoAvaliar({ idOrdem, numero, detalhe }: { idOrdem: number; numero: string; detalhe: string }) {
+  const [aberta, setAberta] = useState(false);
+  const router = useRouter();
+  const concluir = (ok: string) => {
+    setAberta(false);
+    avisar(ok);
+    router.refresh();
+  };
+  return (
+    <>
+      <button type="button" onClick={() => setAberta(true)} className="botao-principal botao-pequeno">Avaliar</button>
+      {aberta && (
+        <Janela titulo={`Avaliar o atendimento da ${numero}`} aoFechar={() => setAberta(false)} largura={460}>
+          <p className="px-4 pt-4 text-sm text-tinta2">{detalhe}</p>
+          <FormAvaliacao idOrdem={idOrdem} aoConcluir={concluir} />
+        </Janela>
+      )}
+    </>
   );
 }

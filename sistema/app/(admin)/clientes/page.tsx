@@ -1,16 +1,17 @@
 import Link from "next/link";
 import { Prisma } from "@prisma/client";
-import { Aviso, Chip, Paginacao, paginaAtual, Titulo } from "@/app/_componentes/ui";
+import { Chip, Paginacao, paginaAtual, Titulo } from "@/app/_componentes/ui";
 import { prisma } from "@/lib/db";
 import { formatarCpfCnpj, soDigitos } from "@/lib/dominio/cpf-cnpj";
 import { EM_ABERTO } from "@/lib/dominio/ordem";
 import { exigirPerfil } from "@/lib/permissao";
+import { BotaoNovoCliente } from "./formularios";
 
 export const metadata = { title: "Clientes" };
 
 const POR_PAGINA = 20;
 
-type Busca = { busca?: string; situacao?: string; pagina?: string; ok?: string };
+type Busca = { busca?: string; situacao?: string; pagina?: string };
 
 // T05 - clientes (UC04, TA24)
 export default async function Clientes({ searchParams }: { searchParams: Promise<Busca> }) {
@@ -43,12 +44,10 @@ export default async function Clientes({ searchParams }: { searchParams: Promise
   ]);
 
   return (
-    <div className="mx-auto max-w-6xl">
+    <div className="w-full">
       <Titulo titulo="Clientes" subtitulo="Empresas e pessoas atendidas pela rede">
-        <Link href="/clientes/novo" className="botao-principal">Novo cliente</Link>
+        <BotaoNovoCliente />
       </Titulo>
-
-      {params.ok && <Aviso tom="ok" titulo={params.ok === "novo" ? "Cliente cadastrado." : "Alterações salvas."} />}
 
       <form className="cartao mb-4 flex flex-wrap items-end gap-3 p-4">
         <div className="min-w-56 flex-1">

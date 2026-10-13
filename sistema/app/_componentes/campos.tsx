@@ -36,13 +36,20 @@ async function subirArquivo(form: FormData, preparar: Preparar): Promise<string 
 // depois de qualquer resposta, inclusive de erro, e os selects voltavam pro valor inicial por baixo
 // do que a tela mostrava (o tipo pessoa fisica virava juridica e o cpf era validado como cnpj).
 // assim o que foi digitado fica, e o formulario so e limpo quando a acao deu certo
-export function useFormulario(acao: Acao, inicial: Record<string, string> = {}, preparar?: Preparar) {
+// aoConcluir: chamado quando a acao deu certo (a janela usa pra fechar e mostrar o aviso)
+export function useFormulario(acao: Acao, inicial: Record<string, string> = {}, preparar?: Preparar, aoConcluir?: (ok: string) => void) {
+  const concluir = useRef(aoConcluir);
+  concluir.current = aoConcluir;
   const [estado, despachar, enviando] = useActionState<EstadoFormulario, FormData>(async (anterior, form) => {
     if (preparar) {
       const erro = await subirArquivo(form, preparar);
       if (erro) return erroNoCampo("arquivo", erro, valoresDo(form));
     }
-    return acao(anterior, form);
+    const resposta = await acao(anterior, form);
+    // chamado aqui, e nao num efeito depois: a acao pode tirar da tela o proprio botao que abriu a
+    // janela (a ordem atribuida sai da lista do painel) e o aviso de confirmacao se perderia junto
+    if (resposta.ok) concluir.current?.(resposta.ok);
+    return resposta;
   }, {});
   const [, iniciar] = useTransition();
   const ultimo = useRef<HTMLFormElement | null>(null);

@@ -14,16 +14,17 @@ export function MenuLateral({ grupos }: { grupos: GrupoMenu[] }) {
     .sort((a, b) => b.href.length - a.href.length)[0]?.href;
 
   return (
-    <nav className="flex min-w-0 gap-4 overflow-x-auto border-b border-regua bg-white px-3 py-2 md:block md:w-52 md:shrink-0 md:overflow-visible md:border-r md:border-b-0 md:px-0 md:py-4">
+    <nav aria-label="Menu" className="flex min-w-0 gap-1 overflow-x-auto px-3 pb-2 md:block md:space-y-5 md:overflow-visible md:px-3 md:pb-0">
       {grupos.map((grupo) => (
-        <div key={grupo.titulo} className="flex shrink-0 items-center gap-1 md:mb-4 md:block">
-          <p className="hidden px-4 pb-1 text-xs font-semibold text-tinta2 md:block">{grupo.titulo}</p>
+        <div key={grupo.titulo} className="flex shrink-0 gap-1 md:block md:space-y-0.5">
+          <p className="hidden px-3 pb-1.5 text-xs font-medium text-[#8a938f] md:block">{grupo.titulo}</p>
           {grupo.itens.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className={`block whitespace-nowrap px-4 py-1.5 text-sm ${
-                ativo === item.href ? "border-l-3 border-caneta bg-caneta-clara font-semibold" : "hover:bg-papel"
+              aria-current={ativo === item.href ? "page" : undefined}
+              className={`block rounded-lg px-3 py-2 text-sm whitespace-nowrap transition-colors ${
+                ativo === item.href ? "bg-caneta-clara font-medium text-caneta" : "text-tinta hover:bg-[#f2f4f3]"
               }`}
             >
               {item.nome}

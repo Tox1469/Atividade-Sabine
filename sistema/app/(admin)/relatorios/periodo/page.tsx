@@ -16,7 +16,7 @@ export default async function ServicosPorPeriodo({ searchParams }: { searchParam
   const filtros = `de=${paraCampoData(periodo.inicio)}&ate=${paraCampoData(periodo.fim)}`;
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className="w-full">
       <Titulo titulo="Serviços por período" subtitulo={`De ${periodo.texto}. Emitido em ${dataHoraBR(new Date())}.`}>
         <div className="nao-imprimir flex gap-2">
           <a href={`/relatorios/exportar?tipo=periodo&${filtros}`} className="botao">Exportar CSV</a>

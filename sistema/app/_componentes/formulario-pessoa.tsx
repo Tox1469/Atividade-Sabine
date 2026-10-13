@@ -17,6 +17,8 @@ type Props = {
   ajudaDocumento?: string;
   emailObrigatorio?: boolean;
   textoBotao?: string;
+  aoConcluir?: (ok: string) => void;
+  aoCancelar?: () => void;
   // campos a mais antes do botao (senha e consentimento do cadastro). recebe o erro de cada campo
   children?: (erro: (campo: string) => string | undefined) => React.ReactNode;
 };
@@ -39,8 +41,8 @@ function mascara(campo: string, valor: string, juridica: boolean) {
   return valor;
 }
 
-export function FormularioPessoa({ acao, inicial = {}, voltar, ajudaEmail, ajudaDocumento, emailObrigatorio, textoBotao = "Salvar", children }: Props) {
-  const { estado, enviar, enviando, valor, erro } = useFormulario(acao, inicial);
+export function FormularioPessoa({ acao, inicial = {}, voltar, ajudaEmail, ajudaDocumento, emailObrigatorio, textoBotao = "Salvar", children, aoConcluir, aoCancelar }: Props) {
+  const { estado, enviar, enviando, valor, erro } = useFormulario(acao, inicial, undefined, aoConcluir);
   const form = useRef<HTMLFormElement>(null);
   const [tipo, setTipo] = useState(valor("tipo_pessoa") || "J");
   const [uf, setUf] = useState(valor("uf") || "PR");
@@ -207,7 +209,11 @@ export function FormularioPessoa({ acao, inicial = {}, voltar, ajudaEmail, ajuda
         </div>
         {children && <div className="border-t border-regua-clara p-4">{children(erro)}</div>}
         <div className="rodape-form">
-          {voltar && <Link href={voltar} className="botao">Cancelar</Link>}
+          {aoCancelar ? (
+            <button type="button" onClick={aoCancelar} className="botao">Cancelar</button>
+          ) : (
+            voltar && <Link href={voltar} className="botao">Cancelar</Link>
+          )}
           <BotaoEnviar enviando={enviando} texto={textoBotao} />
         </div>
       </section>

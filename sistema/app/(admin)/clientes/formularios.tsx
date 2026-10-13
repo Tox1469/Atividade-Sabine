@@ -1,10 +1,17 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { avisar } from "@/app/_componentes/aviso-flutuante";
+import { Janela } from "@/app/_componentes/janela";
+import { useConcluir } from "../ordens/formularios";
 import { BotaoEnviar, MensagemFormulario, useFormulario } from "@/app/_componentes/campos";
 import { FormularioPessoa } from "@/app/_componentes/formulario-pessoa";
 import { alternarAtivo, anonimizar, liberarAcessoCliente, salvarCliente } from "./actions";
 
-export function FormCliente({ id, inicial }: { id: number | null; inicial?: Record<string, string> }) {
+// edicao na ficha (T06): salva, avisa e continua na ficha
+export function FormCliente({ id, inicial }: { id: number; inicial?: Record<string, string> }) {
+  const router = useRouter();
   return (
     <FormularioPessoa
       acao={salvarCliente.bind(null, id)}
@@ -12,7 +19,37 @@ export function FormCliente({ id, inicial }: { id: number | null; inicial?: Reco
       voltar="/clientes"
       ajudaEmail="Usado também para liberar o acesso do cliente ao sistema."
       ajudaDocumento="Não pode existir outro cadastro ativo com o mesmo número (RN10)."
+      aoConcluir={(ok) => {
+        avisar(ok);
+        router.refresh();
+      }}
     />
+  );
+}
+
+// T06 novo: abre por cima da lista de clientes
+export function BotaoNovoCliente() {
+  const [aberta, setAberta] = useState(false);
+  const fechar = () => setAberta(false);
+  const concluir = useConcluir(fechar);
+  return (
+    <>
+      <button type="button" onClick={() => setAberta(true)} className="botao-principal">Novo cliente</button>
+      {aberta && (
+        <Janela titulo="Novo cliente" aoFechar={fechar} largura={1000}>
+          <div className="bg-papel p-4 sm:p-5">
+            <FormularioPessoa
+              acao={salvarCliente.bind(null, null)}
+              ajudaEmail="Usado também para liberar o acesso do cliente ao sistema."
+              ajudaDocumento="Não pode existir outro cadastro ativo com o mesmo número (RN10)."
+              textoBotao="Cadastrar cliente"
+              aoConcluir={concluir}
+              aoCancelar={fechar}
+            />
+          </div>
+        </Janela>
+      )}
+    </>
   );
 }
 

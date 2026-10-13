@@ -13,7 +13,6 @@ export default async function Cadastro({ searchParams }: { searchParams: Promise
 
   return (
     <main className="min-h-screen bg-papel">
-      <div className="h-1.5 bg-caneta" />
       <div className="mx-auto max-w-4xl px-4 py-8">
         <Link href="/login" className="text-sm text-tinta2 hover:text-tinta hover:underline">Voltar para o login</Link>
         <h1 className="mt-2 text-2xl font-semibold">Criar conta no SGP</h1>

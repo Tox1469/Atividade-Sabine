@@ -1,8 +1,9 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
-import { comErros, valoresDo, voltarPara, type EstadoFormulario } from "@/lib/formulario";
+import { prisma } from "@/lib/db";
+import { dataBR } from "@/lib/formato";
+import { comErros, valoresDo, type EstadoFormulario } from "@/lib/formulario";
 import { abrirOrdem, avaliar } from "@/lib/ordens";
 import { exigirCliente } from "@/lib/permissao";
 import { ordemSchema } from "@/lib/validacao/ordem";
@@ -26,7 +27,8 @@ export async function abrirSolicitacao(_estado: EstadoFormulario, form: FormData
   });
   if ("erro" in r) return { mensagem: r.erro, valores };
   revalidatePath("/minhas-solicitacoes");
-  redirect(`/minhas-solicitacoes/${r.id}?nova=1`);
+  const ordem = await prisma.ordem_servico.findUniqueOrThrow({ where: { id_ordem: r.id! } });
+  return { ok: `Solicitação ${ordem.numero} enviada. Prazo combinado: ${dataBR(ordem.prazo)}${d.prazo ? "" : ", pelo prazo padrão do serviço"}.` };
 }
 
 // UC18 - so o titular avalia (RN08): o cliente vem da sessao e lib/ordens confere a ordem
@@ -37,7 +39,5 @@ export async function avaliarAtendimento(idOrdem: number, _estado: EstadoFormula
   revalidatePath(`/minhas-solicitacoes/${idOrdem}`);
   revalidatePath("/minhas-solicitacoes");
   if ("erro" in r) return { mensagem: r.erro, valores: { comentario } };
-  // avaliada pela janela da lista: volta pra lista com o agradecimento
-  if (form.get("voltar")) redirect(voltarPara(form.get("voltar"), "/minhas-solicitacoes", r.ok));
   return { ok: r.ok };
 }

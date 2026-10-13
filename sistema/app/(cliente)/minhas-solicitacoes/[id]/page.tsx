@@ -9,27 +9,20 @@ import { FormAvaliacao } from "../avaliacao";
 export const metadata = { title: "Acompanhar solicitação" };
 
 // T18 - acompanhar e avaliar. so abre ordem do cliente logado (RN08, RNF02)
-export default async function OrdemCliente({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ nova?: string }> }) {
+export default async function OrdemCliente({ params }: { params: Promise<{ id: string }> }) {
   const { cliente } = await exigirCliente();
-  const { nova } = await searchParams;
   const ordem = await prisma.ordem_servico.findFirst({
     where: { id_ordem: Number((await params).id) || 0, id_cliente: cliente.id_cliente },
     include: { servico: true, prestador: true, avaliacao: true, andamentos: { include: { usuario: true } } },
   });
   if (!ordem) notFound();
-  const andamentoPadrao = ordem.andamentos.find((a) => a.status_anterior === null);
 
   return (
-    <div className="mx-auto max-w-5xl">
+    <div className="w-full">
       <Titulo voltar={["/minhas-solicitacoes", "minhas solicitações"]} titulo={`Solicitação ${ordem.numero}`} subtitulo={ordem.servico.nome}>
         <ChipStatus status={ordem.status} />
       </Titulo>
 
-      {nova && (
-        <Aviso tom="ok" titulo={`Solicitação enviada com o número ${ordem.numero}.`}>
-          Prazo combinado: {dataBR(ordem.prazo)}. {andamentoPadrao?.observacao?.startsWith("Prazo padrão") ? "Como você não informou prazo, valeu o prazo padrão do serviço." : ""}
-        </Aviso>
-      )}
       {ordem.status === "concluida" && ordem.data_conclusao && (
         <Aviso tom="ok" titulo={`Serviço concluído em ${dataHoraBR(ordem.data_conclusao).split(" às")[0]}, ${ordem.entregue_no_prazo ? "dentro do prazo" : "depois do prazo"}.`}>
           {ordem.avaliacao ? "Sua avaliação já foi registrada." : "A avaliação fica disponível agora e pode ser lançada uma única vez (RN08)."}

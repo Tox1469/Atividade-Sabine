@@ -1,9 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { avisar } from "@/app/_componentes/aviso-flutuante";
 import { BotaoEnviar, Campo, CampoArquivo, CampoTexto, MensagemFormulario, Selecao, useFormulario } from "@/app/_componentes/campos";
 import { FormularioPessoa } from "@/app/_componentes/formulario-pessoa";
+import { Janela } from "@/app/_componentes/janela";
+import { useConcluir } from "../ordens/formularios";
 import {
   alterarSituacao,
   anonimizar,
@@ -15,14 +19,45 @@ import {
   salvarPrestador,
 } from "./actions";
 
-export function FormPrestador({ id, inicial }: { id: number | null; inicial?: Record<string, string> }) {
+// edicao na ficha (T04): salva, avisa e continua na ficha
+export function FormPrestador({ id, inicial }: { id: number; inicial?: Record<string, string> }) {
+  const router = useRouter();
   return (
     <FormularioPessoa
       acao={salvarPrestador.bind(null, id)}
       inicial={inicial}
       voltar="/prestadores"
       ajudaEmail="Usado também para liberar o acesso do prestador ao sistema."
+      aoConcluir={(ok) => {
+        avisar(ok);
+        router.refresh();
+      }}
     />
+  );
+}
+
+// T04 novo: abre por cima da lista de prestadores
+export function BotaoNovoPrestador() {
+  const [aberta, setAberta] = useState(false);
+  const fechar = () => setAberta(false);
+  const concluir = useConcluir(fechar);
+  return (
+    <>
+      <button type="button" onClick={() => setAberta(true)} className="botao-principal">Novo prestador</button>
+      {aberta && (
+        <Janela titulo="Novo prestador" aoFechar={fechar} largura={1000}>
+          <div className="bg-papel p-4 sm:p-5">
+            <FormularioPessoa
+              acao={salvarPrestador.bind(null, null)}
+              ajudaEmail="Usado também para liberar o acesso do prestador ao sistema."
+              textoBotao="Cadastrar prestador"
+              aoConcluir={concluir}
+              aoCancelar={fechar}
+            />
+          </div>
+        </Janela>
+      )}
+    </>
   );
 }
 
@@ -107,12 +142,13 @@ export function FormDocumentoAdmin({ id, tipos }: { id: number; tipos: Tipo[] })
   return <FormDocumento tipos={tipos} acao={enviarDocumento.bind(null, id)} preparar={prepararEnvio.bind(null, id, "documentos")} />;
 }
 
-export function FormSituacao({ id, atual, voltar }: { id: number; atual: string; voltar?: string }) {
-  const { estado, enviar, enviando, valor, erro } = useFormulario(alterarSituacao.bind(null, id));
+export function FormSituacao({ id, atual, aoConcluir, aoCancelar }: { id: number; atual: string; aoConcluir?: (ok: string) => void; aoCancelar?: () => void }) {
+  const emJanela = !!aoCancelar;
+  const { estado, enviar, enviando, valor, erro } = useFormulario(alterarSituacao.bind(null, id), {}, undefined, aoConcluir);
   const opcoes = ["ativo", "pendente", "bloqueado", "inativo"].filter((s) => s !== atual);
   return (
-    <form onSubmit={enviar} className={voltar ? "" : "cartao"} noValidate>
-      {voltar ? <input type="hidden" name="voltar" value={voltar} /> : <h2 className="cartao-titulo">Alterar situação cadastral</h2>}
+    <form onSubmit={enviar} className={emJanela ? "" : "cartao"} noValidate>
+      {!emJanela && <h2 className="cartao-titulo">Alterar situação cadastral</h2>}
       <div className="space-y-3 p-4">
         <MensagemFormulario estado={estado} />
         <Selecao
@@ -135,7 +171,11 @@ export function FormSituacao({ id, atual, voltar }: { id: number; atual: string;
         />
       </div>
       <div className="rodape-form">
-        <Link href={voltar ?? "/prestadores"} scroll={false} className="botao">Cancelar</Link>
+        {emJanela ? (
+          <button type="button" onClick={aoCancelar} className="botao">Cancelar</button>
+        ) : (
+          <Link href="/prestadores" className="botao">Cancelar</Link>
+        )}
         <BotaoEnviar enviando={enviando} texto="Gravar alteração" />
       </div>
     </form>
@@ -188,5 +228,25 @@ export function FormAnonimizar({ id }: { id: number }) {
         </>
       )}
     </form>
+  );
+}
+
+// UC09: alterar a situacao sem sair do painel de vencimentos
+export function BotaoSituacao({ id, nome, atual, detalhe }: { id: number; nome: string; atual: string; detalhe: string }) {
+  const [aberta, setAberta] = useState(false);
+  const fechar = () => setAberta(false);
+  const concluir = useConcluir(fechar);
+  return (
+    <>
+      <button type="button" onClick={() => setAberta(true)} className="botao botao-pequeno">Alterar situação</button>
+      {aberta && (
+        <Janela titulo={`Situação cadastral de ${nome}`} aoFechar={fechar} largura={560}>
+          <p className="px-4 pt-4 text-sm">
+            Situação atual: <span className={`chip chip-${atual}`}>{atual[0].toUpperCase() + atual.slice(1)}</span>. {detalhe}
+          </p>
+          <FormSituacao id={id} atual={atual} aoConcluir={concluir} aoCancelar={fechar} />
+        </Janela>
+      )}
+    </>
   );
 }

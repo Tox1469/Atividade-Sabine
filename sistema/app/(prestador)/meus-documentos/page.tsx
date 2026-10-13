@@ -25,7 +25,7 @@ export default async function MeusDocumentos() {
   const vence = problemas.find(({ s }) => s.tipo === "vence");
 
   return (
-    <div className="mx-auto max-w-6xl">
+    <div className="w-full">
       <Titulo titulo="Meus documentos" subtitulo="Documento obrigatório em dia é o que mantém você recebendo ordens" />
 
       {vencido ? (

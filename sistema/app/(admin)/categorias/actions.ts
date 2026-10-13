@@ -2,7 +2,6 @@
 
 import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { comErros, erroNoCampo, valoresDo, type EstadoFormulario } from "@/lib/formulario";
@@ -41,5 +40,5 @@ export async function salvarCategoria(id: number | null, _estado: EstadoFormular
   }
 
   revalidatePath("/categorias");
-  redirect(`/categorias?ok=${id === null ? "nova" : "editada"}`);
+  return { ok: id === null ? `Categoria ${dados.nome} adicionada.` : `Categoria ${dados.nome} salva.` };
 }

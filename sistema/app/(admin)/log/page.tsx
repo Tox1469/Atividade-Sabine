@@ -30,7 +30,7 @@ export default async function Log({ searchParams }: { searchParams: Promise<{ ac
   ]);
 
   return (
-    <div className="mx-auto max-w-6xl">
+    <div className="w-full">
       <Titulo titulo="Log de ações" subtitulo="Mudança de situação cadastral, atribuição e cancelamento de ordem, com usuário, data e hora (RF19)" />
 
       <form className="cartao mb-4 flex flex-wrap items-end gap-3 p-4">

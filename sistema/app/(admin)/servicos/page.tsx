@@ -1,17 +1,15 @@
-import Link from "next/link";
 import { Prisma } from "@prisma/client";
-import { Aviso, Chip, Paginacao, paginaAtual, Titulo } from "@/app/_componentes/ui";
+import { Chip, Paginacao, paginaAtual, Titulo } from "@/app/_componentes/ui";
 import { prisma } from "@/lib/db";
 import { dinheiro, plural } from "@/lib/formato";
 import { exigirPerfil } from "@/lib/permissao";
-import { Janela } from "@/app/_componentes/janela";
-import { FormServico } from "./formulario";
+import { BotaoServico } from "./formulario";
 
 export const metadata = { title: "Serviços" };
 
 const POR_PAGINA = 20;
 
-type Busca = { busca?: string; categoria?: string; pagina?: string; ok?: string; janela?: string; editar?: string };
+type Busca = { busca?: string; categoria?: string; pagina?: string };
 
 // T08 - catalogo de servicos (UC06, TA26)
 export default async function Servicos({ searchParams }: { searchParams: Promise<Busca> }) {
@@ -37,22 +35,13 @@ export default async function Servicos({ searchParams }: { searchParams: Promise
     prisma.categoria_servico.findMany({ orderBy: { nome: "asc" } }),
   ]);
 
-  // o catalogo com os filtros de agora, pra janela abrir por cima e voltar pro mesmo lugar
-  const catalogo = (extra: Record<string, string> = {}) => {
-    const q = new URLSearchParams();
-    for (const [k, v] of Object.entries(params)) if (v && !["janela", "editar", "ok"].includes(k)) q.set(k, v);
-    for (const [k, v] of Object.entries(extra)) q.set(k, v);
-    return `/servicos${q.size ? "?" + q : ""}`;
-  };
-  const editando = params.editar ? await prisma.servico.findUnique({ where: { id_servico: Number(params.editar) || 0 } }) : null;
-  const opcoes = categorias.filter((c) => c.ativa || c.id_categoria === editando?.id_categoria).map((c) => ({ id: c.id_categoria, nome: c.nome }));
+  const opcoes = categorias.map((c) => ({ id: c.id_categoria, nome: c.nome, ativa: c.ativa }));
 
   return (
-    <div className="mx-auto max-w-6xl">
+    <div className="w-full">
       <Titulo titulo="Serviços" subtitulo="Catálogo com valor de referência e prazo padrão">
-        <Link href={catalogo({ janela: "novo" })} scroll={false} className="botao-principal">Novo serviço</Link>
+        <BotaoServico categorias={opcoes} titulo="Novo serviço" texto="Novo serviço" classe="botao-principal" />
       </Titulo>
-      {params.ok && <Aviso tom="ok" titulo={params.ok === "novo" ? "Serviço cadastrado." : "Alterações salvas."} />}
 
       <form className="cartao mb-4 flex flex-wrap items-end gap-3 p-4">
         <div className="min-w-56 flex-1">
@@ -88,7 +77,21 @@ export default async function Servicos({ searchParams }: { searchParams: Promise
                   <td className="numerico">{s.valor_referencia === null ? "-" : dinheiro(s.valor_referencia)}</td>
                   <td className="numerico">{plural(s.prazo_padrao_dias, "dia", "dias")}</td>
                   <td>{s.ativo ? <Chip tom="ativo">Ativo</Chip> : <Chip tom="inativo">Inativo</Chip>}</td>
-                  <td className="acoes"><Link href={catalogo({ editar: String(s.id_servico) })} scroll={false} className="botao botao-pequeno">Abrir</Link></td>
+                  <td className="acoes"><BotaoServico
+                      id={s.id_servico}
+                      categorias={opcoes}
+                      titulo={s.nome}
+                      texto="Abrir"
+                      classe="botao botao-pequeno"
+                      inicial={{
+                        nome: s.nome,
+                        id_categoria: String(s.id_categoria),
+                        descricao: s.descricao ?? "",
+                        valor_referencia: s.valor_referencia === null ? "" : Number(s.valor_referencia).toFixed(2).replace(".", ","),
+                        prazo_padrao_dias: String(s.prazo_padrao_dias),
+                        ativo: s.ativo ? "sim" : "nao",
+                      }}
+                    /></td>
                 </tr>
               ))}
             </tbody>
@@ -97,28 +100,6 @@ export default async function Servicos({ searchParams }: { searchParams: Promise
       </div>
       <Paginacao pagina={pagina} total={total} porPagina={POR_PAGINA} base="/servicos" params={params} />
 
-      {params.janela === "novo" && (
-        <Janela titulo="Novo serviço" fechar={catalogo()}>
-          <FormServico id={null} categorias={opcoes} voltar={catalogo()} />
-        </Janela>
-      )}
-      {editando && (
-        <Janela titulo={editando.nome} fechar={catalogo()}>
-          <FormServico
-            id={editando.id_servico}
-            categorias={opcoes}
-            voltar={catalogo()}
-            inicial={{
-              nome: editando.nome,
-              id_categoria: String(editando.id_categoria),
-              descricao: editando.descricao ?? "",
-              valor_referencia: editando.valor_referencia === null ? "" : Number(editando.valor_referencia).toFixed(2).replace(".", ","),
-              prazo_padrao_dias: String(editando.prazo_padrao_dias),
-              ativo: editando.ativo ? "sim" : "nao",
-            }}
-          />
-        </Janela>
-      )}
     </div>
   );
 }

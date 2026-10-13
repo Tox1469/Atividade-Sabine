@@ -92,8 +92,26 @@ export default async function DocumentosPrestador({ params }: { params: Promise<
             </table>
           )}
         </div>
-        <div className="max-w-2xl">
+        <div className="colunas">
           <FormDocumentoAdmin id={id} tipos={tipos.map((t) => ({ id: t.id_tipo_documento, nome: t.nome, exige_validade: t.exige_validade }))} />
+          <section className="cartao overflow-x-auto">
+            <h2 className="cartao-titulo">Tipos de documento</h2>
+            <table className="tabela">
+              <thead>
+                <tr><th>Tipo</th><th>Obrigatório</th><th>Tem validade</th></tr>
+              </thead>
+              <tbody>
+                {tipos.map((t) => (
+                  <tr key={t.id_tipo_documento}>
+                    <td>{t.nome}</td>
+                    <td>{t.obrigatorio ? "Sim" : "Não"}</td>
+                    <td>{t.exige_validade ? "Sim" : "Não expira"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <p className="border-t border-regua-clara px-5 py-3 text-xs text-tinta2">Obrigatório vencido deixa o prestador pendente e fora da atribuição (RN02).</p>
+          </section>
         </div>
       </div>
     </>

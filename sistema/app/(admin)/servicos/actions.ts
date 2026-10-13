@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { EM_ABERTO } from "@/lib/dominio/ordem";
@@ -44,5 +43,5 @@ export async function salvarServico(id: number | null, _estado: EstadoFormulario
   else await prisma.servico.update({ where: { id_servico: id }, data: dados });
 
   revalidatePath("/servicos");
-  redirect(`/servicos?ok=${id === null ? "novo" : "editado"}`);
+  return { ok: id === null ? `Serviço ${dados.nome} cadastrado.` : "Alterações salvas." };
 }

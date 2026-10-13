@@ -1,14 +1,36 @@
 "use client";
 
-import Link from "next/link";
+import { useState } from "react";
 import { BotaoEnviar, Campo, CampoTexto, MensagemFormulario, Selecao, useFormulario } from "@/app/_componentes/campos";
+import { Janela } from "@/app/_componentes/janela";
+import { useConcluir } from "../ordens/formularios";
 import { salvarServico } from "./actions";
 
-type Props = { id: number | null; inicial?: Record<string, string>; categorias: { id: number; nome: string }[]; voltar: string };
+type Categoria = { id: number; nome: string; ativa: boolean };
 
 // T09 - ficha do servico, aberta em janela por cima do catalogo (T08)
-export function FormServico({ id, inicial = {}, categorias, voltar }: Props) {
-  const { estado, enviar, enviando, valor, erro } = useFormulario(salvarServico.bind(null, id), inicial);
+export function BotaoServico({ id = null, inicial, categorias, titulo, texto, classe }: { id?: number | null; inicial?: Record<string, string>; categorias: Categoria[]; titulo: string; texto: string; classe: string }) {
+  const [aberta, setAberta] = useState(false);
+  const fechar = () => setAberta(false);
+  const concluir = useConcluir(fechar);
+  // categoria inativa so aparece se ja for a do servico
+  const opcoes = categorias.filter((c) => c.ativa || String(c.id) === inicial?.id_categoria);
+  return (
+    <>
+      <button type="button" onClick={() => setAberta(true)} className={classe}>{texto}</button>
+      {aberta && (
+        <Janela titulo={titulo} aoFechar={fechar}>
+          <FormServico id={id} inicial={inicial} categorias={opcoes} aoConcluir={concluir} aoCancelar={fechar} />
+        </Janela>
+      )}
+    </>
+  );
+}
+
+type Props = { id: number | null; inicial?: Record<string, string>; categorias: { id: number; nome: string }[]; aoConcluir: (ok: string) => void; aoCancelar: () => void };
+
+function FormServico({ id, inicial = {}, categorias, aoConcluir, aoCancelar }: Props) {
+  const { estado, enviar, enviando, valor, erro } = useFormulario(salvarServico.bind(null, id), inicial, undefined, aoConcluir);
   const ativo = estado.valores ? estado.valores.ativo === "sim" : inicial.ativo !== "nao";
 
   return (
@@ -41,7 +63,7 @@ export function FormServico({ id, inicial = {}, categorias, voltar }: Props) {
         </div>
       </div>
       <div className="rodape-form">
-        <Link href={voltar} scroll={false} className="botao">Cancelar</Link>
+        <button type="button" onClick={aoCancelar} className="botao">Cancelar</button>
         <BotaoEnviar enviando={enviando} texto="Salvar" />
       </div>
     </form>

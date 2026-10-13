@@ -1,18 +1,18 @@
 import Link from "next/link";
 import { Prisma } from "@prisma/client";
-import { Aviso, Chip, ChipStatus, Paginacao, paginaAtual, Titulo } from "@/app/_componentes/ui";
+import { Chip, ChipStatus, Paginacao, paginaAtual, Titulo } from "@/app/_componentes/ui";
 import { prisma } from "@/lib/db";
 import { emAtraso, NOME_STATUS, STATUS } from "@/lib/dominio/ordem";
 import { dataBR, hoje, lerData, plural, somarDias } from "@/lib/formato";
 import { exigirPerfil } from "@/lib/permissao";
-import { JanelaAtribuir } from "./janela-atribuir";
-import { JanelaNovaOrdem } from "./janela-nova";
+import { dadosNovaOrdem } from "@/lib/ordens";
+import { BotaoAtribuir, BotaoNovaOrdem } from "./formularios";
 
 export const metadata = { title: "Ordens de serviço" };
 
 const POR_PAGINA = 20;
 
-type Busca = { busca?: string; status?: string; de?: string; ate?: string; categoria?: string; prestador?: string; cliente?: string; pagina?: string; atribuir?: string; janela?: string; ok?: string };
+type Busca = { busca?: string; status?: string; de?: string; ate?: string; categoria?: string; prestador?: string; cliente?: string; pagina?: string };
 
 // T11 - ordens de servico. os mesmos filtros servem de historico por prestador e por cliente (RF16, UC19)
 export default async function Ordens({ searchParams }: { searchParams: Promise<Busca> }) {
@@ -57,22 +57,13 @@ export default async function Ordens({ searchParams }: { searchParams: Promise<B
     idCliente ? prisma.cliente.findUnique({ where: { id_cliente: idCliente } }) : null,
   ]);
   const nome = (p: { nome_fantasia: string | null; nome_razao_social: string }) => p.nome_fantasia ?? p.nome_razao_social;
-  // o endereco da lista com os filtros de agora, pra janela abrir por cima e voltar pro mesmo lugar
-  const lista = (extra: Record<string, string> = {}) => {
-    const q = new URLSearchParams();
-    for (const [k, v] of Object.entries(params)) if (v && !["atribuir", "janela", "ok"].includes(k)) q.set(k, v);
-    for (const [k, v] of Object.entries(extra)) q.set(k, v);
-    return `/ordens${q.size ? "?" + q : ""}`;
-  };
   const recorte = prestador ? `do prestador ${nome(prestador)}` : cliente ? `do cliente ${nome(cliente)}` : "";
 
   return (
-    <div className="mx-auto max-w-6xl">
+    <div className="w-full">
       <Titulo titulo="Ordens de serviço" subtitulo={recorte ? `Histórico ${recorte}` : "Do pedido à conclusão"}>
-        <Link href={lista({ janela: "nova" })} scroll={false} className="botao-principal">Abrir ordem</Link>
+        <BotaoNovaOrdem {...(await dadosNovaOrdem())} clienteInicial={idCliente ? String(idCliente) : undefined} />
       </Titulo>
-
-      {params.ok && <Aviso tom="ok" titulo={params.ok} />}
 
       <form className="cartao mb-4 flex flex-wrap items-end gap-3 p-4">
         {idPrestador > 0 && <input type="hidden" name="prestador" value={idPrestador} />}
@@ -132,7 +123,7 @@ export default async function Ordens({ searchParams }: { searchParams: Promise<B
                   </td>
                   <td className="acoes">
                     {o.status === "aberta" ? (
-                      <Link href={lista({ atribuir: String(o.id_ordem) })} scroll={false} className="botao-principal botao-pequeno">Atribuir</Link>
+                      <BotaoAtribuir idOrdem={o.id_ordem} />
                     ) : (
                       <Link href={`/ordens/${o.id_ordem}`} className="botao botao-pequeno">Abrir</Link>
                     )}
@@ -145,8 +136,6 @@ export default async function Ordens({ searchParams }: { searchParams: Promise<B
       </div>
       <Paginacao pagina={pagina} total={total} porPagina={POR_PAGINA} base="/ordens" params={params} />
 
-      {params.atribuir && <JanelaAtribuir idOrdem={Number(params.atribuir) || 0} fechar={lista()} />}
-      {params.janela === "nova" && <JanelaNovaOrdem fechar={lista()} cliente={params.cliente} />}
     </div>
   );
 }

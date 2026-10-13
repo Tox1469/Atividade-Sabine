@@ -15,15 +15,15 @@ const abas = [
 export function AbasPrestador({ id }: { id: number }) {
   const caminho = usePathname();
   return (
-    <div className="mb-4 flex gap-1 overflow-x-auto border-b border-regua text-sm md:overflow-visible">
+    <div className="mb-6 flex gap-6 border-b border-regua text-sm max-md:overflow-x-auto">
       {abas.map(([sufixo, nome]) => {
         const href = `/prestadores/${id}${sufixo}`;
         return caminho === href ? (
-          <span key={href} className="-mb-px whitespace-nowrap rounded-t border border-b-0 border-regua border-t-2 border-t-caneta bg-white px-4 py-2 font-semibold">
+          <span key={href} aria-current="page" className="-mb-px border-b-2 border-caneta pb-2.5 font-medium whitespace-nowrap text-caneta">
             {nome}
           </span>
         ) : (
-          <Link key={href} href={href} className="whitespace-nowrap px-4 py-2 text-tinta2 hover:text-tinta">
+          <Link key={href} href={href} className="-mb-px border-b-2 border-transparent pb-2.5 whitespace-nowrap text-tinta2 transition-colors hover:border-regua hover:text-tinta">
             {nome}
           </Link>
         );

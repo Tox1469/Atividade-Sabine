@@ -30,7 +30,7 @@ export default async function Desempenho({ searchParams }: { searchParams: Promi
   const filtros = `de=${paraCampoData(periodo.inicio)}&ate=${paraCampoData(periodo.fim)}`;
 
   return (
-    <div className="mx-auto max-w-5xl">
+    <div className="w-full">
       <Titulo titulo="Desempenho dos prestadores" subtitulo={`Ordens concluídas de ${periodo.texto}. Emitido em ${dataHoraBR(new Date())}.`}>
         <div className="nao-imprimir flex gap-2">
           <a href={`/relatorios/exportar?tipo=desempenho&${filtros}`} className="botao">Exportar CSV</a>

@@ -26,17 +26,17 @@ export function Aviso({ tom, titulo, children }: { tom?: "ok" | "atencao" | "err
 
 export function Titulo({ titulo, subtitulo, voltar, children }: { titulo: string; subtitulo?: React.ReactNode; voltar?: [string, string]; children?: React.ReactNode }) {
   return (
-    <div className="mb-4 flex flex-wrap items-start justify-between gap-3 border-b border-regua pb-3">
-      <div>
+    <div className="mb-6 flex flex-wrap items-end justify-between gap-4 md:flex-nowrap">
+      <div className="min-w-0 flex-1">
         {voltar && (
-          <Link href={voltar[0]} className="nao-imprimir mb-1 inline-block text-sm text-tinta2 hover:text-tinta hover:underline">
+          <Link href={voltar[0]} className="nao-imprimir mb-2 inline-block text-sm text-tinta2 hover:text-caneta">
             Voltar para {voltar[1]}
           </Link>
         )}
-        <h1 className="text-xl font-semibold">{titulo}</h1>
-        {subtitulo && <p className="text-sm text-tinta2">{subtitulo}</p>}
+        <h1 className="text-[26px] leading-tight font-semibold tracking-[-0.01em]">{titulo}</h1>
+        {subtitulo && <p className="mt-1 text-sm text-tinta2">{subtitulo}</p>}
       </div>
-      {children && <div className="flex flex-wrap gap-2">{children}</div>}
+      {children && <div className="flex shrink-0 flex-wrap items-center gap-2">{children}</div>}
     </div>
   );
 }
@@ -52,18 +52,23 @@ export function Vazio({ titulo, children }: { titulo: string; children?: React.R
 
 const PASSOS = ["aberta", "atribuida", "em_execucao", "concluida"];
 
-// RN05: a trilha mostra onde a ordem esta na sequencia
+// RN05: a trilha mostra onde a ordem esta na sequencia. cancelada vira a ultima etapa, em vermelho
 export function Trilha({ status }: { status: string }) {
+  const cancelada = status === "cancelada";
   const atual = PASSOS.indexOf(status);
+  const etapas = cancelada ? [...PASSOS.slice(0, 1), "cancelada"] : PASSOS;
   return (
-    <div className="trilha">
-      {PASSOS.map((p, i) => (
-        <span key={p} className={`passo ${i < atual ? "feito" : i === atual ? "atual" : ""}`}>
-          {NOME_STATUS[p]}
-        </span>
-      ))}
-      {status === "cancelada" && <span className="passo cancelado">Cancelada</span>}
-    </div>
+    <ol className="trilha" aria-label="Situação da ordem">
+      {etapas.map((p, i) => {
+        const classe = p === "cancelada" ? "cancelado" : cancelada ? "feito" : i < atual ? "feito" : i === atual ? "atual" : "";
+        return (
+          <li key={p} className={`passo ${classe}`} aria-current={classe === "atual" ? "step" : undefined}>
+            <span className="marca">{classe === "feito" ? "✓" : p === "cancelada" ? "✕" : i + 1}</span>
+            {NOME_STATUS[p]}
+          </li>
+        );
+      })}
+    </ol>
   );
 }
 
@@ -92,7 +97,7 @@ export function Paginacao({ pagina, total, porPagina, base, params }: { pagina: 
     return `${base}?${q}`;
   };
   return (
-    <div className="mt-3 flex items-center justify-end gap-2 text-sm">
+    <div className="mt-4 flex items-center justify-end gap-2 text-sm">
       {pagina > 1 && <Link href={link(pagina - 1)} className="botao py-1">Anterior</Link>}
       <span className="text-tinta2">Página {pagina} de {paginas}</span>
       {pagina < paginas && <Link href={link(pagina + 1)} className="botao py-1">Próxima</Link>}

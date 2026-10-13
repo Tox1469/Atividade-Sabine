@@ -1,5 +1,7 @@
+import Link from "next/link";
 import { signOut } from "@/auth";
 import type { Perfil } from "@/lib/permissao";
+import { AvisosFlutuantes } from "./aviso-flutuante";
 import { MenuLateral, type GrupoMenu } from "./menu";
 
 // cada perfil so enxerga no menu o que pode usar. isso e conforto: quem barra de verdade
@@ -49,7 +51,6 @@ const MENUS: Record<Perfil, GrupoMenu[]> = {
       titulo: "Solicitações",
       itens: [
         { nome: "Minhas solicitações", href: "/minhas-solicitacoes" },
-        { nome: "Nova solicitação", href: "/minhas-solicitacoes/nova" },
       ],
     },
     { titulo: "Conta", itens: [{ nome: "Minha conta", href: "/minha-conta" }] },
@@ -58,35 +59,49 @@ const MENUS: Record<Perfil, GrupoMenu[]> = {
 
 const NOME_PERFIL: Record<Perfil, string> = { administrador: "Administrador", prestador: "Prestador", cliente: "Cliente" };
 
+function Sair() {
+  return (
+    <form
+      action={async () => {
+        "use server";
+        await signOut({ redirectTo: "/login" });
+      }}
+    >
+      <button className="cursor-pointer rounded-md px-2 py-1 text-sm text-tinta2 transition-colors hover:bg-[#f2f4f3] hover:text-tinta">Sair</button>
+    </form>
+  );
+}
+
 export function Casca({ perfil, nome, children }: { perfil: Perfil; nome: string; children: React.ReactNode }) {
   return (
-    <div className="flex min-h-screen flex-col">
-      <header className="flex items-center justify-between border-b-3 border-caneta bg-caneta-escura px-4 py-2 text-white">
-        <div className="flex items-baseline gap-2">
-          <span className="text-lg font-bold">SGP</span>
-          <span className="hidden text-sm text-[#aab0b6] sm:inline">gestão de prestadores</span>
-        </div>
-        <div className="flex items-center gap-3">
-          <div className="text-right leading-tight">
-            <p className="text-sm font-semibold">{nome}</p>
-            <p className="text-xs text-[#aab0b6]">{NOME_PERFIL[perfil]}</p>
+    <div className="min-h-screen md:flex">
+      <aside className="border-b border-regua bg-white md:w-60 md:shrink-0 md:border-r md:border-b-0">
+        <div className="md:sticky md:top-0 md:flex md:h-screen md:flex-col">
+        <div className="flex items-center justify-between px-5 py-4 md:pt-7 md:pb-6">
+          <Link href="/" className="leading-tight">
+            <span className="block text-[17px] font-semibold tracking-[-0.01em] text-caneta">SGP</span>
+            <span className="block text-xs text-tinta2">Gestão de prestadores</span>
+          </Link>
+          <div className="flex items-center gap-2 md:hidden">
+            <span className="max-w-32 truncate text-sm text-tinta2">{nome}</span>
+            <Sair />
           </div>
-          <form
-            action={async () => {
-              "use server";
-              await signOut({ redirectTo: "/login" });
-            }}
-            className="border-l border-[#555b61] pl-3"
-          >
-            <button className="cursor-pointer text-sm hover:underline">Sair</button>
-          </form>
         </div>
-      </header>
+        <div className="md:flex-1 md:overflow-y-auto">
+          <MenuLateral grupos={MENUS[perfil]} />
+        </div>
+        <div className="hidden items-center gap-3 border-t border-regua-clara px-5 py-4 md:flex">
+          <span className="min-w-0 flex-1 leading-tight">
+            <span className="block truncate text-sm font-medium" title={nome}>{nome}</span>
+            <span className="block text-xs text-tinta2">{NOME_PERFIL[perfil]}</span>
+          </span>
+          <Sair />
+        </div>
+        </div>
+      </aside>
 
-      <div className="flex min-w-0 flex-1 flex-col md:flex-row">
-        <MenuLateral grupos={MENUS[perfil]} />
-        <main className="min-w-0 flex-1 px-4 py-5 md:px-6">{children}</main>
-      </div>
+      <main className="min-w-0 flex-1 px-4 py-6 md:px-10 md:py-9">{children}</main>
+      <AvisosFlutuantes />
     </div>
   );
 }

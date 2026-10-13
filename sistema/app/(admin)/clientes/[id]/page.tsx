@@ -4,7 +4,9 @@ import { Chip, Titulo } from "@/app/_componentes/ui";
 import { prisma } from "@/lib/db";
 import { formatarCpfCnpj } from "@/lib/dominio/cpf-cnpj";
 import { dataHoraBR } from "@/lib/formato";
+import { dadosNovaOrdem } from "@/lib/ordens";
 import { exigirPerfil } from "@/lib/permissao";
+import { BotaoNovaOrdem } from "../../ordens/formularios";
 import { BotaoLiberarAcesso, FormAnonimizar, FormAtivo, FormCliente } from "../formularios";
 
 export const metadata = { title: "Ficha do cliente" };
@@ -23,7 +25,7 @@ export default async function FichaCliente({ params }: { params: Promise<{ id: s
   inicial.cep = cliente.cep.replace(/(\d{5})(\d{3})/, "$1-$2");
 
   return (
-    <div className="mx-auto max-w-5xl space-y-4">
+    <div className="w-full space-y-4">
       <Titulo voltar={["/clientes", "clientes"]} titulo={cliente.nome_fantasia ?? cliente.nome_razao_social} subtitulo={`Cadastro do cliente, ${formatarCpfCnpj(cliente.cpf_cnpj)}`}>
         {cliente.ativo ? <Chip tom="ativo">Ativo</Chip> : <Chip tom="inativo">Inativo</Chip>}
       </Titulo>
@@ -55,7 +57,7 @@ export default async function FichaCliente({ params }: { params: Promise<{ id: s
             <p>{ordens === 0 ? "Nenhuma ordem aberta para este cliente até agora." : `${ordens} ${ordens === 1 ? "ordem" : "ordens"} no histórico.`}</p>
             <div className="flex flex-wrap gap-2">
               {ordens > 0 && <Link href={`/ordens?cliente=${cliente.id_cliente}`} className="botao">Ver ordens do cliente</Link>}
-              {cliente.ativo && <Link href={`/ordens?janela=nova&cliente=${cliente.id_cliente}`} className="botao">Abrir ordem para este cliente</Link>}
+              {cliente.ativo && <BotaoNovaOrdem {...(await dadosNovaOrdem())} clienteInicial={String(cliente.id_cliente)} texto="Abrir ordem para este cliente" classe="botao" />}
             </div>
             {!anonimizado && <FormAtivo id={cliente.id_cliente} ativo={cliente.ativo} />}
           </div>

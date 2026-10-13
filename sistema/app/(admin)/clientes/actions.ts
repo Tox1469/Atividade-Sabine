@@ -2,7 +2,6 @@
 
 import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { liberarAcesso } from "@/lib/acesso";
 import { anonimizarCliente } from "@/lib/anonimizar";
 import { prisma } from "@/lib/db";
@@ -29,8 +28,8 @@ export async function salvarCliente(id: number | null, _estado: EstadoFormulario
     throw erro;
   }
 
-  revalidatePath("/clientes");
-  redirect(`/clientes?ok=${id === null ? "novo" : "editado"}`);
+  revalidatePath("/clientes", "layout");
+  return { ok: id === null ? `${dados.nome_fantasia ?? dados.nome_razao_social} cadastrado.` : "Alterações salvas." };
 }
 
 // A3.2: inativar pede confirmacao e nao vale pra cliente com ordem em aberto

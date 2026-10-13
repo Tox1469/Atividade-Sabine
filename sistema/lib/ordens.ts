@@ -270,3 +270,16 @@ export async function catalogoAtivo() {
 export function enderecoDe(p: { logradouro: string; numero: string; complemento: string | null; bairro: string; cidade: string }) {
   return `${p.logradouro}, ${p.numero}${p.complemento ? ` ${p.complemento}` : ""} - ${p.bairro}, ${p.cidade}`;
 }
+
+// o que o botao "abrir ordem" do administrador precisa pra janela abrir na hora
+export async function dadosNovaOrdem() {
+  const [categorias, clientes] = await Promise.all([
+    catalogoAtivo(),
+    prisma.cliente.findMany({ where: { ativo: true }, orderBy: { nome_razao_social: "asc" } }),
+  ]);
+  return {
+    categorias,
+    clientes: clientes.map((c) => ({ id: c.id_cliente, nome: c.nome_fantasia ? `${c.nome_fantasia} (${c.nome_razao_social})` : c.nome_razao_social, local: enderecoDe(c) })),
+    prazoMinimo: new Date().toISOString().slice(0, 10),
+  };
+}

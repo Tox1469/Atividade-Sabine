@@ -8,18 +8,15 @@ import { dataBR, dataHoraBR, diasEntre, hoje, plural } from "@/lib/formato";
 import { FILTRO_ACEITE } from "@/lib/ordens";
 import { exigirPerfil } from "@/lib/permissao";
 import { BotaoImprimir } from "@/app/_componentes/imprimir";
-import { Janela } from "@/app/_componentes/janela";
-import { FormCancelar } from "../formularios";
-import { JanelaAtribuir } from "../janela-atribuir";
+import { BotaoAtribuir, BotaoCancelar } from "../formularios";
 
 export const metadata = { title: "Ordem de serviço" };
 
 const PRIORIDADE: Record<string, string> = { baixa: "neutro", normal: "aberta", alta: "pendente", urgente: "atraso" };
 
 // T12 - a ordem na visao do administrador. atribuir e cancelar abrem por cima (T12b, T12c)
-export default async function OrdemAdmin({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ janela?: string; ok?: string }> }) {
+export default async function OrdemAdmin({ params }: { params: Promise<{ id: string }> }) {
   await exigirPerfil("administrador");
-  const { janela, ok } = await searchParams;
   const ordem = await prisma.ordem_servico.findUnique({
     where: { id_ordem: Number((await params).id) || 0 },
     include: {
@@ -37,19 +34,16 @@ export default async function OrdemAdmin({ params, searchParams }: { params: Pro
   const aceita = foiAceita(ordem.data_atribuicao, aceites);
   const atrasada = emAtraso(ordem.status, ordem.prazo, dia);
   const aberta = ordem.status === "aberta" || ordem.status === "atribuida" || ordem.status === "em_execucao";
-  const podeAtribuir = ordem.status === "aberta" || ordem.status === "atribuida";
-  const aqui = `/ordens/${ordem.id_ordem}`;
   const nome = (p: { nome_fantasia: string | null; nome_razao_social: string }) => p.nome_fantasia ?? p.nome_razao_social;
 
   return (
-    <div className="mx-auto max-w-6xl">
+    <div className="w-full">
       <Titulo voltar={["/ordens", "ordens de serviço"]} titulo={`Ordem ${ordem.numero}`} subtitulo={`${ordem.servico.nome}, para ${nome(ordem.cliente)}`}>
         <ChipStatus status={ordem.status} />
         {atrasada && <Chip tom="atraso">Em atraso</Chip>}
         <BotaoImprimir texto="Imprimir" />
       </Titulo>
 
-      {ok && <Aviso tom="ok" titulo={ok} />}
       {ordem.status === "atribuida" && semRespostaHaMaisDe24h(ordem.status, ordem.data_atribuicao, aceita, new Date()) && (
         <Aviso tom="atencao" titulo="Aguardando resposta do prestador há mais de 24h.">
           Dá para trocar o prestador enquanto a execução não começou (UC14 E3.1).
@@ -129,9 +123,9 @@ export default async function OrdemAdmin({ params, searchParams }: { params: Pro
           </div>
           {aberta && (
             <div className="rodape-form">
-              <Link href={`${aqui}?janela=cancelar`} className="botao-perigo">Cancelar ordem</Link>
-              {ordem.status === "aberta" && <Link href={`${aqui}?janela=atribuir`} className="botao-principal">Atribuir prestador</Link>}
-              {ordem.status === "atribuida" && <Link href={`${aqui}?janela=trocar`} className="botao">Trocar prestador</Link>}
+              <BotaoCancelar idOrdem={ordem.id_ordem} numero={ordem.numero} />
+              {ordem.status === "aberta" && <BotaoAtribuir idOrdem={ordem.id_ordem} texto="Atribuir prestador" classe="botao-principal" />}
+              {ordem.status === "atribuida" && <BotaoAtribuir idOrdem={ordem.id_ordem} texto="Trocar prestador" classe="botao" />}
             </div>
           )}
         </div>
@@ -144,13 +138,6 @@ export default async function OrdemAdmin({ params, searchParams }: { params: Pro
         </div>
       </div>
 
-      {(janela === "atribuir" || janela === "trocar") && podeAtribuir && <JanelaAtribuir idOrdem={ordem.id_ordem} fechar={aqui} />}
-
-      {janela === "cancelar" && aberta && (
-        <Janela titulo={`Cancelar a ordem ${ordem.numero}`} fechar={aqui} largura={560}>
-          <FormCancelar idOrdem={ordem.id_ordem} voltar={aqui} />
-        </Janela>
-      )}
     </div>
   );
 }

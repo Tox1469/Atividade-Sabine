@@ -38,7 +38,7 @@ export default async function Usuarios({ searchParams }: { searchParams: Promise
   ]);
 
   return (
-    <div className="mx-auto max-w-6xl">
+    <div className="w-full">
       <Titulo titulo="Usuários" subtitulo="Quem entra no sistema e com qual perfil" />
       <div className="colunas">
         <div style={{ flexGrow: 3 }}>

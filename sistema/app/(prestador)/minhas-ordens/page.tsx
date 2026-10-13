@@ -37,8 +37,15 @@ export default async function MinhasOrdens({ searchParams }: { searchParams: Pro
   const atrasadasMes = concluidasMes.filter((o) => !o.entregue_no_prazo).length;
 
   return (
-    <div className="mx-auto max-w-6xl">
-      <Titulo titulo="Minhas ordens" subtitulo="As ordens atribuídas a você" />
+    <div className="w-full">
+      <Titulo
+        titulo="Minhas ordens"
+        subtitulo={[
+          atribuidas === 0 ? "Nenhuma esperando início" : plural(atribuidas, "esperando início", "esperando início"),
+          emExecucao.length === 0 ? "nenhuma em execução" : `${plural(emExecucao.length, "em execução", "em execução")}, prazo mais próximo em ${plural(Math.max(0, diasEntre(dia, emExecucao[0].prazo)), "dia", "dias")}`,
+          concluidasMes.length === 0 ? "nenhuma concluída no mês" : `${plural(concluidasMes.length, "concluída", "concluídas")} no mês, ${atrasadasMes === 0 ? "todas no prazo" : plural(atrasadasMes, "com atraso", "com atraso")}`,
+        ].join(", ") + "."}
+      />
 
       {prestador.situacao === "pendente" && (
         <Aviso tom="atencao" titulo="Seu cadastro está pendente, por isso você não recebe ordens novas.">
@@ -49,24 +56,6 @@ export default async function MinhasOrdens({ searchParams }: { searchParams: Pro
       {prestador.situacao === "bloqueado" && (
         <Aviso tom="erro" titulo="Seu cadastro está bloqueado pelo administrador.">As ordens que já estavam com você continuam aqui. Para saber o motivo, fale com a administração.</Aviso>
       )}
-
-      <div className="indicadores">
-        <div className="indicador">
-          <div className="rotulo-ind">Atribuídas a mim</div>
-          <div className="numero">{atribuidas}</div>
-          <div className="detalhe">aguardando início</div>
-        </div>
-        <div className="indicador atencao">
-          <div className="rotulo-ind">Em execução</div>
-          <div className="numero">{emExecucao.length}</div>
-          <div className="detalhe">{emExecucao.length === 0 ? "nenhuma agora" : `prazo mais próximo em ${plural(Math.max(0, diasEntre(dia, emExecucao[0].prazo)), "dia", "dias")}`}</div>
-        </div>
-        <div className="indicador ok">
-          <div className="rotulo-ind">Concluídas no mês</div>
-          <div className="numero">{concluidasMes.length}</div>
-          <div className="detalhe">{concluidasMes.length === 0 ? "nenhuma ainda" : atrasadasMes === 0 ? "todas dentro do prazo" : plural(atrasadasMes, "com atraso", "com atraso")}</div>
-        </div>
-      </div>
 
       <div className="cartao overflow-x-auto">
         <h2 className="cartao-titulo">Ordens atribuídas a mim</h2>

@@ -13,7 +13,7 @@ export default async function FichaPrestador({ params, children }: { params: Pro
   if (!prestador) notFound();
 
   return (
-    <div className="mx-auto max-w-6xl">
+    <div className="w-full">
       <Titulo
         voltar={["/prestadores", "prestadores"]}
         titulo={prestador.nome_fantasia ?? prestador.nome_razao_social}

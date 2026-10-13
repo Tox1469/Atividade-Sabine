@@ -27,7 +27,7 @@ export default async function ExecucaoOrdem({ params }: { params: Promise<{ id: 
   const faltam = diasEntre(dia, ordem.prazo);
 
   return (
-    <div className="mx-auto max-w-6xl">
+    <div className="w-full">
       <Titulo voltar={["/minhas-ordens", "minhas ordens"]} titulo={`Ordem ${ordem.numero}`} subtitulo={ordem.servico.nome}>
         <ChipStatus status={ordem.status} />
         {emAtraso(ordem.status, ordem.prazo, dia) && <Chip tom="atraso">Em atraso</Chip>}

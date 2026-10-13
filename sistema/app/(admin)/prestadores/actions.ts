@@ -2,7 +2,6 @@
 
 import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { z } from "zod";
 import { liberarAcesso } from "@/lib/acesso";
 import { anonimizarPrestador } from "@/lib/anonimizar";
@@ -10,7 +9,7 @@ import { prisma } from "@/lib/db";
 import { gravarDocumento } from "@/lib/documentos";
 import { EM_ANDAMENTO } from "@/lib/dominio/ordem";
 import { hoje, lerData } from "@/lib/formato";
-import { comErros, erroNoCampo, valoresDo, voltarPara, type EstadoFormulario } from "@/lib/formulario";
+import { comErros, erroNoCampo, valoresDo, type EstadoFormulario } from "@/lib/formulario";
 import { registrarLog } from "@/lib/log";
 import { exigirPerfil } from "@/lib/permissao";
 import { apagarArquivo, linkDeEnvio, receberArquivo } from "@/lib/storage";
@@ -49,8 +48,8 @@ export async function salvarPrestador(id: number | null, _estado: EstadoFormular
     throw erro;
   }
 
-  revalidatePath("/prestadores");
-  redirect(`/prestadores?ok=${id === null ? "novo" : "editado"}`);
+  revalidatePath("/prestadores", "layout");
+  return { ok: id === null ? `${dados.nome_fantasia ?? dados.nome_razao_social} cadastrado. Ele entra como pendente até a documentação ser conferida.` : "Alterações salvas." };
 }
 
 // UC07 - habilitar em categorias (TA27). desmarcar nao apaga: a habilitacao fica inativa
@@ -130,9 +129,7 @@ export async function alterarSituacao(id: number, _estado: EstadoFormulario, for
 
   revalidatePath(caminho(id, "/situacao"));
   revalidatePath("/vencimentos");
-  // aberta como janela no painel de vencimentos (UC09): volta pro painel com o aviso
-  if (form.get("voltar")) redirect(voltarPara(form.get("voltar"), "/vencimentos", `Situação de ${prestador.nome_fantasia ?? prestador.nome_razao_social} alterada para ${situacao}.`));
-  return { ok: "Situação alterada." };
+  return { ok: `Situação de ${prestador.nome_fantasia ?? prestador.nome_razao_social} alterada para ${situacao}.` };
 }
 
 // UC08 A1: o administrador envia em nome do prestador

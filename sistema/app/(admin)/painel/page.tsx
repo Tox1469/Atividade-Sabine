@@ -3,22 +3,21 @@ import { Aviso, Chip, ChipStatus, Titulo, Vazio } from "@/app/_componentes/ui";
 import { prisma } from "@/lib/db";
 import { situacaoDocumento } from "@/lib/dominio/documento";
 import { emAtraso, foiAceita, semRespostaHaMaisDe24h } from "@/lib/dominio/ordem";
-import { FILTRO_ACEITE } from "@/lib/ordens";
-import { JanelaAtribuir } from "../ordens/janela-atribuir";
+import { dadosNovaOrdem, FILTRO_ACEITE } from "@/lib/ordens";
+import { BotaoAtribuir, BotaoNovaOrdem } from "../ordens/formularios";
 import { dataBR, diasEntre, hoje, plural, somarDias } from "@/lib/formato";
 import { exigirPerfil } from "@/lib/permissao";
 
 export const metadata = { title: "Painel do dia" };
 
 // T02 - painel do dia: o que o administrador precisa resolver hoje
-export default async function Painel({ searchParams }: { searchParams: Promise<{ atribuir?: string; ok?: string }> }) {
+export default async function Painel() {
   await exigirPerfil("administrador");
-  const { atribuir, ok } = await searchParams;
   const dia = hoje();
   const agora = new Date();
   const inicioMes = new Date(Date.UTC(dia.getUTCFullYear(), dia.getUTCMonth(), 1));
 
-  const [vencidos, aVencer, abertas, emAndamento, concluidasMes, pendentes] = await Promise.all([
+  const [vencidos, aVencer, abertas, emAndamento, concluidasMes, pendentes, novaOrdem] = await Promise.all([
     prisma.documento.findMany({ where: { versao_atual: true, data_validade: { lt: dia } }, include: { tipo: true, prestador: true }, orderBy: { data_validade: "asc" } }),
     prisma.documento.findMany({ where: { versao_atual: true, data_validade: { gte: dia, lte: somarDias(dia, 30) } }, include: { tipo: true, prestador: true }, orderBy: { data_validade: "asc" } }),
     prisma.ordem_servico.findMany({ where: { status: "aberta" }, include: { cliente: true, servico: { include: { categoria: true } } }, orderBy: { prazo: "asc" } }),
@@ -30,6 +29,7 @@ export default async function Painel({ searchParams }: { searchParams: Promise<{
     prisma.ordem_servico.findMany({ where: { status: "concluida", data_conclusao: { gte: inicioMes } }, select: { entregue_no_prazo: true } }),
     // prestador pendente que ja mandou documento: esta esperando alguem conferir
     prisma.prestador.count({ where: { situacao: "pendente", documentos: { some: { versao_atual: true } } } }),
+    dadosNovaOrdem(),
   ]);
 
   // precisa de acao: aberta (atribuir), atrasada, ou atribuida sem resposta ha mais de 24h (UC14 E3.1)
@@ -55,43 +55,39 @@ export default async function Painel({ searchParams }: { searchParams: Promise<{
   const nome = (p: { nome_fantasia: string | null; nome_razao_social: string }) => p.nome_fantasia ?? p.nome_razao_social;
 
   return (
-    <div className="mx-auto max-w-6xl">
-      <Titulo titulo="Painel do dia" subtitulo={`Situação em ${dataBR(dia)}`}>
-        <Link href="/ordens?janela=nova" className="botao-principal">Abrir ordem</Link>
+    <div className="w-full">
+      <Titulo
+        titulo="Painel do dia"
+        subtitulo={
+          <>
+            {dataBR(dia)}.{" "}
+            <Link href="/vencimentos" className={vencidos.length ? "font-medium text-carimbo hover:underline" : "hover:underline"}>
+              {vencidos.length === 0 ? "Nenhum documento vencido" : plural(vencidos.length, "documento vencido", "documentos vencidos")}
+            </Link>
+            {vencidos.length > 0 && ` (${plural(pendentesVencidos, "prestador pendente", "prestadores pendentes")}, ${plural(bloqueadosVencidos, "bloqueado", "bloqueados")})`},{" "}
+            <Link href="/vencimentos" className="hover:underline">{aVencer.length === 0 ? "nenhum vence" : `${aVencer.length} ${aVencer.length === 1 ? "vence" : "vencem"}`} nos próximos 30 dias</Link>
+            {" e "}
+            <Link href="/relatorios/desempenho" className="hover:underline">
+              {concluidasMes.length === 0 ? "nenhuma ordem concluída no mês" : `${plural(concluidasMes.length, "ordem concluída", "ordens concluídas")} no mês, ${noPrazo === concluidasMes.length ? "todas no prazo" : `${Math.round((noPrazo / concluidasMes.length) * 100)}% no prazo`}`}
+            </Link>
+            .
+          </>
+        }
+      >
+        <BotaoNovaOrdem {...novaOrdem} />
       </Titulo>
 
-      {ok && <Aviso tom="ok" titulo={ok} />}
       {pendentes > 0 && (
         <Aviso titulo={`${plural(pendentes, "prestador pendente já enviou documentos", "prestadores pendentes já enviaram documentos")} e espera conferência.`}>
           <Link href="/prestadores?situacao=pendente" className="underline">Ver os pendentes</Link> e, com a documentação em dia, mudar a situação para ativo.
         </Aviso>
       )}
 
-      <div className="indicadores">
-        <Link className="indicador alerta" href="/vencimentos">
-          <div className="rotulo-ind">Documentos vencidos</div>
-          <div className="numero">{vencidos.length}</div>
-          <div className="detalhe">{vencidos.length === 0 ? "tudo em dia" : `${plural(pendentesVencidos, "pendente", "pendentes")} e ${plural(bloqueadosVencidos, "bloqueado", "bloqueados")}`}</div>
-        </Link>
-        <Link className="indicador atencao" href="/vencimentos">
-          <div className="rotulo-ind">Vencem em 30 dias</div>
-          <div className="numero">{aVencer.length}</div>
-          <div className="detalhe">{aVencer.length === 0 ? "nenhum no período" : `o mais próximo em ${plural(diasEntre(dia, aVencer[0].data_validade!), "dia", "dias")}`}</div>
-        </Link>
-        <Link className="indicador" href="/ordens?status=aberta">
-          <div className="rotulo-ind">Ordens aguardando atribuição</div>
-          <div className="numero">{abertas.length}</div>
-          <div className="detalhe">{prazoCurto === 0 ? "nenhuma com prazo curto" : `${plural(prazoCurto, "com prazo", "com prazo")} até amanhã`}</div>
-        </Link>
-        <Link className="indicador ok" href="/relatorios/desempenho">
-          <div className="rotulo-ind">Concluídas no mês</div>
-          <div className="numero">{concluidasMes.length}</div>
-          <div className="detalhe">{concluidasMes.length === 0 ? "nenhuma ainda" : `${Math.round((noPrazo / concluidasMes.length) * 100)}% dentro do prazo`}</div>
-        </Link>
-      </div>
-
       <div className="cartao mb-4 overflow-x-auto">
-        <h2 className="cartao-titulo">Ordens que precisam de ação</h2>
+        <h2 className="cartao-titulo">
+          Ordens que precisam de ação <span className="font-normal text-tinta2">{precisamAcao.length}</span>
+          {prazoCurto > 0 && <span className="ml-2 text-sm font-normal text-carimbo">{plural(prazoCurto, "com prazo", "com prazo")} até amanhã</span>}
+        </h2>
         {precisamAcao.length === 0 ? (
           <Vazio titulo="Nenhuma ordem esperando atribuição ou atrasada." />
         ) : (
@@ -114,7 +110,7 @@ export default async function Painel({ searchParams }: { searchParams: Promise<{
                   </td>
                   <td className="acoes">
                     {o.status === "aberta" ? (
-                      <Link href={`/painel?atribuir=${o.id_ordem}`} scroll={false} className="botao-principal botao-pequeno">Atribuir</Link>
+                      <BotaoAtribuir idOrdem={o.id_ordem} />
                     ) : (
                       <Link href={`/ordens/${o.id_ordem}`} className="botao botao-pequeno">Abrir</Link>
                     )}
@@ -127,7 +123,9 @@ export default async function Painel({ searchParams }: { searchParams: Promise<{
       </div>
 
       <div className="cartao overflow-x-auto">
-        <h2 className="cartao-titulo">Documentação em risco</h2>
+        <h2 className="cartao-titulo">
+          Documentação em risco <span className="font-normal text-tinta2">{emRisco.length}</span>
+        </h2>
         {emRisco.length === 0 ? (
           <Vazio titulo="Nenhum documento vencido nem vencendo nos próximos 15 dias." />
         ) : (
@@ -153,7 +151,6 @@ export default async function Painel({ searchParams }: { searchParams: Promise<{
         )}
       </div>
 
-      {atribuir && <JanelaAtribuir idOrdem={Number(atribuir) || 0} fechar="/painel" />}
     </div>
   );
 }

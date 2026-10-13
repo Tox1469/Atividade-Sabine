@@ -1,19 +1,20 @@
 import Link from "next/link";
 import { Prisma } from "@prisma/client";
-import { Aviso, ChipSituacao, Paginacao, paginaAtual, Titulo } from "@/app/_componentes/ui";
+import { ChipSituacao, Paginacao, paginaAtual, Titulo } from "@/app/_componentes/ui";
 import { notasDosPrestadores } from "@/lib/aptidao";
 import { prisma } from "@/lib/db";
 import { textoNota } from "@/lib/dominio/avaliacao";
 import { formatarCpfCnpj, soDigitos } from "@/lib/dominio/cpf-cnpj";
 import { exigirPerfil } from "@/lib/permissao";
 import { SITUACOES } from "@/lib/validacao/pessoa";
+import { BotaoNovoPrestador } from "./formularios";
 
 export const metadata = { title: "Prestadores" };
 
 // RNF06: a listagem e paginada no banco, nunca trazendo tudo de uma vez
 const POR_PAGINA = 20;
 
-type Busca = { busca?: string; situacao?: string; categoria?: string; pagina?: string; ok?: string };
+type Busca = { busca?: string; situacao?: string; categoria?: string; pagina?: string };
 
 // T03 - prestadores
 export default async function Prestadores({ searchParams }: { searchParams: Promise<Busca> }) {
@@ -51,16 +52,11 @@ export default async function Prestadores({ searchParams }: { searchParams: Prom
   const notas = await notasDosPrestadores(prestadores.map((p) => p.id_prestador));
 
   return (
-    <div className="mx-auto max-w-6xl">
+    <div className="w-full">
       <Titulo titulo="Prestadores" subtitulo="Cadastro da rede de terceirizados">
-        <Link href="/prestadores/novo" className="botao-principal">Novo prestador</Link>
+        <BotaoNovoPrestador />
       </Titulo>
 
-      {params.ok && (
-        <Aviso tom="ok" titulo={params.ok === "novo" ? "Prestador cadastrado." : "Alterações salvas."}>
-          {params.ok === "novo" && "Ele entra como pendente até a documentação ser conferida."}
-        </Aviso>
-      )}
 
       <form className="cartao mb-4 flex flex-wrap items-end gap-3 p-4">
         <div className="min-w-56 flex-1">
