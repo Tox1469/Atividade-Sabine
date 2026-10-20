@@ -1,7 +1,7 @@
 # sgp - sistema de gestao de prestadores
 ## 2ª entrega do 2º bimestre - sistema publicado e funcionando
 
-**versao 1.1 - 13/10/2026 - entrega de 06/11/2026**
+**versao 1.2 - 20/10/2026 - entrega de 06/11/2026**
 unicesumar - analise e desenvolvimento de sistemas
 imersao profissional - projeto de software - equipe 8
 
@@ -94,7 +94,6 @@ o problema, os tres perfis, os 19 requisitos funcionais e as 12 regras de negoci
 | item | por que |
 |---|---|
 | firefox e edge (RNF07) e restauracao de backup (RNF08) | conferencias que faltam, sem codigo novo previsto |
-| rodar o sistema do zero na maquina do igor seguindo o readme (TA58) | o ci ja faz isso a cada push numa maquina limpa, mas a conferencia na maquina dele continua combinada |
 | roteiro da apresentacao final e ensaio (TA70) | entrega de 27/11 |
 
 ---
@@ -184,7 +183,6 @@ sistema/
 |---|---|
 | abrir o sistema publicado no firefox e no edge e repetir os casos principais | igor |
 | restaurar um backup do supabase num banco de teste e conferir os dados | luis |
-| rodar o sistema do zero seguindo o readme (TA58) | igor |
 | roteiro da apresentacao final, divisao das falas e ensaio com o sistema publicado (TA70) | os dois |
 
 ---
@@ -212,7 +210,7 @@ antes de apresentar: rodar `npm run db:restaurar` contra o banco publicado (o lu
 | o sistema esta publicado e acessivel | sim, https://sgp-equipe8-sistema.vercel.app |
 | o banco esta em nuvem com dados de demonstracao | sim, supabase em sao paulo, com a carga inicial. `npm run db:restaurar` volta pra ela |
 | o codigo da entrega esta integrado ao repositorio | sim, na branch main |
-| conseguimos executar a aplicacao seguindo o readme | sim, o ci faz isso a cada push. falta repetir na maquina do igor (TA58) |
+| conseguimos executar a aplicacao seguindo o readme | sim, o ci faz isso a cada push e o igor repetiu num clone novo na maquina dele em 20/10 (TA58) |
 | executamos os testes e registramos resultados reais | sim, testes.md 1.2 |
 | registramos defeitos, correcões e pendencias | sim, testes.md secao 5 e secao 6 deste documento |
 | atualizamos os documentos afetados e a rastreabilidade | sim, secões 2 e 5 |
@@ -229,3 +227,4 @@ antes de apresentar: rodar `npm run db:restaurar` contra o banco publicado (o lu
 |---|---|---|
 | 1.0 | 13/10/2026 | primeira versao, para a entrega de 06/11/2026 |
 | 1.1 | 13/10/2026 | demonstracao protegida (backlog TA71): contas de teste travadas, `npm run db:restaurar` e novo administrador em janela. testes 1.2 e backlog 1.3 |
+| 1.2 | 20/10/2026 | TA58 concluida: sai das pendencias e o checklist registra o teste na maquina do igor. backlog 1.4 |

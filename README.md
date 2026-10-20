@@ -184,6 +184,8 @@ npm install
 copy .env.example .env        (no linux ou mac: cp .env.example .env)
 ```
 
+o `npm install` demora uns 2 minutos na primeira vez. com npm 11 ou mais novo ele termina avisando `allow-scripts` sobre alguns pacotes (prisma, embedded-postgres, esbuild): pode ignorar, nao precisa aprovar nada pro sistema rodar.
+
 abrir o `.env` e preencher o `AUTH_SECRET` com um texto aleatorio comprido. esse comando gera um e mostra no terminal:
 
 ```
@@ -202,9 +204,11 @@ e em outro terminal, dentro de `sistema/`:
 
 ```
 npm run db:migrar     cria as 14 tabelas
-npm run db:carga      administradores de teste, tipos de documento, categorias e alguns prestadores ficticios
+npm run db:carga      usuarios de teste, tipos de documento, categorias, prestadores, clientes e ordens ficticios
 npm run dev
 ```
+
+o `db:carga` pode mostrar um quadro do prisma sugerindo atualizar pra uma versao nova. tambem pode ignorar: o projeto usa a versao 6 de proposito.
 
 o sistema abre em http://localhost:3000. usuarios de teste, todos com a senha `sgp@2026`: `luis@sgp.teste` ou `igor@sgp.teste` (administrador), `eletrica@sgp.teste` (prestador) e `zanin@sgp.teste` (cliente). todos os dados da carga sao inventados. a senha dessas contas nao muda pelo sistema e elas nao podem ser desativadas, pra demonstracao abrir sempre pra quem for avaliar.
 

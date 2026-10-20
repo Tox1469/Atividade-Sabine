@@ -1,7 +1,7 @@
 # sgp - sistema de gestao de prestadores
 ## backlog e quadro de tarefas
 
-**versao 1.3 - 13/10/2026 - 2ª entrega do 2º bimestre (06/11)**
+**versao 1.4 - 20/10/2026 - 2ª entrega do 2º bimestre (06/11)**
 unicesumar - analise e desenvolvimento de sistemas
 imersao profissional - projeto de software - equipe 8
 
@@ -76,7 +76,7 @@ autenticacao e cadastros de apoio. sem esta release nao ha o que atribuir.
 | TA25 | construir as categorias de servico (T07) | RF04, HU05 | alta | luis | 13/10 | concluida |
 | TA26 | construir o catalogo de servicos (T08 e T09) | RF05, HU06 | alta | luis | 13/10 | concluida |
 | TA27 | implementar a habilitacao do prestador por categoria (T04) | RF06, HU07, RN04 | alta | luis | 13/10 | concluida |
-| TA58 | rodar o sistema do zero na maquina do igor seguindo so o readme, e corrigir o readme no que faltar | RNF11, manual da entrega | alta | igor | 20/10 | a fazer |
+| TA58 | rodar o sistema do zero na maquina do igor seguindo so o readme, e corrigir o readme no que faltar | RNF11, manual da entrega | alta | igor | 20/10 | concluida |
 | TA59 | escrever e executar os casos de teste do recorte, com evidencias | manual da entrega | alta | luis | 20/10 | concluida |
 | TA60 | registrar a revisao do 1º bimestre e atualizar tecnologias, modelo de dados e rastreabilidade | manual da entrega | alta | luis | 20/10 | concluida |
 | TA61 | gerar 5 mil prestadores ficticios e medir o tempo da listagem | RNF06 | alta | luis | 13/10 | concluida |
@@ -183,8 +183,7 @@ surgiu durante a implementacao do 2º bimestre e foi feito junto, porque deixava
 
 | situacao | tarefas |
 |---|---|
-| concluidas | 69 |
-| a fazer ate 20/10 | 1 (TA58, rodar do zero na maquina do igor seguindo o readme) |
+| concluidas | 70 |
 | a fazer ate 27/11 | 1 (TA70, a apresentacao final) |
 | **total** | **71** |
 
@@ -205,3 +204,4 @@ surgiu durante a implementacao do 2º bimestre e foi feito junto, porque deixava
 | 1.1 | 06/10/2026 | coluna de prazo, criterios de conclusao do recorte de 20/10, TA17 a TA23 concluidas. TA20 a TA22 foram feitas junto com o backend pra fechar o recorte, e o igor assumiu TA24 a TA26 pra 06/11. entraram TA58 a TA62 |
 | 1.2 | 13/10/2026 | TA16, TA24 a TA57, TA61 e TA62 concluidas, adiantando o que era de 27/11 e o que estava depois do mvp. as telas que estavam com o igor foram feitas junto com o backend, e ele ficou com a revisao de seguranca, a integracao continua e o readme (TA67 a TA69). entraram TA63 a TA70 |
 | 1.3 | 13/10/2026 | entrou e foi concluida a TA71, protecao da demonstracao. a TA70 passa a incluir restaurar a demonstracao antes do ensaio |
+| 1.4 | 20/10/2026 | TA58 concluida: clone novo na maquina do igor (windows 10, node 24, npm 11) seguindo so o readme. todos os passos funcionaram e os 56 testes passaram. o readme ganhou o aviso do `allow-scripts` do npm 11 e do quadro de atualizacao do prisma, e o `package-lock.json` passou a ter o mesmo nome do `package.json` (`sgp`), que o `npm install` corrigia sozinho e deixava o git com alteracao |
