@@ -271,14 +271,14 @@ os fluxos alternativos e de excecao sao numerados a partir do passo do fluxo pri
 
 **fluxos alternativos**
 
-- **A6.1 - primeiro acesso do prestador:** se o prestador nunca enviou documento, o sistema abre a tela inicial ja com o aviso de pendencia documental e o atalho para UC08.
-- **A6.2 - administrador com vencimentos no periodo:** se existirem documentos vencidos ou a vencer em 30 dias, a tela inicial do administrador destaca o total e oferece o atalho para UC09.
+- A6.1 - primeiro acesso do prestador: se o prestador nunca enviou documento, o sistema abre a tela inicial ja com o aviso de pendencia documental e o atalho para UC08.
+- A6.2 - administrador com vencimentos no periodo: se existirem documentos vencidos ou a vencer em 30 dias, a tela inicial do administrador destaca o total e oferece o atalho para UC09.
 
 **fluxos de excecao**
 
-- **E4.1 - credenciais invalidas:** o sistema informa "email ou senha invalidos", sem revelar qual dos dois esta errado, e retorna ao passo 2.
-- **E4.2 - conta inativa:** o sistema informa que a conta esta inativa e orienta o contato com o administrador. o caso de uso termina sem criar sessao.
-- **E4.3 - tentativas sucessivas:** apos 5 tentativas invalidas seguidas o sistema bloqueia novas tentativas daquele email por 15 minutos (RNF12).
+- E4.1 - credenciais invalidas: o sistema informa "email ou senha invalidos", sem revelar qual dos dois esta errado, e retorna ao passo 2.
+- E4.2 - conta inativa: o sistema informa que a conta esta inativa e orienta o contato com o administrador. o caso de uso termina sem criar sessao.
+- E4.3 - tentativas sucessivas: apos 5 tentativas invalidas seguidas o sistema bloqueia novas tentativas daquele email por 15 minutos (RNF12).
 
 **regras aplicadas:** RNF01 (senha em hash), RNF02 (permissao validada no servidor), RNF12 (bloqueio apos tentativas sucessivas).
 
@@ -305,7 +305,7 @@ os fluxos alternativos e de excecao sao numerados a partir do passo do fluxo pri
 
 **fluxo alternativo**
 
-- **A1.1 - encerramento por inatividade:** apos 30 minutos sem requisicao, o sistema invalida a sessao automaticamente e, no proximo acesso, exibe "sua sessao expirou, entre novamente".
+- A1.1 - encerramento por inatividade: apos 30 minutos sem requisicao, o sistema invalida a sessao automaticamente e, no proximo acesso, exibe "sua sessao expirou, entre novamente".
 
 **regras aplicadas:** RNF03.
 
@@ -328,14 +328,14 @@ os cinco casos de uso de cadastro compartilham o mesmo comportamento: incluir, c
 
 **fluxos alternativos**
 
-- **A3.1 - consultar:** o sistema abre o registro em modo somente leitura, sem permitir alteracao.
-- **A3.2 - inativar:** o sistema pede confirmacao explicita, valida a regra de bloqueio da entidade e, se aprovada, marca o registro como inativo. nenhum registro é apagado fisicamente do banco.
+- A3.1 - consultar: o sistema abre o registro em modo somente leitura, sem permitir alteracao.
+- A3.2 - inativar: o sistema pede confirmacao explicita, valida a regra de bloqueio da entidade e, se aprovada, marca o registro como inativo. nenhum registro é apagado fisicamente do banco.
 
 **fluxos de excecao**
 
-- **E6.1 - campo obrigatorio nao preenchido:** o sistema destaca o campo, informa o que falta e mantem o que ja foi digitado.
-- **E6.2 - violacao de regra da entidade:** o sistema recusa a gravacao e informa qual regra foi violada.
-- **E3.1 - inativacao bloqueada:** o sistema recusa a inativacao e informa o motivo e o caminho para regularizar.
+- E6.1 - campo obrigatorio nao preenchido: o sistema destaca o campo, informa o que falta e mantem o que ja foi digitado.
+- E6.2 - violacao de regra da entidade: o sistema recusa a gravacao e informa qual regra foi violada.
+- E3.1 - inativacao bloqueada: o sistema recusa a inativacao e informa o motivo e o caminho para regularizar.
 
 **particularidades de cada caso de uso**
 
@@ -371,7 +371,7 @@ os cinco casos de uso de cadastro compartilham o mesmo comportamento: incluir, c
 
 **fluxo de excecao**
 
-- **E3.1 - remocao de categoria em uso:** se o prestador tem ordem atribuida ou em execucao naquela categoria, o sistema recusa a remocao e informa quais ordens impedem a alteracao.
+- E3.1 - remocao de categoria em uso: se o prestador tem ordem atribuida ou em execucao naquela categoria, o sistema recusa a remocao e informa quais ordens impedem a alteracao.
 
 **regras aplicadas:** RN04 (a atribuicao respeita a categoria).
 
@@ -405,15 +405,15 @@ os cinco casos de uso de cadastro compartilham o mesmo comportamento: incluir, c
 
 **fluxos alternativos**
 
-- **A3.1 - substituir documento vencido:** o prestador seleciona um documento existente e envia a versao renovada. o sistema mantem a versao anterior no historico e passa a considerar a mais recente.
-- **A3.2 - documento sem validade:** para tipos sem vencimento, como rg e cpf, o campo data de validade fica desabilitado e o documento é sempre considerado valido.
+- A3.1 - substituir documento vencido: o prestador seleciona um documento existente e envia a versao renovada. o sistema mantem a versao anterior no historico e passa a considerar a mais recente.
+- A3.2 - documento sem validade: para tipos sem vencimento, como rg e cpf, o campo data de validade fica desabilitado e o documento é sempre considerado valido.
 
 **fluxos de excecao**
 
-- **E6.1 - formato nao aceito:** o sistema recusa o arquivo e informa que sao aceitos pdf, jpg e png (RNF09).
-- **E6.2 - arquivo acima de 10 mb:** o sistema recusa o envio e informa o limite.
-- **E6.3 - data de validade anterior a data atual:** o sistema aceita o envio, mas ja registra o documento como vencido e alerta o prestador.
-- **E6.4 - data de emissao posterior a data de validade:** o sistema recusa a gravacao e destaca os dois campos.
+- E6.1 - formato nao aceito: o sistema recusa o arquivo e informa que sao aceitos pdf, jpg e png (RNF09).
+- E6.2 - arquivo acima de 10 mb: o sistema recusa o envio e informa o limite.
+- E6.3 - data de validade anterior a data atual: o sistema aceita o envio, mas ja registra o documento como vencido e alerta o prestador.
+- E6.4 - data de emissao posterior a data de validade: o sistema recusa a gravacao e destaca os dois campos.
 
 **regras aplicadas:** RN02 (documento vencido leva o prestador para pendente), RNF09 (formato e tamanho).
 
@@ -443,11 +443,11 @@ os cinco casos de uso de cadastro compartilham o mesmo comportamento: incluir, c
 
 **pontos de extensao**
 
-- **prestador com documento vencido:** a partir de qualquer linha do grupo de vencidos, o administrador pode acionar UC11 e alterar a situacao cadastral sem sair do painel.
+- prestador com documento vencido: a partir de qualquer linha do grupo de vencidos, o administrador pode acionar UC11 e alterar a situacao cadastral sem sair do painel.
 
 **fluxo alternativo**
 
-- **A2.1 - nenhum vencimento no periodo:** o sistema exibe a mensagem de que nao ha documento vencido nem a vencer nos proximos 30 dias.
+- A2.1 - nenhum vencimento no periodo: o sistema exibe a mensagem de que nao ha documento vencido nem a vencer nos proximos 30 dias.
 
 **regras aplicadas:** RN02.
 
@@ -480,13 +480,13 @@ os cinco casos de uso de cadastro compartilham o mesmo comportamento: incluir, c
 
 **fluxos alternativos**
 
-- **A2.1 - alteracao automatica pelo vencimento:** quando um documento obrigatorio vence, o proprio sistema muda a situacao para "pendente", com o motivo "documento vencido: [tipo]" e o usuario responsavel registrado como "sistema" (RN02).
-- **A2.2 - regularizacao:** ao receber o documento renovado, o sistema verifica se restam pendencias. nao restando, sugere ao administrador o retorno para "ativo", que continua dependendo de confirmacao manual.
+- A2.1 - alteracao automatica pelo vencimento: quando um documento obrigatorio vence, o proprio sistema muda a situacao para "pendente", com o motivo "documento vencido: [tipo]" e o usuario responsavel registrado como "sistema" (RN02).
+- A2.2 - regularizacao: ao receber o documento renovado, o sistema verifica se restam pendencias. nao restando, sugere ao administrador o retorno para "ativo", que continua dependendo de confirmacao manual.
 
 **fluxos de excecao**
 
-- **E5.1 - motivo ausente ou muito curto:** o sistema recusa a gravacao e exige um motivo com no minimo 10 caracteres.
-- **E5.2 - inativacao com ordem em andamento:** o sistema recusa a mudanca para "inativo" e lista as ordens atribuidas ou em execucao que precisam ser concluidas ou realocadas antes (RN11).
+- E5.1 - motivo ausente ou muito curto: o sistema recusa a gravacao e exige um motivo com no minimo 10 caracteres.
+- E5.2 - inativacao com ordem em andamento: o sistema recusa a mudanca para "inativo" e lista as ordens atribuidas ou em execucao que precisam ser concluidas ou realocadas antes (RN11).
 
 **regras aplicadas:** RN02, RN11.
 
@@ -518,14 +518,14 @@ os cinco casos de uso de cadastro compartilham o mesmo comportamento: incluir, c
 
 **fluxos alternativos**
 
-- **A1.1 - abertura pelo administrador:** o administrador seleciona antes o cliente para o qual a ordem esta sendo aberta. o restante do fluxo é identico.
-- **A3.1 - prazo nao informado:** o sistema assume o prazo padrao de execucao cadastrado no servico (UC06) e informa a data calculada ao cliente.
+- A1.1 - abertura pelo administrador: o administrador seleciona antes o cliente para o qual a ordem esta sendo aberta. o restante do fluxo é identico.
+- A3.1 - prazo nao informado: o sistema assume o prazo padrao de execucao cadastrado no servico (UC06) e informa a data calculada ao cliente.
 
 **fluxos de excecao**
 
-- **E4.1 - prazo desejado no passado:** o sistema recusa a data e solicita uma data igual ou posterior a de hoje.
-- **E4.2 - descricao muito curta:** o sistema exige uma descricao com no minimo 20 caracteres, para que o prestador entenda a demanda.
-- **E4.3 - cliente inativo:** o sistema impede a abertura e orienta o contato com o administrador.
+- E4.1 - prazo desejado no passado: o sistema recusa a data e solicita uma data igual ou posterior a de hoje.
+- E4.2 - descricao muito curta: o sistema exige uma descricao com no minimo 20 caracteres, para que o prestador entenda a demanda.
+- E4.3 - cliente inativo: o sistema impede a abertura e orienta o contato com o administrador.
 
 ---
 
@@ -558,13 +558,13 @@ os cinco casos de uso de cadastro compartilham o mesmo comportamento: incluir, c
 
 **fluxos alternativos**
 
-- **A5.1 - reatribuicao:** se a ordem ja estava atribuida e ainda nao entrou em execucao, o administrador pode trocar o prestador. o sistema exige um motivo e registra as duas atribuicões no historico da ordem.
-- **A3.1 - nenhum prestador apto:** o sistema informa que nao ha prestador apto na categoria e oferece dois caminhos: habilitar um prestador existente (UC07) ou regularizar a documentacao de quem esta pendente (UC09).
+- A5.1 - reatribuicao: se a ordem ja estava atribuida e ainda nao entrou em execucao, o administrador pode trocar o prestador. o sistema exige um motivo e registra as duas atribuicões no historico da ordem.
+- A3.1 - nenhum prestador apto: o sistema informa que nao ha prestador apto na categoria e oferece dois caminhos: habilitar um prestador existente (UC07) ou regularizar a documentacao de quem esta pendente (UC09).
 
 **fluxos de excecao**
 
-- **E6.1 - prestador deixou de estar apto:** se entre o passo 3 e o passo 6 o prestador teve documento vencido ou situacao alterada, o sistema recusa a atribuicao, informa o motivo e retorna ao passo 3 com a lista atualizada.
-- **E7.1 - ordem ja atribuida por outro usuario:** se outro administrador atribuiu a mesma ordem enquanto esta tela estava aberta, o sistema recusa a gravacao, informa quem atribuiu e recarrega a fila.
+- E6.1 - prestador deixou de estar apto: se entre o passo 3 e o passo 6 o prestador teve documento vencido ou situacao alterada, o sistema recusa a atribuicao, informa o motivo e retorna ao passo 3 com a lista atualizada.
+- E7.1 - ordem ja atribuida por outro usuario: se outro administrador atribuiu a mesma ordem enquanto esta tela estava aberta, o sistema recusa a gravacao, informa quem atribuiu e recarrega a fila.
 
 **regras aplicadas:** RN01 (prestador ativo), RN02 (documento vencido bloqueia), RN03 (contrato vigente, quando UC10 estiver implementado), RN04 (categoria compativel), RN05 (sequencia de status).
 
@@ -592,11 +592,11 @@ os cinco casos de uso de cadastro compartilham o mesmo comportamento: incluir, c
 
 **fluxo alternativo**
 
-- **A3.1 - recusar:** o prestador aciona recusar e informa o motivo, com no minimo 10 caracteres. o sistema devolve a ordem ao status "aberta", registra a recusa no historico e sinaliza a ordem na fila do administrador. o mesmo prestador nao volta a aparecer como sugestao para aquela ordem.
+- A3.1 - recusar: o prestador aciona recusar e informa o motivo, com no minimo 10 caracteres. o sistema devolve a ordem ao status "aberta", registra a recusa no historico e sinaliza a ordem na fila do administrador. o mesmo prestador nao volta a aparecer como sugestao para aquela ordem.
 
 **fluxo de excecao**
 
-- **E3.1 - prazo de resposta esgotado:** se o prestador nao responde em 24 horas, o sistema sinaliza a ordem como "aguardando resposta ha mais de 24h" na tela do administrador, que pode reatribuir por A5.1 de UC13.
+- E3.1 - prazo de resposta esgotado: se o prestador nao responde em 24 horas, o sistema sinaliza a ordem como "aguardando resposta ha mais de 24h" na tela do administrador, que pode reatribuir por A5.1 de UC13.
 
 **regras aplicadas:** RN05.
 
@@ -625,8 +625,8 @@ os cinco casos de uso de cadastro compartilham o mesmo comportamento: incluir, c
 
 **fluxos de excecao**
 
-- **E2.1 - ordem fora da sequencia:** se a ordem nao esta em um status que permita iniciar a execucao, o sistema recusa a acao e informa o status atual (RN05).
-- **E2.2 - ordem de outro prestador:** se a ordem nao pertence ao prestador logado, o servidor recusa a requisicao mesmo que a tela tenha sido manipulada (RNF02).
+- E2.1 - ordem fora da sequencia: se a ordem nao esta em um status que permita iniciar a execucao, o sistema recusa a acao e informa o status atual (RN05).
+- E2.2 - ordem de outro prestador: se a ordem nao pertence ao prestador logado, o servidor recusa a requisicao mesmo que a tela tenha sido manipulada (RNF02).
 
 **regras aplicadas:** RN05, RN06.
 
@@ -656,8 +656,8 @@ os cinco casos de uso de cadastro compartilham o mesmo comportamento: incluir, c
 
 **fluxos de excecao**
 
-- **E4.1 - relato ausente:** o sistema exige a descricao do que foi executado antes de concluir.
-- **E2.1 - ordem ja concluida:** o sistema informa que a ordem esta concluida e nao permite nova alteracao (RN06).
+- E4.1 - relato ausente: o sistema exige a descricao do que foi executado antes de concluir.
+- E2.1 - ordem ja concluida: o sistema informa que a ordem esta concluida e nao permite nova alteracao (RN06).
 
 **regras aplicadas:** RN05, RN06 (ordem concluida é imutavel), RN12 (calculo do atraso).
 
@@ -690,8 +690,8 @@ os cinco casos de uso de cadastro compartilham o mesmo comportamento: incluir, c
 
 **fluxos de excecao**
 
-- **E5.1 - motivo com menos de 10 caracteres:** o sistema recusa o cancelamento e mantem a tela aberta (RN07).
-- **E2.1 - ordem ja concluida:** o sistema informa que ordens concluidas nao podem ser canceladas e orienta a abertura de uma nova ordem para correcao (RN06).
+- E5.1 - motivo com menos de 10 caracteres: o sistema recusa o cancelamento e mantem a tela aberta (RN07).
+- E2.1 - ordem ja concluida: o sistema informa que ordens concluidas nao podem ser canceladas e orienta a abertura de uma nova ordem para correcao (RN06).
 
 **regras aplicadas:** RN06, RN07.
 
@@ -720,9 +720,9 @@ os cinco casos de uso de cadastro compartilham o mesmo comportamento: incluir, c
 
 **fluxos de excecao**
 
-- **E1.1 - ordem nao concluida:** o sistema nao apresenta a opcao de avaliar e informa que a avaliacao fica disponivel apos a conclusao (RN08).
-- **E1.2 - ordem ja avaliada:** o sistema exibe a avaliacao existente em modo somente leitura e nao permite alteracao (RN08).
-- **E1.3 - cliente diferente do titular da ordem:** o servidor recusa a requisicao (RN08, RNF02).
+- E1.1 - ordem nao concluida: o sistema nao apresenta a opcao de avaliar e informa que a avaliacao fica disponivel apos a conclusao (RN08).
+- E1.2 - ordem ja avaliada: o sistema exibe a avaliacao existente em modo somente leitura e nao permite alteracao (RN08).
+- E1.3 - cliente diferente do titular da ordem: o servidor recusa a requisicao (RN08, RNF02).
 
 **regras aplicadas:** RN08 (avaliacao unica e pelo cliente titular), RN09 (composicao da nota media).
 
@@ -753,7 +753,7 @@ os cinco casos de uso de cadastro compartilham o mesmo comportamento: incluir, c
 
 **fluxo alternativo**
 
-- **A4.1 - exibicao dos inaptos:** a criterio do administrador, a tela pode listar tambem os prestadores inaptos, sem permitir a selecao, apenas com o motivo do impedimento. isso evita a duvida de "por que fulano nao aparece".
+- A4.1 - exibicao dos inaptos: a criterio do administrador, a tela pode listar tambem os prestadores inaptos, sem permitir a selecao, apenas com o motivo do impedimento. isso evita a duvida de "por que fulano nao aparece".
 
 **regras aplicadas:** RN01, RN02, RN03, RN04.
 

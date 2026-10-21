@@ -785,14 +785,14 @@
 </ol>
 <p><strong>fluxos alternativos</strong></p>
 <ul>
-<li><strong>A6.1 - primeiro acesso do prestador:</strong> se o prestador nunca enviou documento, o sistema abre a tela inicial ja com o aviso de pendencia documental e o atalho para UC08.</li>
-<li><strong>A6.2 - administrador com vencimentos no periodo:</strong> se existirem documentos vencidos ou a vencer em 30 dias, a tela inicial do administrador destaca o total e oferece o atalho para UC09.</li>
+<li>A6.1 - primeiro acesso do prestador: se o prestador nunca enviou documento, o sistema abre a tela inicial ja com o aviso de pendencia documental e o atalho para UC08.</li>
+<li>A6.2 - administrador com vencimentos no periodo: se existirem documentos vencidos ou a vencer em 30 dias, a tela inicial do administrador destaca o total e oferece o atalho para UC09.</li>
 </ul>
 <p><strong>fluxos de excecao</strong></p>
 <ul>
-<li><strong>E4.1 - credenciais invalidas:</strong> o sistema informa "email ou senha invalidos", sem revelar qual dos dois esta errado, e retorna ao passo 2.</li>
-<li><strong>E4.2 - conta inativa:</strong> o sistema informa que a conta esta inativa e orienta o contato com o administrador. o caso de uso termina sem criar sessao.</li>
-<li><strong>E4.3 - tentativas sucessivas:</strong> apos 5 tentativas invalidas seguidas o sistema bloqueia novas tentativas daquele email por 15 minutos (RNF12).</li>
+<li>E4.1 - credenciais invalidas: o sistema informa "email ou senha invalidos", sem revelar qual dos dois esta errado, e retorna ao passo 2.</li>
+<li>E4.2 - conta inativa: o sistema informa que a conta esta inativa e orienta o contato com o administrador. o caso de uso termina sem criar sessao.</li>
+<li>E4.3 - tentativas sucessivas: apos 5 tentativas invalidas seguidas o sistema bloqueia novas tentativas daquele email por 15 minutos (RNF12).</li>
 </ul>
 <p><strong>regras aplicadas:</strong> RNF01 (senha em hash), RNF02 (permissao validada no servidor), RNF12 (bloqueio apos tentativas sucessivas).</p>
 <hr />
@@ -833,7 +833,7 @@
 </ol>
 <p><strong>fluxo alternativo</strong></p>
 <ul>
-<li><strong>A1.1 - encerramento por inatividade:</strong> apos 30 minutos sem requisicao, o sistema invalida a sessao automaticamente e, no proximo acesso, exibe "sua sessao expirou, entre novamente".</li>
+<li>A1.1 - encerramento por inatividade: apos 30 minutos sem requisicao, o sistema invalida a sessao automaticamente e, no proximo acesso, exibe "sua sessao expirou, entre novamente".</li>
 </ul>
 <p><strong>regras aplicadas:</strong> RNF03.</p>
 <hr />
@@ -852,14 +852,14 @@
 </ol>
 <p><strong>fluxos alternativos</strong></p>
 <ul>
-<li><strong>A3.1 - consultar:</strong> o sistema abre o registro em modo somente leitura, sem permitir alteracao.</li>
-<li><strong>A3.2 - inativar:</strong> o sistema pede confirmacao explicita, valida a regra de bloqueio da entidade e, se aprovada, marca o registro como inativo. nenhum registro é apagado fisicamente do banco.</li>
+<li>A3.1 - consultar: o sistema abre o registro em modo somente leitura, sem permitir alteracao.</li>
+<li>A3.2 - inativar: o sistema pede confirmacao explicita, valida a regra de bloqueio da entidade e, se aprovada, marca o registro como inativo. nenhum registro é apagado fisicamente do banco.</li>
 </ul>
 <p><strong>fluxos de excecao</strong></p>
 <ul>
-<li><strong>E6.1 - campo obrigatorio nao preenchido:</strong> o sistema destaca o campo, informa o que falta e mantem o que ja foi digitado.</li>
-<li><strong>E6.2 - violacao de regra da entidade:</strong> o sistema recusa a gravacao e informa qual regra foi violada.</li>
-<li><strong>E3.1 - inativacao bloqueada:</strong> o sistema recusa a inativacao e informa o motivo e o caminho para regularizar.</li>
+<li>E6.1 - campo obrigatorio nao preenchido: o sistema destaca o campo, informa o que falta e mantem o que ja foi digitado.</li>
+<li>E6.2 - violacao de regra da entidade: o sistema recusa a gravacao e informa qual regra foi violada.</li>
+<li>E3.1 - inativacao bloqueada: o sistema recusa a inativacao e informa o motivo e o caminho para regularizar.</li>
 </ul>
 <p><strong>particularidades de cada caso de uso</strong></p>
 <table>
@@ -949,7 +949,7 @@
 </ol>
 <p><strong>fluxo de excecao</strong></p>
 <ul>
-<li><strong>E3.1 - remocao de categoria em uso:</strong> se o prestador tem ordem atribuida ou em execucao naquela categoria, o sistema recusa a remocao e informa quais ordens impedem a alteracao.</li>
+<li>E3.1 - remocao de categoria em uso: se o prestador tem ordem atribuida ou em execucao naquela categoria, o sistema recusa a remocao e informa quais ordens impedem a alteracao.</li>
 </ul>
 <p><strong>regras aplicadas:</strong> RN04 (a atribuicao respeita a categoria).</p>
 <hr />
@@ -1003,15 +1003,15 @@
 </ol>
 <p><strong>fluxos alternativos</strong></p>
 <ul>
-<li><strong>A3.1 - substituir documento vencido:</strong> o prestador seleciona um documento existente e envia a versao renovada. o sistema mantem a versao anterior no historico e passa a considerar a mais recente.</li>
-<li><strong>A3.2 - documento sem validade:</strong> para tipos sem vencimento, como rg e cpf, o campo data de validade fica desabilitado e o documento é sempre considerado valido.</li>
+<li>A3.1 - substituir documento vencido: o prestador seleciona um documento existente e envia a versao renovada. o sistema mantem a versao anterior no historico e passa a considerar a mais recente.</li>
+<li>A3.2 - documento sem validade: para tipos sem vencimento, como rg e cpf, o campo data de validade fica desabilitado e o documento é sempre considerado valido.</li>
 </ul>
 <p><strong>fluxos de excecao</strong></p>
 <ul>
-<li><strong>E6.1 - formato nao aceito:</strong> o sistema recusa o arquivo e informa que sao aceitos pdf, jpg e png (RNF09).</li>
-<li><strong>E6.2 - arquivo acima de 10 mb:</strong> o sistema recusa o envio e informa o limite.</li>
-<li><strong>E6.3 - data de validade anterior a data atual:</strong> o sistema aceita o envio, mas ja registra o documento como vencido e alerta o prestador.</li>
-<li><strong>E6.4 - data de emissao posterior a data de validade:</strong> o sistema recusa a gravacao e destaca os dois campos.</li>
+<li>E6.1 - formato nao aceito: o sistema recusa o arquivo e informa que sao aceitos pdf, jpg e png (RNF09).</li>
+<li>E6.2 - arquivo acima de 10 mb: o sistema recusa o envio e informa o limite.</li>
+<li>E6.3 - data de validade anterior a data atual: o sistema aceita o envio, mas ja registra o documento como vencido e alerta o prestador.</li>
+<li>E6.4 - data de emissao posterior a data de validade: o sistema recusa a gravacao e destaca os dois campos.</li>
 </ul>
 <p><strong>regras aplicadas:</strong> RN02 (documento vencido leva o prestador para pendente), RNF09 (formato e tamanho).</p>
 <hr />
@@ -1058,11 +1058,11 @@
 </ol>
 <p><strong>pontos de extensao</strong></p>
 <ul>
-<li><strong>prestador com documento vencido:</strong> a partir de qualquer linha do grupo de vencidos, o administrador pode acionar UC11 e alterar a situacao cadastral sem sair do painel.</li>
+<li>prestador com documento vencido: a partir de qualquer linha do grupo de vencidos, o administrador pode acionar UC11 e alterar a situacao cadastral sem sair do painel.</li>
 </ul>
 <p><strong>fluxo alternativo</strong></p>
 <ul>
-<li><strong>A2.1 - nenhum vencimento no periodo:</strong> o sistema exibe a mensagem de que nao ha documento vencido nem a vencer nos proximos 30 dias.</li>
+<li>A2.1 - nenhum vencimento no periodo: o sistema exibe a mensagem de que nao ha documento vencido nem a vencer nos proximos 30 dias.</li>
 </ul>
 <p><strong>regras aplicadas:</strong> RN02.</p>
 <hr />
@@ -1112,13 +1112,13 @@
 </ol>
 <p><strong>fluxos alternativos</strong></p>
 <ul>
-<li><strong>A2.1 - alteracao automatica pelo vencimento:</strong> quando um documento obrigatorio vence, o proprio sistema muda a situacao para "pendente", com o motivo "documento vencido: [tipo]" e o usuario responsavel registrado como "sistema" (RN02).</li>
-<li><strong>A2.2 - regularizacao:</strong> ao receber o documento renovado, o sistema verifica se restam pendencias. nao restando, sugere ao administrador o retorno para "ativo", que continua dependendo de confirmacao manual.</li>
+<li>A2.1 - alteracao automatica pelo vencimento: quando um documento obrigatorio vence, o proprio sistema muda a situacao para "pendente", com o motivo "documento vencido: [tipo]" e o usuario responsavel registrado como "sistema" (RN02).</li>
+<li>A2.2 - regularizacao: ao receber o documento renovado, o sistema verifica se restam pendencias. nao restando, sugere ao administrador o retorno para "ativo", que continua dependendo de confirmacao manual.</li>
 </ul>
 <p><strong>fluxos de excecao</strong></p>
 <ul>
-<li><strong>E5.1 - motivo ausente ou muito curto:</strong> o sistema recusa a gravacao e exige um motivo com no minimo 10 caracteres.</li>
-<li><strong>E5.2 - inativacao com ordem em andamento:</strong> o sistema recusa a mudanca para "inativo" e lista as ordens atribuidas ou em execucao que precisam ser concluidas ou realocadas antes (RN11).</li>
+<li>E5.1 - motivo ausente ou muito curto: o sistema recusa a gravacao e exige um motivo com no minimo 10 caracteres.</li>
+<li>E5.2 - inativacao com ordem em andamento: o sistema recusa a mudanca para "inativo" e lista as ordens atribuidas ou em execucao que precisam ser concluidas ou realocadas antes (RN11).</li>
 </ul>
 <p><strong>regras aplicadas:</strong> RN02, RN11.</p>
 <hr />
@@ -1170,14 +1170,14 @@
 </ol>
 <p><strong>fluxos alternativos</strong></p>
 <ul>
-<li><strong>A1.1 - abertura pelo administrador:</strong> o administrador seleciona antes o cliente para o qual a ordem esta sendo aberta. o restante do fluxo é identico.</li>
-<li><strong>A3.1 - prazo nao informado:</strong> o sistema assume o prazo padrao de execucao cadastrado no servico (UC06) e informa a data calculada ao cliente.</li>
+<li>A1.1 - abertura pelo administrador: o administrador seleciona antes o cliente para o qual a ordem esta sendo aberta. o restante do fluxo é identico.</li>
+<li>A3.1 - prazo nao informado: o sistema assume o prazo padrao de execucao cadastrado no servico (UC06) e informa a data calculada ao cliente.</li>
 </ul>
 <p><strong>fluxos de excecao</strong></p>
 <ul>
-<li><strong>E4.1 - prazo desejado no passado:</strong> o sistema recusa a data e solicita uma data igual ou posterior a de hoje.</li>
-<li><strong>E4.2 - descricao muito curta:</strong> o sistema exige uma descricao com no minimo 20 caracteres, para que o prestador entenda a demanda.</li>
-<li><strong>E4.3 - cliente inativo:</strong> o sistema impede a abertura e orienta o contato com o administrador.</li>
+<li>E4.1 - prazo desejado no passado: o sistema recusa a data e solicita uma data igual ou posterior a de hoje.</li>
+<li>E4.2 - descricao muito curta: o sistema exige uma descricao com no minimo 20 caracteres, para que o prestador entenda a demanda.</li>
+<li>E4.3 - cliente inativo: o sistema impede a abertura e orienta o contato com o administrador.</li>
 </ul>
 <hr />
 <h3>7.10 UC13 - atribuir ordem a um prestador</h3>
@@ -1231,13 +1231,13 @@
 </ol>
 <p><strong>fluxos alternativos</strong></p>
 <ul>
-<li><strong>A5.1 - reatribuicao:</strong> se a ordem ja estava atribuida e ainda nao entrou em execucao, o administrador pode trocar o prestador. o sistema exige um motivo e registra as duas atribuicões no historico da ordem.</li>
-<li><strong>A3.1 - nenhum prestador apto:</strong> o sistema informa que nao ha prestador apto na categoria e oferece dois caminhos: habilitar um prestador existente (UC07) ou regularizar a documentacao de quem esta pendente (UC09).</li>
+<li>A5.1 - reatribuicao: se a ordem ja estava atribuida e ainda nao entrou em execucao, o administrador pode trocar o prestador. o sistema exige um motivo e registra as duas atribuicões no historico da ordem.</li>
+<li>A3.1 - nenhum prestador apto: o sistema informa que nao ha prestador apto na categoria e oferece dois caminhos: habilitar um prestador existente (UC07) ou regularizar a documentacao de quem esta pendente (UC09).</li>
 </ul>
 <p><strong>fluxos de excecao</strong></p>
 <ul>
-<li><strong>E6.1 - prestador deixou de estar apto:</strong> se entre o passo 3 e o passo 6 o prestador teve documento vencido ou situacao alterada, o sistema recusa a atribuicao, informa o motivo e retorna ao passo 3 com a lista atualizada.</li>
-<li><strong>E7.1 - ordem ja atribuida por outro usuario:</strong> se outro administrador atribuiu a mesma ordem enquanto esta tela estava aberta, o sistema recusa a gravacao, informa quem atribuiu e recarrega a fila.</li>
+<li>E6.1 - prestador deixou de estar apto: se entre o passo 3 e o passo 6 o prestador teve documento vencido ou situacao alterada, o sistema recusa a atribuicao, informa o motivo e retorna ao passo 3 com a lista atualizada.</li>
+<li>E7.1 - ordem ja atribuida por outro usuario: se outro administrador atribuiu a mesma ordem enquanto esta tela estava aberta, o sistema recusa a gravacao, informa quem atribuiu e recarrega a fila.</li>
 </ul>
 <p><strong>regras aplicadas:</strong> RN01 (prestador ativo), RN02 (documento vencido bloqueia), RN03 (contrato vigente, quando UC10 estiver implementado), RN04 (categoria compativel), RN05 (sequencia de status).</p>
 <hr />
@@ -1279,11 +1279,11 @@
 </ol>
 <p><strong>fluxo alternativo</strong></p>
 <ul>
-<li><strong>A3.1 - recusar:</strong> o prestador aciona recusar e informa o motivo, com no minimo 10 caracteres. o sistema devolve a ordem ao status "aberta", registra a recusa no historico e sinaliza a ordem na fila do administrador. o mesmo prestador nao volta a aparecer como sugestao para aquela ordem.</li>
+<li>A3.1 - recusar: o prestador aciona recusar e informa o motivo, com no minimo 10 caracteres. o sistema devolve a ordem ao status "aberta", registra a recusa no historico e sinaliza a ordem na fila do administrador. o mesmo prestador nao volta a aparecer como sugestao para aquela ordem.</li>
 </ul>
 <p><strong>fluxo de excecao</strong></p>
 <ul>
-<li><strong>E3.1 - prazo de resposta esgotado:</strong> se o prestador nao responde em 24 horas, o sistema sinaliza a ordem como "aguardando resposta ha mais de 24h" na tela do administrador, que pode reatribuir por A5.1 de UC13.</li>
+<li>E3.1 - prazo de resposta esgotado: se o prestador nao responde em 24 horas, o sistema sinaliza a ordem como "aguardando resposta ha mais de 24h" na tela do administrador, que pode reatribuir por A5.1 de UC13.</li>
 </ul>
 <p><strong>regras aplicadas:</strong> RN05.</p>
 <hr />
@@ -1326,8 +1326,8 @@
 </ol>
 <p><strong>fluxos de excecao</strong></p>
 <ul>
-<li><strong>E2.1 - ordem fora da sequencia:</strong> se a ordem nao esta em um status que permita iniciar a execucao, o sistema recusa a acao e informa o status atual (RN05).</li>
-<li><strong>E2.2 - ordem de outro prestador:</strong> se a ordem nao pertence ao prestador logado, o servidor recusa a requisicao mesmo que a tela tenha sido manipulada (RNF02).</li>
+<li>E2.1 - ordem fora da sequencia: se a ordem nao esta em um status que permita iniciar a execucao, o sistema recusa a acao e informa o status atual (RN05).</li>
+<li>E2.2 - ordem de outro prestador: se a ordem nao pertence ao prestador logado, o servidor recusa a requisicao mesmo que a tela tenha sido manipulada (RNF02).</li>
 </ul>
 <p><strong>regras aplicadas:</strong> RN05, RN06.</p>
 <hr />
@@ -1371,8 +1371,8 @@
 </ol>
 <p><strong>fluxos de excecao</strong></p>
 <ul>
-<li><strong>E4.1 - relato ausente:</strong> o sistema exige a descricao do que foi executado antes de concluir.</li>
-<li><strong>E2.1 - ordem ja concluida:</strong> o sistema informa que a ordem esta concluida e nao permite nova alteracao (RN06).</li>
+<li>E4.1 - relato ausente: o sistema exige a descricao do que foi executado antes de concluir.</li>
+<li>E2.1 - ordem ja concluida: o sistema informa que a ordem esta concluida e nao permite nova alteracao (RN06).</li>
 </ul>
 <p><strong>regras aplicadas:</strong> RN05, RN06 (ordem concluida é imutavel), RN12 (calculo do atraso).</p>
 <hr />
@@ -1422,8 +1422,8 @@
 </ol>
 <p><strong>fluxos de excecao</strong></p>
 <ul>
-<li><strong>E5.1 - motivo com menos de 10 caracteres:</strong> o sistema recusa o cancelamento e mantem a tela aberta (RN07).</li>
-<li><strong>E2.1 - ordem ja concluida:</strong> o sistema informa que ordens concluidas nao podem ser canceladas e orienta a abertura de uma nova ordem para correcao (RN06).</li>
+<li>E5.1 - motivo com menos de 10 caracteres: o sistema recusa o cancelamento e mantem a tela aberta (RN07).</li>
+<li>E2.1 - ordem ja concluida: o sistema informa que ordens concluidas nao podem ser canceladas e orienta a abertura de uma nova ordem para correcao (RN06).</li>
 </ul>
 <p><strong>regras aplicadas:</strong> RN06, RN07.</p>
 <hr />
@@ -1466,9 +1466,9 @@
 </ol>
 <p><strong>fluxos de excecao</strong></p>
 <ul>
-<li><strong>E1.1 - ordem nao concluida:</strong> o sistema nao apresenta a opcao de avaliar e informa que a avaliacao fica disponivel apos a conclusao (RN08).</li>
-<li><strong>E1.2 - ordem ja avaliada:</strong> o sistema exibe a avaliacao existente em modo somente leitura e nao permite alteracao (RN08).</li>
-<li><strong>E1.3 - cliente diferente do titular da ordem:</strong> o servidor recusa a requisicao (RN08, RNF02).</li>
+<li>E1.1 - ordem nao concluida: o sistema nao apresenta a opcao de avaliar e informa que a avaliacao fica disponivel apos a conclusao (RN08).</li>
+<li>E1.2 - ordem ja avaliada: o sistema exibe a avaliacao existente em modo somente leitura e nao permite alteracao (RN08).</li>
+<li>E1.3 - cliente diferente do titular da ordem: o servidor recusa a requisicao (RN08, RNF02).</li>
 </ul>
 <p><strong>regras aplicadas:</strong> RN08 (avaliacao unica e pelo cliente titular), RN09 (composicao da nota media).</p>
 <hr />
@@ -1513,7 +1513,7 @@
 </ol>
 <p><strong>fluxo alternativo</strong></p>
 <ul>
-<li><strong>A4.1 - exibicao dos inaptos:</strong> a criterio do administrador, a tela pode listar tambem os prestadores inaptos, sem permitir a selecao, apenas com o motivo do impedimento. isso evita a duvida de "por que fulano nao aparece".</li>
+<li>A4.1 - exibicao dos inaptos: a criterio do administrador, a tela pode listar tambem os prestadores inaptos, sem permitir a selecao, apenas com o motivo do impedimento. isso evita a duvida de "por que fulano nao aparece".</li>
 </ul>
 <p><strong>regras aplicadas:</strong> RN01, RN02, RN03, RN04.</p>
 <hr />

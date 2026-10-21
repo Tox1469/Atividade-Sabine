@@ -1,6 +1,6 @@
 # como trabalhar neste repositorio
 
-combinado entre o luis e o igor pra os dois mexerem no mesmo codigo sem um atropelar o outro. vale pra quem estiver digitando e pra qualquer ferramenta que um de nos use pra ajudar.
+combinado entre o luis e o igor pra os dois mexerem no mesmo codigo sem um atropelar o outro.
 
 ## antes de mexer e antes de subir
 
@@ -28,7 +28,7 @@ git config core.hooksPath          tem que mostrar ferramentas/git
 - cada um commita com a propria conta do github. o historico é o que mostra quem fez o que (RNF11)
 - mensagem em portugues, minuscula, no formato `tipo: o que mudou`. tipos usados: `feat` (funcionalidade), `fix` (defeito), `docs`, `style` (so visual), `test`, `ci`, `chore`
 - se o commit fecha uma tarefa do [backlog](docs/backlog.md), cita o id: `feat: relatorio de desempenho (TA54)`
-- sem linha de co-autoria nem de "gerado por". o gancho `ferramentas/git/commit-msg` tira essas linhas sozinho, mas o certo é nem colocar
+- sem linha de co-autoria, o commit é de quem fez. o gancho `ferramentas/git/commit-msg` tira essa linha sozinho, mas o certo é nem colocar
 
 ## antes do push
 

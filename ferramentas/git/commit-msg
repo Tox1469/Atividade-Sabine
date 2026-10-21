@@ -1,6 +1,5 @@
 #!/bin/sh
 # o historico do repositorio mostra so os dois integrantes (RNF11: commits identificaveis por integrante).
-# editor e assistente de codigo costumam colocar no fim da mensagem uma linha de co-autoria ou de
-# "gerado por". este gancho tira essas linhas antes do commit ser gravado.
+# tira da mensagem as linhas de co-autoria e as que alguns editores colocam sozinhos no fim.
 # fica ligado sozinho depois do npm install na pasta sistema (script prepare do package.json)
-sed -i -E '/^[[:space:]]*co-authored-by:/Id; /generated with|claude-session:|claude\.ai\/code/Id' "$1"
+sed -i -E '/^[[:space:]]*(co-authored-by|[a-z]+-session):/Id; /generated with|\/code\/session_/Id' "$1"
