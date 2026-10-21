@@ -14,7 +14,7 @@ imersao profissional - projeto de software - equipe 8
 | equipe | 8 |
 | integrantes | luis gustavo boratto de oliveira e igor schiniegoski pallisser |
 | projeto | sgp - sistema de gestao de prestadores |
-| repositorio | https://github.com/igorschiniegoski/Atividade-Sabine (o mesmo do 1º bimestre, publico) |
+| repositorio | https://github.com/Tox1469/Atividade-Sabine (publico, com todo o historico do 1º bimestre) |
 | versao avaliada | tag `entrega-20-10-2026` no repositorio |
 | codigo | pasta [`sistema/`](../sistema) |
 

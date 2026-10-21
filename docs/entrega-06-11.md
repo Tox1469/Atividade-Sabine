@@ -14,7 +14,7 @@ imersao profissional - projeto de software - equipe 8
 | equipe | 8 |
 | integrantes | luis gustavo boratto de oliveira e igor schiniegoski pallisser |
 | projeto | sgp - sistema de gestao de prestadores |
-| repositorio | https://github.com/igorschiniegoski/Atividade-Sabine (o mesmo desde o 1º bimestre, publico) |
+| repositorio | https://github.com/Tox1469/Atividade-Sabine (publico, com todo o historico desde o 1º bimestre) |
 | sistema publicado | https://sgp-equipe8-sistema.vercel.app |
 | documentacao e prototipo | https://sgp-equipe8.vercel.app |
 | versao avaliada | branch main. o commit testado esta no [testes.md](testes.md), secao 2 |
