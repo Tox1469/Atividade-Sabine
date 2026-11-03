@@ -8,6 +8,7 @@ on:
     paths: ["sistema/**", ".github/workflows/sistema.yml"]
   pull_request:
     paths: ["sistema/**", ".github/workflows/sistema.yml"]
+  workflow_dispatch: # botao "Run workflow", pra rodar na hora da apresentacao
 
 jobs:
   verificar:
