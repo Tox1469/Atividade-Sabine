@@ -1,7 +1,7 @@
 # sgp - sistema de gestao de prestadores
 ## backlog e quadro de tarefas
 
-**versao 1.4 - 20/10/2026 - 2ª entrega do 2º bimestre (06/11)**
+**versao 1.5 - 03/11/2026 - 2ª entrega do 2º bimestre (06/11)**
 unicesumar - analise e desenvolvimento de sistemas
 imersao profissional - projeto de software - equipe 8
 
@@ -170,12 +170,13 @@ surgiu durante a implementacao do 2º bimestre e foi feito junto, porque deixava
 | TA68 | integracao continua no github actions: tipos, lint, testes com um postgres proprio e build a cada push | qualidade | media | igor | 13/10 | concluida |
 | TA69 | reescrever o readme com o que ja funciona, o endereco publicado e todas as variaveis | 3ª entrega | media | igor | 13/10 | concluida |
 | TA71 | proteger a demonstracao: contas @sgp.teste sem troca de senha, sem desativar e sem anonimizar, e o `npm run db:restaurar`, que volta o banco e os arquivos pra carga inicial antes de cada apresentacao | RNF02, apresentacao final | media | luis | 13/10 | concluida |
+| TA72 | encurtar o roteiro da demonstracao de 06/11 pelo retorno de 20/10 (a apresentacao ficou longa): 4 passos, sem slide, demonstracao direto no sistema publicado | 2ª entrega | alta | ambos | 03/11 | concluida |
 
 ## 7.2 ate 27/11
 
 | id | tarefa | requisito | prioridade | responsavel | prazo | situacao |
 |---|---|---|---|---|---|---|
-| TA70 | montar o roteiro da apresentacao final, dividir as falas e ensaiar com o sistema publicado, restaurado com `npm run db:restaurar` antes | apresentacao final | alta | ambos | 27/11 | a fazer |
+| TA70 | montar o roteiro da apresentacao final, curto como o de 06/11 (TA72), dividir as falas e ensaiar com o sistema publicado, restaurado com `npm run db:restaurar` antes | apresentacao final | alta | ambos | 27/11 | a fazer |
 
 ---
 
@@ -183,15 +184,15 @@ surgiu durante a implementacao do 2º bimestre e foi feito junto, porque deixava
 
 | situacao | tarefas |
 |---|---|
-| concluidas | 70 |
+| concluidas | 71 |
 | a fazer ate 27/11 | 1 (TA70, a apresentacao final) |
-| **total** | **71** |
+| **total** | **72** |
 
 | responsavel | tarefas atribuidas |
 |---|---|
 | luis gustavo boratto de oliveira | 60 |
 | igor schiniegoski pallisser | 10 |
-| os dois | 1 |
+| os dois | 2 |
 | ambos, em revisao cruzada | todas |
 
 ---
@@ -205,3 +206,4 @@ surgiu durante a implementacao do 2º bimestre e foi feito junto, porque deixava
 | 1.2 | 13/10/2026 | TA16, TA24 a TA57, TA61 e TA62 concluidas, adiantando o que era de 27/11 e o que estava depois do mvp. as telas que estavam com o igor foram feitas junto com o backend, e ele ficou com a revisao de seguranca, a integracao continua e o readme (TA67 a TA69). entraram TA63 a TA70 |
 | 1.3 | 13/10/2026 | entrou e foi concluida a TA71, protecao da demonstracao. a TA70 passa a incluir restaurar a demonstracao antes do ensaio |
 | 1.4 | 20/10/2026 | TA58 concluida: clone novo na maquina do igor (windows 10, node 24, npm 11) seguindo so o readme. todos os passos funcionaram e os 56 testes passaram. o readme ganhou o aviso do `allow-scripts` do npm 11 e do quadro de atualizacao do prisma, e o `package-lock.json` passou a ter o mesmo nome do `package.json` (`sgp`), que o `npm install` corrigia sozinho e deixava o git com alteracao |
+| 1.5 | 03/11/2026 | ajuste pelo retorno da entrega de 20/10, quando a professora pediu pra resumir a apresentacao: entrou e foi concluida a TA72 (roteiro de 06/11 com 4 passos) e a TA70 passa a pedir o mesmo formato curto na apresentacao final |

@@ -1,7 +1,7 @@
 # sgp - sistema de gestao de prestadores
 ## 2ª entrega do 2º bimestre - sistema publicado e funcionando
 
-**versao 1.2 - 20/10/2026 - entrega de 06/11/2026**
+**versao 1.3 - 03/11/2026 - entrega de 06/11/2026**
 unicesumar - analise e desenvolvimento de sistemas
 imersao profissional - projeto de software - equipe 8
 
@@ -35,7 +35,8 @@ este documento é o indice da entrega. ele resume o que mudou desde 20/10 e apon
 | o que mudou desde a entrega anterior e por que | secao 2 |
 | o que funciona agora e o que fica pra 27/11 | secao 3 |
 | tecnologias e arquitetura | [tecnologias-e-arquitetura.md](tecnologias-e-arquitetura.md), versao 1.2, e o resumo na secao 4 |
-| backlog atualizado | [backlog.md](backlog.md), versao 1.3 |
+| retorno da entrega de 20/10 e o ajuste no backlog | secao 2 (ultima linha) e [backlog.md](backlog.md), TA72 |
+| backlog atualizado | [backlog.md](backlog.md), versao 1.5 |
 | codigo integrado e como executar | pasta `sistema/` e o [readme](../README.md) |
 | sistema publicado | https://sgp-equipe8-sistema.vercel.app |
 | testes, resultados e evidencias | [testes.md](testes.md), versao 1.2, e a pasta [evidencias/entrega-06-11](evidencias/entrega-06-11) |
@@ -65,6 +66,7 @@ o problema, os tres perfis, os 19 requisitos funcionais e as 12 regras de negoci
 | 13/10 | revisao e integracao continua | o igor revisou o codigo e corrigiu quatro defeitos (D08 a D11 do testes.md), e montou o github actions que confere tipos, lint, testes e build a cada push | testes 1.1, backlog TA67 e TA68 |
 | 13/10 | backlog | as telas que estavam com o igor foram feitas junto com o backend, e ele ficou com a revisao, o ci e o readme | backlog 1.2 |
 | 13/10 | demonstracao protegida | as contas da tela de login nao mudam de senha nem perdem o acesso, e `npm run db:restaurar` volta o banco e os arquivos pra carga inicial, com as datas contadas do dia. novo administrador passou a abrir em janela | backlog TA71, testes 1.2 (CT64 a CT68, D17) |
+| 20/10 | retorno da 1ª entrega | na apresentacao de 20/10 a professora avaliou que ficou longa e pediu pra resumir. o roteiro de 06/11 caiu de 7 pra 4 passos, sem slide e com a demonstracao direto no sistema publicado, e o da apresentacao final segue a mesma linha | backlog 1.5 (TA72 nova, TA70 ajustada), secao 7 |
 
 ---
 
@@ -189,13 +191,12 @@ sistema/
 
 ## 7. roteiro da demonstracao
 
+curto de proposito, pelo retorno de 20/10: nada de slide nem de ler documento, a fala acompanha o que aparece na tela.
+
 1. o problema em uma frase e o que mudou desde 20/10 (secao 2).
-2. no sistema publicado, como cliente: abrir uma solicitacao e ver o aviso de feriado no prazo.
-3. como administrador: no painel, atribuir a ordem e mostrar por que cada prestador nao apto ficou de fora.
-4. como prestador: aceitar, iniciar, registrar andamento e concluir. tentar abrir a ordem de outro prestador.
-5. como cliente: avaliar. como administrador: nota media, relatorio de desempenho e log.
-6. painel de vencimentos: enviar um documento vencido e rodar o RN02 na hora.
-7. os testes: o github actions verde, o `npm test` e a tabela do [testes.md](testes.md), com um defeito encontrado e corrigido.
+2. fluxo integrado, no sistema publicado: o cliente abre a solicitacao (aviso de feriado no prazo), o administrador atribui (o prestador nao apto fica de fora e a tela diz por que), o prestador aceita e conclui, o cliente avalia.
+3. regra de negocio na hora: documento vencido no painel de vencimentos e o RN02 aplicado pelo botao.
+4. testes: o github actions verde e a tabela do [testes.md](testes.md), com um defeito encontrado e corrigido.
 
 antes de apresentar: rodar `npm run db:restaurar` contra o banco publicado (o luis roda, porque as variaveis de producao ficam com ele), entrar uma vez em cada perfil pra deixar o sistema quente, e conferir que nenhum usuario de teste ficou bloqueado pelo ensaio.
 
@@ -214,7 +215,8 @@ antes de apresentar: rodar `npm run db:restaurar` contra o banco publicado (o lu
 | executamos os testes e registramos resultados reais | sim, testes.md 1.2 |
 | registramos defeitos, correcões e pendencias | sim, testes.md secao 5 e secao 6 deste documento |
 | atualizamos os documentos afetados e a rastreabilidade | sim, secões 2 e 5 |
-| atualizamos o backlog | sim, backlog 1.3 |
+| usamos o retorno da 1ª entrega pra ajustar o backlog | sim, secao 2 e backlog TA72 |
+| atualizamos o backlog | sim, backlog 1.5 |
 | verificamos o acesso da professora | sim, o repositorio e o sistema abrem sem pedir nada alem do login de teste |
 | cada integrante consegue explicar sua contribuicao | a combinar entre os dois antes da apresentacao |
 | definimos os proximos passos ate 27/11 | sim, secao 6 |
@@ -228,3 +230,4 @@ antes de apresentar: rodar `npm run db:restaurar` contra o banco publicado (o lu
 | 1.0 | 13/10/2026 | primeira versao, para a entrega de 06/11/2026 |
 | 1.1 | 13/10/2026 | demonstracao protegida (backlog TA71): contas de teste travadas, `npm run db:restaurar` e novo administrador em janela. testes 1.2 e backlog 1.3 |
 | 1.2 | 20/10/2026 | TA58 concluida: sai das pendencias e o checklist registra o teste na maquina do igor. backlog 1.4 |
+| 1.3 | 03/11/2026 | retorno da entrega de 20/10 (apresentacao longa): linha nova na secao 2, roteiro da secao 7 reduzido a 4 passos e item novo no checklist. backlog 1.5 |
