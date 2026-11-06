@@ -6,176 +6,293 @@
 <title>SGP - apresentação de 06/11 - equipe 8</title>
 <link rel="stylesheet" href="prototipos/estilo.css">
 <style>
-  /* mapa da apresentacao de 06/11, pra ficar projetado: as paradas em ordem, quem conduz cada uma
-     e o atalho pra tela certa do sistema. sem slide de proposito: a professora pediu pra resumir em 20/10 */
-  body.apres { display: block; background: var(--papel); font-size: 16px; line-height: 1.4; padding: 0 0 10px; }
-  .faixa { background: var(--caneta-escura); color: #fff; padding: 10px 24px 9px; border-bottom: 4px solid var(--caneta); }
-  .faixa .dentro { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; gap: 24px; }
-  .faixa .titulo { flex: 1; min-width: 0; }
-  .faixa .curso { font-size: 13px; color: #a8adb1; margin-bottom: 4px; }
-  .faixa h1 { margin: 0 0 3px; font-size: 29px; letter-spacing: .2px; }
-  .faixa p { margin: 0; color: #d6d9db; font-size: 15.5px; }
-  .faixa .data { text-align: right; color: #d6d9db; font-size: 13.5px; white-space: nowrap; }
-  .faixa .data b { display: block; color: #fff; font-size: 24px; }
-  .abrir { display: block; padding: 10px 16px; background: var(--caneta); color: #fff; text-decoration: none; border-radius: 3px; font-size: 17px; font-weight: 600; cursor: pointer; white-space: nowrap; }
-  .abrir span { display: block; font-weight: 400; font-size: 13.5px; color: #f7eadf; }
-  .abrir:hover { background: #8f3d0a; }
-
-  .mapa { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
-  /* cada linha do mapa e um trecho da rota: uma linha fina passa pelos numeros das paradas */
-  .trecho { position: relative; display: grid; gap: 14px; margin-top: 6px; padding-top: 20px; }
-  .trecho::before { content: ""; position: absolute; left: 20px; right: 20px; top: 19px; border-top: 3px solid var(--regua); }
-  .trecho.um { grid-template-columns: 1fr 1fr 1.55fr; }
-  .trecho.dois { grid-template-columns: 1fr 1fr 1fr; }
-  .parada { position: relative; background: var(--branco); border: 1px solid var(--regua); border-top: 4px solid var(--cor); border-radius: 3px; padding: 14px 16px 10px; }
+  /* apresentacao de 06/11: um slide por parada, com a tela real do sistema e o atalho pra abrir ao vivo.
+     o palco tem 1280x720 e escala pro tamanho da janela. setas, page up/down ou espaco trocam o slide */
+  html, body.deck { height: 100%; }
+  body.deck { margin: 0; overflow: hidden; background: #1c1f22; font-size: 18px; }
+  .palco { position: fixed; left: 50%; top: 50%; width: 1280px; height: 720px; transform-origin: center; transform: translate(-50%, -50%); background: var(--papel); overflow: hidden; }
+  .slide { position: absolute; inset: 0; padding: 40px 56px 64px; display: none; flex-direction: column; }
+  .slide.atual { display: flex; }
   .luis { --cor: var(--caneta); }
   .igor { --cor: var(--ardosia); }
-  .num { position: absolute; top: -20px; left: 12px; width: 34px; height: 34px; border-radius: 50%; background: var(--cor); color: #fff; font-weight: 700; font-size: 18px; display: grid; place-items: center; border: 3px solid var(--papel); }
-  .parada h2 { margin: 0 0 7px; font-size: 18.5px; line-height: 1.25; display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
-  .quem { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; color: var(--cor); border: 1px solid var(--cor); padding: 0 7px; border-radius: 3px; }
-  .parada ul { margin: 0; padding-left: 18px; }
-  .parada li { margin-bottom: 3px; }
-  .parada li::marker { color: var(--cor); }
-  .atalhos { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px; }
-  .atalhos a { font-size: 13.5px; padding: 3px 9px; border: 1px solid var(--caneta); border-radius: 3px; color: var(--caneta); text-decoration: none; background: var(--branco); cursor: pointer; }
-  .atalhos a:hover { background: var(--caneta); color: #fff; }
 
-  /* o fluxo e um mapa dentro do mapa: quem faz cada passo e em que status a ordem fica */
-  ol.fluxo { list-style: none; margin: 2px 0 0; padding: 0; }
-  ol.fluxo li { display: grid; grid-template-columns: 112px 1fr auto; gap: 10px; align-items: center; padding: 4px 0; position: relative; }
-  ol.fluxo li + li { border-top: 1px dashed var(--regua); }
-  .perfil { font-size: 13px; font-weight: 600; text-align: center; padding: 3px 0; border-radius: 3px; background: var(--ardosia-fundo); color: var(--ardosia); }
-  .acao small { display: block; color: var(--tinta2); font-size: 13.5px; }
-  .status { font-size: 12.5px; color: var(--tinta2); white-space: nowrap; }
-  .status b { color: var(--tinta); font-weight: 600; }
-  ol.fluxo a { font-size: 13px; color: var(--caneta); cursor: pointer; }
+  .cabeca { display: flex; align-items: flex-end; gap: 16px; margin-bottom: 22px; padding-bottom: 14px; border-bottom: 2px solid var(--regua); }
+  .cabeca div { flex: 1; }
+  .etapa { display: block; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: .7px; color: var(--cor); margin-bottom: 4px; }
+  .cabeca h2 { margin: 0; font-size: 36px; line-height: 1.15; color: var(--tinta); }
+  .quem { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: .6px; color: var(--cor); border: 1.5px solid var(--cor); padding: 2px 10px; border-radius: 3px; }
 
-  .base { max-width: 1280px; margin: 10px auto 0; padding: 0 24px; display: flex; flex-wrap: wrap; gap: 6px 22px; align-items: baseline; font-size: 14.5px; color: var(--tinta2); }
-  .base code { font-family: Consolas, "Courier New", monospace; font-size: 14px; color: var(--tinta); }
-  .base .senha code { background: var(--caneta-clara); padding: 1px 6px; border-radius: 3px; }
-  .base a { color: var(--caneta); cursor: pointer; }
-  .base .links { margin-left: auto; }
+  .slide-miolo { flex: 1; min-height: 0; display: grid; grid-template-columns: 380px 1fr; gap: 36px; align-items: start; }
+  .slide ul.pontos { margin: 0; padding-left: 22px; }
+  .slide ul.pontos li { margin-bottom: 12px; line-height: 1.4; }
+  .slide ul.pontos li::marker { color: var(--cor); }
+  .quadro { margin: 0; aspect-ratio: 16 / 10; background: var(--branco); border: 1px solid var(--regua); border-radius: 6px; overflow: hidden; box-shadow: 0 10px 28px rgba(30, 30, 30, .14); }
+  .quadro img { width: 100%; height: 100%; object-fit: cover; object-position: top left; display: block; }
+  .ao-vivo { display: inline-block; margin-top: 8px; padding: 9px 16px; background: var(--caneta); color: #fff; text-decoration: none; border-radius: 3px; font-size: 16px; font-weight: 600; cursor: pointer; }
+  .ao-vivo:hover { background: #8f3d0a; }
+  .ao-vivo.claro { background: var(--branco); color: var(--caneta); border: 1px solid var(--caneta); }
+  .ao-vivo.claro:hover { background: var(--caneta-clara); }
+  .dica { display: block; margin-top: 8px; font-size: 14.5px; color: var(--tinta2); }
+  .dica code { font-family: Consolas, "Courier New", monospace; font-size: 14.5px; color: var(--tinta); }
 
-  @media (max-width: 960px) {
-    .faixa { padding: 16px 14px; }
-    .faixa .dentro { flex-wrap: wrap; gap: 10px 16px; }
-    .faixa .titulo { flex-basis: 100%; }
-    .faixa h1 { font-size: 24px; }
-    .faixa .data { text-align: left; }
-    .mapa, .base { padding: 0 14px; }
-    .trecho.um, .trecho.dois { grid-template-columns: 1fr; gap: 26px; }
-    .trecho::before { left: 28px; right: auto; top: 20px; bottom: 20px; border-top: 0; border-left: 3px solid var(--regua); }
-    ol.fluxo li { grid-template-columns: 96px 1fr; }
-    .status { grid-column: 2; }
-    .base .links { margin-left: 0; }
-  }
+  /* o caminho da ordem, repetido nos quatro slides do fluxo com a etapa da vez acesa */
+  .trilho { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: -6px 0 18px; font-size: 16px; }
+  .trilho span { padding: 4px 12px; border-radius: 3px; background: var(--ardosia-fundo); color: var(--tinta2); }
+  .trilho span.aqui { background: var(--cor); color: #fff; font-weight: 600; }
+  .trilho i { font-style: normal; color: var(--tinta2); }
+
+  /* capa */
+  .capa { justify-content: center; padding: 0 96px; background: var(--caneta-escura); color: #fff; border-bottom: 10px solid var(--caneta); }
+  .capa .curso { font-size: 16px; color: #a8adb1; margin-bottom: 26px; }
+  .capa h1 { margin: 0; font-size: 92px; line-height: 1; letter-spacing: 1px; }
+  .capa .nome { font-size: 34px; color: #e9ebec; margin: 8px 0 34px; }
+  .capa .entrega { font-size: 22px; color: #fff; }
+  .capa .equipe { font-size: 19px; color: #c9cdd0; margin-top: 6px; }
+  .capa .no-ar { align-self: flex-start; margin-top: 40px; padding: 12px 20px; border: 1.5px solid var(--caneta); border-radius: 4px; color: #fff; text-decoration: none; font-size: 19px; cursor: pointer; }
+  .capa .no-ar b { color: #f0a46b; }
+  .capa .no-ar:hover { background: rgba(168, 72, 12, .25); }
+
+  /* perfis */
+  .chamada { font-size: 27px; line-height: 1.45; margin: 14px 0 40px; max-width: 1040px; }
+  .chamada b { color: var(--caneta); }
+  .perfis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .perfis div { background: var(--branco); border: 1px solid var(--regua); border-top: 4px solid var(--caneta); border-radius: 4px; padding: 26px 26px 30px; }
+  .perfis h3 { margin: 0 0 12px; font-size: 27px; }
+  .perfis p { margin: 0; font-size: 21px; line-height: 1.5; color: var(--tinta); }
+
+  /* antes e agora */
+  .comparar { display: grid; grid-template-columns: 1fr 1.5fr; gap: 24px; }
+  .comparar > div { background: var(--branco); border: 1px solid var(--regua); border-radius: 4px; padding: 18px 22px 8px; }
+  .comparar h3 { margin: 0 0 12px; font-size: 15px; text-transform: uppercase; letter-spacing: .6px; color: var(--tinta2); }
+  .comparar .agora { border-left: 5px solid var(--ardosia); }
+  .comparar .agora h3 { color: var(--ardosia); }
+  .comparar .antes ul.pontos { color: var(--tinta2); }
+  .comparar ul.pontos { font-size: 22px; }
+  .comparar ul.pontos li { margin-bottom: 16px; }
+  .faixa-baixo { margin-top: 26px; font-size: 20px; color: var(--tinta2); }
+  .faixa-baixo b { color: var(--tinta); }
+
+  /* proximos passos */
+  .proximos { width: 100%; border-collapse: collapse; font-size: 25px; background: var(--branco); border: 1px solid var(--regua); }
+  .proximos td { padding: 22px 26px; border-bottom: 1px solid var(--regua-clara); }
+  .proximos td:last-child { width: 170px; color: var(--tinta2); font-size: 21px; }
+  .fim { margin-top: 56px; display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
+  .fim strong { font-size: 48px; margin-right: 10px; }
+
+  .rodape-slide { position: absolute; left: 56px; right: 40px; bottom: 18px; display: flex; align-items: center; gap: 14px; font-size: 13.5px; color: var(--tinta2); }
+  .rodape-slide .contador { margin-left: auto; font-variant-numeric: tabular-nums; }
+  .rodape-slide button { width: 36px; height: 30px; border: 1px solid var(--regua); background: var(--branco); color: var(--tinta); border-radius: 3px; font-size: 16px; cursor: pointer; }
+  .rodape-slide button:hover { border-color: var(--caneta); color: var(--caneta); }
+  .rodape-slide button:disabled { opacity: .35; cursor: default; }
+  .em-capa .rodape-slide { color: #a8adb1; }
 </style>
 </head>
-<body class="apres">
+<body class="deck">
 
-<div class="faixa">
-  <div class="dentro">
-    <div class="titulo">
-      <div class="curso">unicesumar, análise e desenvolvimento de sistemas, imersão profissional em projeto de software</div>
-      <h1>SGP, sistema de gestão de prestadores</h1>
-      <p>Equipe 8: Luis Gustavo Boratto de Oliveira e Igor Schiniegoski Pallisser</p>
+<div class="palco" id="palco">
+
+  <section class="slide capa">
+    <div class="curso">Unicesumar · Análise e Desenvolvimento de Sistemas · Imersão profissional em projeto de software</div>
+    <h1>SGP</h1>
+    <div class="nome">Sistema de gestão de prestadores</div>
+    <div class="entrega">2ª entrega do 2º bimestre · 06/11/2026</div>
+    <div class="equipe">Equipe 8: Luis Gustavo Boratto de Oliveira e Igor Schiniegoski Pallisser</div>
+    <a class="no-ar" href="https://sgp-equipe8-sistema.vercel.app" target="_blank">Sistema publicado e funcionando: <b>sgp-equipe8-sistema.vercel.app</b></a>
+  </section>
+
+  <section class="slide luis">
+    <div class="cabeca"><div><span class="etapa">O problema</span><h2>Prestador terceirizado num sistema só</h2></div><span class="quem">Luis</span></div>
+    <p class="chamada">Quem contrata prestador terceirizado controla cadastro, documento com validade e ordem de serviço em <b>planilha e mensagem</b>. O SGP junta tudo isso num lugar só, com três perfis.</p>
+    <div class="perfis">
+      <div><h3>Administrador</h3><p>Cadastra prestadores, confere documentos e contratos, atribui as ordens e acompanha os relatórios.</p></div>
+      <div><h3>Prestador</h3><p>Vê só as ordens dele, aceita ou recusa, executa e envia os próprios documentos.</p></div>
+      <div><h3>Cliente</h3><p>Abre a solicitação, acompanha cada passo e avalia o atendimento no fim.</p></div>
     </div>
-    <div class="data"><b>06/11</b>2ª entrega do 2º bimestre</div>
-    <a class="abrir" href="https://sgp-equipe8-sistema.vercel.app" target="_blank">Abrir o sistema publicado<span>sgp-equipe8-sistema.vercel.app</span></a>
-  </div>
-</div>
+  </section>
 
-<div class="mapa">
-
-  <div class="trecho um">
-    <section class="parada luis">
-      <span class="num">1</span>
-      <h2>O problema <span class="quem">Luis</span></h2>
-      <ul>
-        <li>Quem contrata prestador terceirizado controla tudo em planilha e mensagem.</li>
-        <li>O SGP junta cadastro, documento com validade e ordem de serviço num sistema só.</li>
-        <li>Três perfis: administrador, prestador e cliente.</li>
-      </ul>
-    </section>
-
-    <section class="parada igor">
-      <span class="num">2</span>
-      <h2>O que mudou desde 20/10 <span class="quem">Igor</span></h2>
-      <ul>
-        <li>Em 20/10: login do administrador e cadastro de prestadores.</li>
-        <li>Hoje: publicado na Vercel, com o banco no Supabase em São Paulo.</li>
-        <li>Entrou a ordem de serviço completa, contratos, relatórios, log e LGPD.</li>
-        <li>19 requisitos funcionais e 12 regras de negócio implementados.</li>
-      </ul>
-    </section>
-
-    <section class="parada igor">
-      <span class="num">3</span>
-      <h2>Fluxo completo no sistema publicado <span class="quem">Igor</span></h2>
-      <ol class="fluxo">
-        <li><span class="perfil">Cliente</span><span class="acao">Abre a solicitação<small>prazo em feriado: o sistema avisa</small></span><span class="status">fica <b>aberta</b></span></li>
-        <li><span class="perfil">Administrador</span><span class="acao">Atribui o prestador<small>só aparece quem está apto, e a tela diz por quê</small></span><span class="status">fica <b>atribuída</b></span></li>
-        <li><span class="perfil">Prestador</span><span class="acao">Aceita, inicia e conclui<small>vê só as ordens dele, sem pular etapa</small></span><span class="status"><b>em execução</b>, <b>concluída</b></span></li>
-        <li><span class="perfil">Cliente</span><span class="acao">Avalia o atendimento<small>nota e comentário</small></span><span class="status">fica <b>avaliada</b></span></li>
-      </ol>
-      <div class="atalhos">
-        <a href="https://sgp-equipe8-sistema.vercel.app/minhas-solicitacoes" target="_blank">Cliente: solicitações</a>
-        <a href="https://sgp-equipe8-sistema.vercel.app/ordens" target="_blank">Administrador: ordens</a>
-        <a href="https://sgp-equipe8-sistema.vercel.app/minhas-ordens" target="_blank">Prestador: ordens</a>
+  <section class="slide igor">
+    <div class="cabeca"><div><span class="etapa">Desde a última entrega</span><h2>O que mudou desde 20/10</h2></div><span class="quem">Igor</span></div>
+    <div class="comparar">
+      <div class="antes">
+        <h3>Em 20/10</h3>
+        <ul class="pontos">
+          <li>Login do administrador.</li>
+          <li>Cadastro e consulta de prestadores.</li>
+          <li>Só o perfil do administrador.</li>
+        </ul>
       </div>
-    </section>
-  </div>
-
-  <div class="trecho dois">
-    <section class="parada luis">
-      <span class="num">4</span>
-      <h2>Regra de negócio na hora <span class="quem">Luis</span></h2>
-      <ul>
-        <li>RN02: documento obrigatório vencido deixa o prestador pendente.</li>
-        <li>Ele sai da lista de atribuição até regularizar.</li>
-        <li>Roda sozinha todo dia e pelo botão "Aplicar RN02 agora".</li>
-      </ul>
-      <div class="atalhos"><a href="https://sgp-equipe8-sistema.vercel.app/vencimentos" target="_blank">Painel de vencimentos</a></div>
-    </section>
-
-    <section class="parada igor">
-      <span class="num">5</span>
-      <h2>Testes <span class="quem">Igor</span></h2>
-      <ul>
-        <li>GitHub Actions a cada push: tipos, lint, testes e build.</li>
-        <li>Regras das ordens com teste automático contra o banco.</li>
-        <li>Defeito D10: clique duplo no aceite gravava duas vezes. Corrigido.</li>
-      </ul>
-      <div class="atalhos">
-        <a href="https://github.com/Tox1469/Atividade-Sabine/actions" target="_blank">GitHub Actions</a>
-        <a href="docs/testes.html" target="_blank">Tabela de testes</a>
+      <div class="agora">
+        <h3>Hoje, 06/11</h3>
+        <ul class="pontos">
+          <li>Publicado na Vercel, com o banco no Supabase, os dois em São Paulo.</li>
+          <li>Ordem de serviço do pedido até a avaliação.</li>
+          <li>Documentos com validade, contratos e a rotina da RN02.</li>
+          <li>Relatórios com exportação, log de ações e LGPD.</li>
+          <li>Os três perfis com tela própria e cadastro pela tela de login.</li>
+        </ul>
       </div>
-    </section>
+    </div>
+    <p class="faixa-baixo"><b>19 de 19</b> requisitos funcionais e <b>12 de 12</b> regras de negócio implementados. Pelo retorno de 20/10, a apresentação ficou mais curta e vai direto no sistema.</p>
+  </section>
 
-    <section class="parada igor">
-      <span class="num">6</span>
-      <h2>Até 27/11 <span class="quem">Igor</span></h2>
-      <ul>
-        <li>Abrir no Firefox e no Edge e repetir os casos principais.</li>
-        <li>Restaurar um backup do banco e conferir os dados.</li>
-        <li>Ensaiar a apresentação final.</li>
-      </ul>
-    </section>
+  <section class="slide igor">
+    <div class="cabeca"><div><span class="etapa">Fluxo completo · 1 de 4</span><h2>O cliente abre a solicitação</h2></div><span class="quem">Igor</span></div>
+    <div class="trilho"><span class="aqui">aberta</span><i>›</i><span>atribuída</span><i>›</i><span>em execução</span><i>›</i><span>concluída</span><i>›</i><span>avaliada</span></div>
+    <div class="slide-miolo">
+      <div>
+        <ul class="pontos">
+          <li>Escolhe a categoria e o serviço, que já mostra valor e prazo de referência.</li>
+          <li>Prazo em feriado nacional: o sistema avisa na hora, pela API de feriados.</li>
+          <li>A ordem nasce aberta e vai pro administrador.</li>
+        </ul>
+        <a class="ao-vivo" href="https://sgp-equipe8-sistema.vercel.app/minhas-solicitacoes" target="_blank">Abrir no sistema</a>
+        <span class="dica">entrar como <code>zanin@sgp.teste</code></span>
+      </div>
+      <figure class="quadro"><img src="docs/apresentacao-06-11/feriado-no-prazo.png" alt="Janela de nova solicitação com o aviso de que 15/11/2026 é feriado nacional"></figure>
+    </div>
+  </section>
+
+  <section class="slide igor">
+    <div class="cabeca"><div><span class="etapa">Fluxo completo · 2 de 4</span><h2>O administrador atribui</h2></div><span class="quem">Igor</span></div>
+    <div class="trilho"><span>aberta</span><i>›</i><span class="aqui">atribuída</span><i>›</i><span>em execução</span><i>›</i><span>concluída</span><i>›</i><span>avaliada</span></div>
+    <div class="slide-miolo">
+      <div>
+        <ul class="pontos">
+          <li>Aparecem só os aptos: ativo, habilitado na categoria, sem documento vencido e com contrato vigente (RN01 a RN04).</li>
+          <li>Quem não pode aparece separado, com o motivo.</li>
+          <li>Nota média, ordens em andamento e último atendimento ajudam a escolher.</li>
+        </ul>
+        <a class="ao-vivo" href="https://sgp-equipe8-sistema.vercel.app/ordens" target="_blank">Abrir no sistema</a>
+        <span class="dica">entrar como <code>igor@sgp.teste</code></span>
+      </div>
+      <figure class="quadro"><img src="docs/evidencias/entrega-06-11/CT43-atribuicao-aptos-e-inaptos.png" alt="Janela de atribuição com os prestadores aptos e os não disponíveis com o motivo"></figure>
+    </div>
+  </section>
+
+  <section class="slide igor">
+    <div class="cabeca"><div><span class="etapa">Fluxo completo · 3 de 4</span><h2>O prestador executa</h2></div><span class="quem">Igor</span></div>
+    <div class="trilho"><span>aberta</span><i>›</i><span>atribuída</span><i>›</i><span class="aqui">em execução</span><i>›</i><span class="aqui">concluída</span><i>›</i><span>avaliada</span></div>
+    <div class="slide-miolo">
+      <div>
+        <ul class="pontos">
+          <li>O prestador vê só as ordens dele.</li>
+          <li>Aceita, inicia, registra o andamento e conclui contando o que fez.</li>
+          <li>Não pula etapa e, depois de concluída, a ordem não muda mais (RN05 e RN06).</li>
+          <li>Cada passo fica no histórico, com data e autor.</li>
+        </ul>
+        <a class="ao-vivo" href="https://sgp-equipe8-sistema.vercel.app/minhas-ordens" target="_blank">Abrir no sistema</a>
+        <span class="dica">entrar como <code>treslagoas@sgp.teste</code></span>
+      </div>
+      <figure class="quadro"><img src="docs/evidencias/entrega-06-11/CT47-conclusao-e-ordem-travada.png" alt="Histórico da ordem do aberta até o serviço concluído"></figure>
+    </div>
+  </section>
+
+  <section class="slide igor">
+    <div class="cabeca"><div><span class="etapa">Fluxo completo · 4 de 4</span><h2>O cliente avalia</h2></div><span class="quem">Igor</span></div>
+    <div class="trilho"><span>aberta</span><i>›</i><span>atribuída</span><i>›</i><span>em execução</span><i>›</i><span>concluída</span><i>›</i><span class="aqui">avaliada</span></div>
+    <div class="slide-miolo">
+      <div>
+        <ul class="pontos">
+          <li>A avaliação libera quando a ordem é concluída.</li>
+          <li>Nota de 1 a 5 e comentário.</li>
+          <li>A nota média aparece na hora de atribuir e no relatório de desempenho.</li>
+        </ul>
+        <a class="ao-vivo" href="https://sgp-equipe8-sistema.vercel.app/minhas-solicitacoes" target="_blank">Abrir no sistema</a>
+        <span class="dica">entrar como <code>zanin@sgp.teste</code></span>
+      </div>
+      <figure class="quadro"><img src="docs/evidencias/entrega-06-11/CT48-avaliacao-em-janela.png" alt="Janela de avaliação do atendimento com nota e comentário"></figure>
+    </div>
+  </section>
+
+  <section class="slide luis">
+    <div class="cabeca"><div><span class="etapa">Regra de negócio na hora</span><h2>RN02: documento vencido bloqueia</h2></div><span class="quem">Luis</span></div>
+    <div class="slide-miolo">
+      <div>
+        <ul class="pontos">
+          <li>Documento obrigatório vencido deixa o prestador pendente.</li>
+          <li>Ele sai da lista de atribuição até regularizar.</li>
+          <li>A rotina roda sozinha todo dia e também pelo botão "Aplicar RN02 agora".</li>
+          <li>O painel mostra o que já venceu e o que vence nos próximos 30 dias.</li>
+        </ul>
+        <a class="ao-vivo" href="https://sgp-equipe8-sistema.vercel.app/vencimentos" target="_blank">Abrir no sistema</a>
+        <span class="dica">entrar como <code>luis@sgp.teste</code></span>
+      </div>
+      <figure class="quadro"><img src="docs/evidencias/entrega-06-11/CT36-painel-de-vencimentos.png" alt="Painel de vencimentos com os documentos vencidos e os que vencem nos próximos 30 dias"></figure>
+    </div>
+  </section>
+
+  <section class="slide igor">
+    <div class="cabeca"><div><span class="etapa">Qualidade</span><h2>Testes</h2></div><span class="quem">Igor</span></div>
+    <div class="slide-miolo">
+      <div>
+        <ul class="pontos">
+          <li>A cada push o GitHub Actions confere tipos, lint, testes e build.</li>
+          <li><b>56</b> testes automáticos, com as regras das ordens rodando contra o banco.</li>
+          <li><b>67</b> casos de teste pela tela, todos passando.</li>
+          <li><b>17</b> defeitos registrados e corrigidos. Exemplo, D10: clique duplo no aceite gravava duas vezes.</li>
+        </ul>
+        <a class="ao-vivo" href="https://github.com/Tox1469/Atividade-Sabine/actions" target="_blank">GitHub Actions</a>
+        <a class="ao-vivo claro" href="docs/testes.html" target="_blank">Tabela de testes</a>
+      </div>
+      <figure class="quadro"><img src="docs/apresentacao-06-11/ci-verde.png" alt="Execução do GitHub Actions com os passos tipos, lint, testes e build concluídos"></figure>
+    </div>
+  </section>
+
+  <section class="slide igor">
+    <div class="cabeca"><div><span class="etapa">Próximos passos</span><h2>Até 27/11</h2></div><span class="quem">Igor</span></div>
+    <table class="proximos">
+      <tr><td>Abrir no Firefox e no Edge e repetir os casos principais</td><td>Igor</td></tr>
+      <tr><td>Restaurar um backup do banco num ambiente de teste e conferir os dados</td><td>Luis</td></tr>
+      <tr><td>Roteiro da apresentação final e ensaio no sistema publicado</td><td>Os dois</td></tr>
+    </table>
+    <div class="fim">
+      <strong>Obrigado!</strong>
+      <a class="ao-vivo" href="https://sgp-equipe8-sistema.vercel.app" target="_blank">Sistema</a>
+      <a class="ao-vivo claro" href="https://github.com/Tox1469/Atividade-Sabine" target="_blank">Repositório</a>
+      <a class="ao-vivo claro" href="docs/entrega-06-11.html" target="_blank">Documento da entrega</a>
+    </div>
+  </section>
+
+  <div class="rodape-slide">
+    <span>SGP · Equipe 8 · 06/11/2026</span>
+    <span class="contador" id="contador"></span>
+    <button type="button" id="voltar" aria-label="Slide anterior">‹</button>
+    <button type="button" id="avancar" aria-label="Próximo slide">›</button>
   </div>
-
 </div>
 
-<div class="base">
-  <span>Administrador <code>luis@sgp.teste</code> <code>igor@sgp.teste</code></span>
-  <span>Prestador <code>treslagoas@sgp.teste</code></span>
-  <span>Cliente <code>zanin@sgp.teste</code></span>
-  <span class="senha">Senha <code>sgp@2026</code></span>
-  <span class="links">
-    <a href="https://github.com/Tox1469/Atividade-Sabine" target="_blank">Repositório</a> ·
-    <a href="docs/entrega-06-11.html" target="_blank">Documento da entrega</a> ·
-    <a href="./">Documentação</a>
-  </span>
-</div>
+<script>
+  const palco = document.getElementById('palco');
+  const slides = [...document.querySelectorAll('.slide')];
+  let atual = 0;
+
+  function mostra(n) {
+    atual = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, i) => s.classList.toggle('atual', i === atual));
+    palco.classList.toggle('em-capa', atual === 0);
+    document.getElementById('contador').textContent = `${atual + 1} / ${slides.length}`;
+    document.getElementById('voltar').disabled = atual === 0;
+    document.getElementById('avancar').disabled = atual === slides.length - 1;
+    history.replaceState(null, '', '#' + (atual + 1));
+  }
+
+  function ajusta() {
+    const escala = Math.min(innerWidth / 1280, innerHeight / 720);
+    palco.style.transform = `translate(-50%, -50%) scale(${escala})`;
+  }
+
+  document.getElementById('voltar').onclick = () => mostra(atual - 1);
+  document.getElementById('avancar').onclick = () => mostra(atual + 1);
+  addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); mostra(atual + 1); }
+    if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); mostra(atual - 1); }
+    if (e.key === 'Home') mostra(0);
+    if (e.key === 'End') mostra(slides.length - 1);
+  });
+  addEventListener('resize', ajusta);
+  ajusta();
+  mostra((parseInt(location.hash.slice(1), 10) || 1) - 1);
+</script>
 
 </body>
 </html>
