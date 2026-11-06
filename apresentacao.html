@@ -6,58 +6,68 @@
 <title>SGP - apresentação de 06/11 - equipe 8</title>
 <link rel="stylesheet" href="prototipos/estilo.css">
 <style>
-  /* roteiro da apresentacao de 06/11: cada bloco tem quem fala, o texto pra ler e o que deixar na tela.
-     curto de proposito, sem slide: a professora pediu pra resumir em 20/10 */
-  body.apres { display: block; background: var(--papel); font-size: 17px; line-height: 1.5; padding: 0 0 20px; }
-  .faixa { background: var(--caneta-escura); color: #fff; padding: 14px 24px 12px; border-bottom: 4px solid var(--caneta); }
-  .faixa .dentro, .miolo { max-width: 1240px; margin: 0 auto; }
-  .faixa .curso { font-size: 13.5px; color: #a8adb1; margin-bottom: 6px; }
-  .faixa h1 { margin: 0 0 4px; font-size: 31px; letter-spacing: .2px; }
-  .faixa p { margin: 0; color: #d6d9db; font-size: 16.5px; }
-  .faixa .data { float: right; text-align: right; color: #d6d9db; font-size: 14.5px; margin-left: 20px; }
-  .faixa .data b { display: block; color: #fff; font-size: 26px; }
-  .miolo { padding: 0 24px; display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 0 28px; align-items: start; }
-  h2 { font-size: 13.5px; text-transform: uppercase; letter-spacing: .6px; color: var(--tinta2); margin: 16px 0 8px; padding-bottom: 3px; border-bottom: 1px solid var(--regua); }
-  h2 small { text-transform: none; letter-spacing: 0; font-weight: 400; float: right; }
-
-  ol.roteiro { list-style: none; margin: 0; padding: 0; counter-reset: passo; }
-  ol.roteiro > li { counter-increment: passo; background: var(--branco); border: 1px solid var(--regua); border-left: 5px solid var(--cor); border-radius: 3px; padding: 12px 18px 13px; margin-bottom: 10px; }
-  .luis { --cor: var(--caneta); --cor-fundo: var(--caneta-clara); }
-  .igor { --cor: var(--ardosia); --cor-fundo: var(--ardosia-fundo); }
-  .cabeca { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 5px; }
-  .cabeca::before { content: counter(passo); font-size: 22px; font-weight: 700; color: var(--cor); line-height: 1; min-width: 18px; }
-  .cabeca strong { font-size: 17px; }
-  .quem { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; color: #fff; background: var(--cor); padding: 2px 9px; border-radius: 3px; }
-  .tempo { margin-left: auto; font-size: 13.5px; color: var(--tinta2); }
-  .fala { margin: 0; font-size: 20px; line-height: 1.55; color: var(--tinta); max-width: 64em; }
-  .tela { margin-top: 9px; padding: 7px 11px; background: var(--cor-fundo); border-radius: 3px; font-size: 15px; color: var(--tinta); }
-  .tela b { color: var(--tinta2); font-weight: 600; text-transform: uppercase; font-size: 12.5px; letter-spacing: .4px; margin-right: 4px; }
-  .tela code, .lado code { font-family: Consolas, "Courier New", monospace; font-size: 14.5px; }
-  .tela a, .rodape a { color: var(--caneta); cursor: pointer; }
-
-  .lado { position: sticky; top: 12px; }
-  .abrir { display: block; margin-top: 16px; padding: 13px 16px; background: var(--caneta); color: #fff; text-decoration: none; border-radius: 3px; font-size: 19px; font-weight: 600; cursor: pointer; }
-  .abrir span { display: block; font-weight: 400; font-size: 14.5px; color: #f7eadf; }
+  /* mapa da apresentacao de 06/11, pra ficar projetado: as paradas em ordem, quem conduz cada uma
+     e o atalho pra tela certa do sistema. sem slide de proposito: a professora pediu pra resumir em 20/10 */
+  body.apres { display: block; background: var(--papel); font-size: 16px; line-height: 1.4; padding: 0 0 10px; }
+  .faixa { background: var(--caneta-escura); color: #fff; padding: 10px 24px 9px; border-bottom: 4px solid var(--caneta); }
+  .faixa .dentro { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; gap: 24px; }
+  .faixa .titulo { flex: 1; min-width: 0; }
+  .faixa .curso { font-size: 13px; color: #a8adb1; margin-bottom: 4px; }
+  .faixa h1 { margin: 0 0 3px; font-size: 29px; letter-spacing: .2px; }
+  .faixa p { margin: 0; color: #d6d9db; font-size: 15.5px; }
+  .faixa .data { text-align: right; color: #d6d9db; font-size: 13.5px; white-space: nowrap; }
+  .faixa .data b { display: block; color: #fff; font-size: 24px; }
+  .abrir { display: block; padding: 10px 16px; background: var(--caneta); color: #fff; text-decoration: none; border-radius: 3px; font-size: 17px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+  .abrir span { display: block; font-weight: 400; font-size: 13.5px; color: #f7eadf; }
   .abrir:hover { background: #8f3d0a; }
-  .caixa { background: var(--branco); border: 1px solid var(--regua); border-radius: 3px; padding: 4px 14px; font-size: 15px; }
-  .caixa div { padding: 7px 0; border-bottom: 1px solid var(--regua-clara); }
-  .caixa div:last-child { border-bottom: 0; }
-  .caixa b { display: block; font-size: 12.5px; text-transform: uppercase; letter-spacing: .4px; color: var(--tinta2); font-weight: 600; }
-  .senha code { background: var(--caneta-clara); padding: 1px 6px; border-radius: 3px; font-size: 16px; }
-  .perguntas dt { font-weight: 600; margin-top: 8px; }
-  .perguntas dd { margin: 2px 0 0; color: var(--tinta); }
-  .perguntas dd span { font-size: 12.5px; font-weight: 600; text-transform: uppercase; color: var(--tinta2); margin-right: 4px; }
-  .rodape { margin-top: 12px; font-size: 14.5px; color: var(--tinta2); line-height: 1.7; }
+
+  .mapa { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+  /* cada linha do mapa e um trecho da rota: uma linha fina passa pelos numeros das paradas */
+  .trecho { position: relative; display: grid; gap: 14px; margin-top: 6px; padding-top: 20px; }
+  .trecho::before { content: ""; position: absolute; left: 20px; right: 20px; top: 19px; border-top: 3px solid var(--regua); }
+  .trecho.um { grid-template-columns: 1fr 1fr 1.55fr; }
+  .trecho.dois { grid-template-columns: 1fr 1fr 1fr; }
+  .parada { position: relative; background: var(--branco); border: 1px solid var(--regua); border-top: 4px solid var(--cor); border-radius: 3px; padding: 14px 16px 10px; }
+  .luis { --cor: var(--caneta); }
+  .igor { --cor: var(--ardosia); }
+  .num { position: absolute; top: -20px; left: 12px; width: 34px; height: 34px; border-radius: 50%; background: var(--cor); color: #fff; font-weight: 700; font-size: 18px; display: grid; place-items: center; border: 3px solid var(--papel); }
+  .parada h2 { margin: 0 0 7px; font-size: 18.5px; line-height: 1.25; display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .quem { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; color: var(--cor); border: 1px solid var(--cor); padding: 0 7px; border-radius: 3px; }
+  .parada ul { margin: 0; padding-left: 18px; }
+  .parada li { margin-bottom: 3px; }
+  .parada li::marker { color: var(--cor); }
+  .atalhos { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .atalhos a { font-size: 13.5px; padding: 3px 9px; border: 1px solid var(--caneta); border-radius: 3px; color: var(--caneta); text-decoration: none; background: var(--branco); cursor: pointer; }
+  .atalhos a:hover { background: var(--caneta); color: #fff; }
+
+  /* o fluxo e um mapa dentro do mapa: quem faz cada passo e em que status a ordem fica */
+  ol.fluxo { list-style: none; margin: 2px 0 0; padding: 0; }
+  ol.fluxo li { display: grid; grid-template-columns: 112px 1fr auto; gap: 10px; align-items: center; padding: 4px 0; position: relative; }
+  ol.fluxo li + li { border-top: 1px dashed var(--regua); }
+  .perfil { font-size: 13px; font-weight: 600; text-align: center; padding: 3px 0; border-radius: 3px; background: var(--ardosia-fundo); color: var(--ardosia); }
+  .acao small { display: block; color: var(--tinta2); font-size: 13.5px; }
+  .status { font-size: 12.5px; color: var(--tinta2); white-space: nowrap; }
+  .status b { color: var(--tinta); font-weight: 600; }
+  ol.fluxo a { font-size: 13px; color: var(--caneta); cursor: pointer; }
+
+  .base { max-width: 1280px; margin: 10px auto 0; padding: 0 24px; display: flex; flex-wrap: wrap; gap: 6px 22px; align-items: baseline; font-size: 14.5px; color: var(--tinta2); }
+  .base code { font-family: Consolas, "Courier New", monospace; font-size: 14px; color: var(--tinta); }
+  .base .senha code { background: var(--caneta-clara); padding: 1px 6px; border-radius: 3px; }
+  .base a { color: var(--caneta); cursor: pointer; }
+  .base .links { margin-left: auto; }
 
   @media (max-width: 960px) {
-    .miolo { grid-template-columns: 1fr; padding: 0 14px; }
-    .lado { position: static; }
-    .faixa { padding: 18px 14px 16px; }
-    .faixa h1 { font-size: 25px; }
-    .faixa .data { float: none; text-align: left; margin: 0 0 8px; }
-    .faixa .data b { display: inline; font-size: 18px; margin-right: 6px; }
-    ol.roteiro > li { padding: 11px 13px 12px; }
-    .fala { font-size: 18.5px; }
+    .faixa { padding: 16px 14px; }
+    .faixa .dentro { flex-wrap: wrap; gap: 10px 16px; }
+    .faixa .titulo { flex-basis: 100%; }
+    .faixa h1 { font-size: 24px; }
+    .faixa .data { text-align: left; }
+    .mapa, .base { padding: 0 14px; }
+    .trecho.um, .trecho.dois { grid-template-columns: 1fr; gap: 26px; }
+    .trecho::before { left: 28px; right: auto; top: 20px; bottom: 20px; border-top: 0; border-left: 3px solid var(--regua); }
+    ol.fluxo li { grid-template-columns: 96px 1fr; }
+    .status { grid-column: 2; }
+    .base .links { margin-left: 0; }
   }
 </style>
 </head>
@@ -65,100 +75,106 @@
 
 <div class="faixa">
   <div class="dentro">
+    <div class="titulo">
+      <div class="curso">unicesumar, análise e desenvolvimento de sistemas, imersão profissional em projeto de software</div>
+      <h1>SGP, sistema de gestão de prestadores</h1>
+      <p>Equipe 8: Luis Gustavo Boratto de Oliveira e Igor Schiniegoski Pallisser</p>
+    </div>
     <div class="data"><b>06/11</b>2ª entrega do 2º bimestre</div>
-    <div class="curso">unicesumar, análise e desenvolvimento de sistemas, imersão profissional em projeto de software</div>
-    <h1>SGP, sistema de gestão de prestadores</h1>
-    <p>Equipe 8: Luis Gustavo Boratto de Oliveira e Igor Schiniegoski Pallisser. Roteiro da apresentação, direto no sistema publicado.</p>
+    <a class="abrir" href="https://sgp-equipe8-sistema.vercel.app" target="_blank">Abrir o sistema publicado<span>sgp-equipe8-sistema.vercel.app</span></a>
   </div>
 </div>
 
-<div class="miolo">
+<div class="mapa">
 
-  <main>
-    <h2>Roteiro <small>uns 5 minutos</small></h2>
-    <ol class="roteiro">
+  <div class="trecho um">
+    <section class="parada luis">
+      <span class="num">1</span>
+      <h2>O problema <span class="quem">Luis</span></h2>
+      <ul>
+        <li>Quem contrata prestador terceirizado controla tudo em planilha e mensagem.</li>
+        <li>O SGP junta cadastro, documento com validade e ordem de serviço num sistema só.</li>
+        <li>Três perfis: administrador, prestador e cliente.</li>
+      </ul>
+    </section>
 
-      <li class="luis">
-        <div class="cabeca"><strong>Abertura</strong><span class="quem">Luis</span><span class="tempo">30 s</span></div>
-        <p class="fala">Boa noite, professora. Nós somos a equipe 8, eu sou o Luis e esse é o Igor. O nosso projeto é o SGP, o sistema de gestão de prestadores. Quem contrata prestador terceirizado costuma controlar cadastro, documento com validade e ordem de serviço em planilha e em mensagem. O SGP junta tudo isso num sistema só, com três perfis: administrador, prestador e cliente. O Igor vai contar o que mudou desde a última entrega.</p>
-        <div class="tela"><b>Na tela</b>o sistema aberto na tela de login.</div>
-      </li>
+    <section class="parada igor">
+      <span class="num">2</span>
+      <h2>O que mudou desde 20/10 <span class="quem">Igor</span></h2>
+      <ul>
+        <li>Em 20/10: login do administrador e cadastro de prestadores.</li>
+        <li>Hoje: publicado na Vercel, com o banco no Supabase em São Paulo.</li>
+        <li>Entrou a ordem de serviço completa, contratos, relatórios, log e LGPD.</li>
+        <li>19 requisitos funcionais e 12 regras de negócio implementados.</li>
+      </ul>
+    </section>
 
-      <li class="igor">
-        <div class="cabeca"><strong>O que mudou desde 20/10</strong><span class="quem">Igor</span><span class="tempo">40 s</span></div>
-        <p class="fala">Na entrega de 20/10 o recorte era o login do administrador e o cadastro de prestadores. Como ficou pronto antes do prazo, a gente seguiu. Hoje o sistema está publicado na Vercel, com o banco no Supabase, em São Paulo. Entrou a ordem de serviço do pedido até a avaliação, os documentos com validade, os contratos, os relatórios com exportação, o log de ações e a parte da LGPD. Os 19 requisitos funcionais e as 12 regras de negócio estão implementados. E como a professora pediu pra resumir, hoje vai ser direto no sistema, sem slide.</p>
-        <div class="tela"><b>Na tela</b>continua no login.</div>
-      </li>
+    <section class="parada igor">
+      <span class="num">3</span>
+      <h2>Fluxo completo no sistema publicado <span class="quem">Igor</span></h2>
+      <ol class="fluxo">
+        <li><span class="perfil">Cliente</span><span class="acao">Abre a solicitação<small>prazo em feriado: o sistema avisa</small></span><span class="status">fica <b>aberta</b></span></li>
+        <li><span class="perfil">Administrador</span><span class="acao">Atribui o prestador<small>só aparece quem está apto, e a tela diz por quê</small></span><span class="status">fica <b>atribuída</b></span></li>
+        <li><span class="perfil">Prestador</span><span class="acao">Aceita, inicia e conclui<small>vê só as ordens dele, sem pular etapa</small></span><span class="status"><b>em execução</b>, <b>concluída</b></span></li>
+        <li><span class="perfil">Cliente</span><span class="acao">Avalia o atendimento<small>nota e comentário</small></span><span class="status">fica <b>avaliada</b></span></li>
+      </ol>
+      <div class="atalhos">
+        <a href="https://sgp-equipe8-sistema.vercel.app/minhas-solicitacoes" target="_blank">Cliente: solicitações</a>
+        <a href="https://sgp-equipe8-sistema.vercel.app/ordens" target="_blank">Administrador: ordens</a>
+        <a href="https://sgp-equipe8-sistema.vercel.app/minhas-ordens" target="_blank">Prestador: ordens</a>
+      </div>
+    </section>
+  </div>
 
-      <li class="igor">
-        <div class="cabeca"><strong>Fluxo 1: o cliente pede</strong><span class="quem">Igor</span><span class="tempo">40 s</span></div>
-        <p class="fala">Vou mostrar o fluxo inteiro, começando pelo cliente. Aqui é o Supermercado Zanin abrindo uma solicitação de desentupimento de pia. Quando eu coloco o prazo pra 15/11, o sistema já avisa que é feriado nacional. Esse aviso vem da API pública de feriados da BrasilAPI. A solicitação entra como aberta e vai pro administrador.</p>
-        <div class="tela"><b>Na tela</b>entrar como <code>zanin@sgp.teste</code>, <a href="https://sgp-equipe8-sistema.vercel.app/minhas-solicitacoes" target="_blank">Minhas solicitações</a>, Nova solicitação. Hidráulica, Desentupimento de pia, uma descrição curta e prazo 15/11/2026.</div>
-      </li>
+  <div class="trecho dois">
+    <section class="parada luis">
+      <span class="num">4</span>
+      <h2>Regra de negócio na hora <span class="quem">Luis</span></h2>
+      <ul>
+        <li>RN02: documento obrigatório vencido deixa o prestador pendente.</li>
+        <li>Ele sai da lista de atribuição até regularizar.</li>
+        <li>Roda sozinha todo dia e pelo botão "Aplicar RN02 agora".</li>
+      </ul>
+      <div class="atalhos"><a href="https://sgp-equipe8-sistema.vercel.app/vencimentos" target="_blank">Painel de vencimentos</a></div>
+    </section>
 
-      <li class="igor">
-        <div class="cabeca"><strong>Fluxo 2: o administrador atribui</strong><span class="quem">Igor</span><span class="tempo">40 s</span></div>
-        <p class="fala">Agora eu entro como administrador. A solicitação que o cliente acabou de abrir já está na lista de ordens. Quando eu clico em atribuir, a janela mostra só quem está apto: a Ponto Certo e a Três Lagoas, que são de hidráulica. O José Carlos também é de hidráulica, mas fica de fora, e a tela diz por quê: a situação dele está pendente. Vou atribuir pra Três Lagoas.</p>
-        <div class="tela"><b>Na tela</b>entrar como <code>igor@sgp.teste</code>, <a href="https://sgp-equipe8-sistema.vercel.app/ordens" target="_blank">Ordens</a>, a ordem nova, Atribuir, Hidráulica Três Lagoas.</div>
-      </li>
+    <section class="parada igor">
+      <span class="num">5</span>
+      <h2>Testes <span class="quem">Igor</span></h2>
+      <ul>
+        <li>GitHub Actions a cada push: tipos, lint, testes e build.</li>
+        <li>Regras das ordens com teste automático contra o banco.</li>
+        <li>Defeito D10: clique duplo no aceite gravava duas vezes. Corrigido.</li>
+      </ul>
+      <div class="atalhos">
+        <a href="https://github.com/Tox1469/Atividade-Sabine/actions" target="_blank">GitHub Actions</a>
+        <a href="docs/testes.html" target="_blank">Tabela de testes</a>
+      </div>
+    </section>
 
-      <li class="igor">
-        <div class="cabeca"><strong>Fluxo 3: o prestador executa e o cliente avalia</strong><span class="quem">Igor</span><span class="tempo">50 s</span></div>
-        <p class="fala">No perfil do prestador, a Três Lagoas só vê as ordens que são dela. Ela aceita a ordem, inicia a execução e conclui contando o que foi feito. A ordem segue sempre a mesma sequência, aberta, atribuída, em execução e concluída, sem pular etapa, e depois de concluída ela não muda mais. Pra fechar, o cliente volta e avalia o atendimento com uma nota. Agora o Luis mostra uma regra de negócio funcionando.</p>
-        <div class="tela"><b>Na tela</b>entrar como <code>treslagoas@sgp.teste</code>, <a href="https://sgp-equipe8-sistema.vercel.app/minhas-ordens" target="_blank">Minhas ordens</a>, Aceitar ordem, Iniciar a execução, Concluir o serviço. Depois <code>zanin@sgp.teste</code> e Avaliar o atendimento.</div>
-      </li>
+    <section class="parada igor">
+      <span class="num">6</span>
+      <h2>Até 27/11 <span class="quem">Igor</span></h2>
+      <ul>
+        <li>Abrir no Firefox e no Edge e repetir os casos principais.</li>
+        <li>Restaurar um backup do banco e conferir os dados.</li>
+        <li>Ensaiar a apresentação final.</li>
+      </ul>
+    </section>
+  </div>
 
-      <li class="luis">
-        <div class="cabeca"><strong>Regra de negócio na hora</strong><span class="quem">Luis</span><span class="tempo">35 s</span></div>
-        <p class="fala">Lembra do José, que ficou de fora da atribuição? Isso é a RN02. Quando um documento obrigatório vence, o prestador passa sozinho pra pendente e sai da lista até regularizar. No caso dele venceu a certidão negativa de débitos. Aqui no painel de vencimentos aparece o que já venceu e o que está pra vencer. A rotina roda todo dia logo depois da meia-noite, e esse botão roda ela na hora.</p>
-        <div class="tela"><b>Na tela</b>como administrador, <a href="https://sgp-equipe8-sistema.vercel.app/vencimentos" target="_blank">Vencimentos</a> e o botão "Aplicar RN02 agora".</div>
-      </li>
+</div>
 
-      <li class="igor">
-        <div class="cabeca"><strong>Testes</strong><span class="quem">Igor</span><span class="tempo">45 s</span></div>
-        <p class="fala">Sobre os testes. A cada push o GitHub Actions confere os tipos, o lint, os testes automáticos e o build, e só fica verde se tudo passar. As regras das ordens têm teste automático rodando contra o banco. Os testes feitos pela tela estão nessa tabela, com o resultado de cada um. Um exemplo é o D10, que eu achei revisando o código: se clicasse duas vezes rápido em aceitar, o aceite entrava duas vezes no histórico. Eu corrigi travando a ordem enquanto grava, e agora o segundo clique recebe o aviso de que ela já foi aceita.</p>
-        <div class="tela"><b>Na tela</b><a href="https://github.com/Tox1469/Atividade-Sabine/actions" target="_blank">GitHub Actions</a> com a última execução verde, depois a <a href="docs/testes.html" target="_blank">tabela de testes</a> na seção dos defeitos (D10).</div>
-      </li>
-
-      <li class="igor">
-        <div class="cabeca"><strong>Até 27/11</strong><span class="quem">Igor</span><span class="tempo">20 s</span></div>
-        <p class="fala">Pra 27/11 faltam três coisas. Eu vou abrir o sistema no Firefox e no Edge e repetir os casos principais. O Luis vai testar a restauração de um backup do banco. E nós dois vamos ensaiar a apresentação final. É isso, obrigado.</p>
-        <div class="tela"><b>Na tela</b>pode voltar pra esta página.</div>
-      </li>
-
-    </ol>
-  </main>
-
-  <aside class="lado">
-    <a class="abrir" href="https://sgp-equipe8-sistema.vercel.app" target="_blank">Abrir o sistema publicado
-      <span>sgp-equipe8-sistema.vercel.app</span></a>
-
-    <h2>Entrar no sistema</h2>
-    <div class="caixa">
-      <div><b>Administrador</b><code>luis@sgp.teste</code> ou <code>igor@sgp.teste</code></div>
-      <div><b>Prestador</b><code>treslagoas@sgp.teste</code></div>
-      <div><b>Cliente</b><code>zanin@sgp.teste</code></div>
-      <div class="senha"><b>Senha</b>todos usam <code>sgp@2026</code>. Na tela de login tem o botão "Entrar como" em cada um.</div>
-    </div>
-
-    <h2>Se a professora perguntar</h2>
-    <dl class="caixa perguntas">
-      <dt>Quem fez o quê?</dt>
-      <dd><span>Igor</span>Eu fiz a revisão do código e corrigi os quatro defeitos que achei, montei o CI no GitHub Actions e testei o README rodando o sistema do zero na minha máquina.</dd>
-      <dd><span>Luis</span>Eu fiz o banco, a parte do servidor e as telas, e publiquei na Vercel e no Supabase.</dd>
-      <dt>Por que Supabase e Vercel?</dt>
-      <dd><span>Luis</span>O Supabase dá o PostgreSQL gerenciado, com backup diário e o armazenamento dos arquivos no mesmo lugar, em São Paulo. A Vercel roda o Next.js sem servidor pra manter, com as funções também em São Paulo, perto do banco.</dd>
-      <dt>Como fica a LGPD?</dt>
-      <dd><span>Igor</span>O prestador dá o consentimento quando se cadastra, e o administrador pode anonimizar os dados pessoais a pedido do titular. A anonimização fica registrada no log de ações.</dd>
-    </dl>
-
-    <div class="rodape">
-      <a href="https://github.com/Tox1469/Atividade-Sabine" target="_blank">Repositório</a> ·
-      <a href="docs/entrega-06-11.html" target="_blank">Documento da entrega de 06/11</a> ·
-      <a href="./">Toda a documentação e o protótipo</a>
-    </div>
-  </aside>
-
+<div class="base">
+  <span>Administrador <code>luis@sgp.teste</code> <code>igor@sgp.teste</code></span>
+  <span>Prestador <code>treslagoas@sgp.teste</code></span>
+  <span>Cliente <code>zanin@sgp.teste</code></span>
+  <span class="senha">Senha <code>sgp@2026</code></span>
+  <span class="links">
+    <a href="https://github.com/Tox1469/Atividade-Sabine" target="_blank">Repositório</a> ·
+    <a href="docs/entrega-06-11.html" target="_blank">Documento da entrega</a> ·
+    <a href="./">Documentação</a>
+  </span>
 </div>
 
 </body>
