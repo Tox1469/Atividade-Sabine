@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SGP - apresentação de 06/11 - equipe 8</title>
+<link rel="stylesheet" href="prototipos/estilo.css">
+<style>
+  /* pagina pra projetar no comeco da apresentacao de 06/11.
+     uma tela so, letra grande, e cada passo do roteiro ja leva pro lugar certo do sistema.
+     sem slide de proposito: a professora pediu pra resumir em 20/10 */
+  body.apres { display: block; background: var(--papel); font-size: 17px; line-height: 1.45; padding: 0 0 12px; }
+  .faixa { background: var(--caneta-escura); color: #fff; padding: 14px 24px 12px; border-bottom: 4px solid var(--caneta); }
+  .faixa .dentro, .miolo { max-width: 1240px; margin: 0 auto; }
+  .faixa .curso { font-size: 13.5px; color: #a8adb1; margin-bottom: 6px; }
+  .faixa h1 { margin: 0 0 4px; font-size: 31px; letter-spacing: .2px; }
+  .faixa p { margin: 0; color: #d6d9db; font-size: 16.5px; }
+  .faixa .data { float: right; text-align: right; color: #d6d9db; font-size: 14.5px; margin-left: 20px; }
+  .faixa .data b { display: block; color: #fff; font-size: 26px; }
+  .miolo { padding: 0 24px; }
+  h2 { font-size: 13.5px; text-transform: uppercase; letter-spacing: .6px; color: var(--tinta2); margin: 12px 0 7px; padding-bottom: 3px; border-bottom: 1px solid var(--regua); }
+  .abertura { display: grid; grid-template-columns: 1fr 330px; gap: 0 28px; align-items: end; }
+  .problema { font-size: 18.5px; margin: 0; line-height: 1.4; }
+  .problema b { color: var(--caneta); font-weight: 600; }
+  .abrir { display: block; padding: 13px 16px; background: var(--caneta); color: #fff; text-decoration: none; border-radius: 3px; font-size: 19px; font-weight: 600; cursor: pointer; }
+  .abrir span { display: block; font-weight: 400; font-size: 14.5px; color: #f7eadf; }
+  .abrir:hover { background: #8f3d0a; }
+  ol.roteiro { list-style: none; margin: 0; padding: 0; counter-reset: passo; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+  ol.roteiro li { counter-increment: passo; position: relative; padding: 10px 14px 11px 52px; background: var(--branco); border: 1px solid var(--regua); border-left: 4px solid var(--caneta); border-radius: 3px; }
+  ol.roteiro li::before { content: counter(passo); position: absolute; left: 15px; top: 7px; font-size: 28px; font-weight: 700; color: var(--caneta); line-height: 1; }
+  ol.roteiro strong { display: block; font-size: 18.5px; margin-bottom: 2px; }
+  ol.roteiro .fala { display: block; color: var(--tinta2); font-size: 15.5px; line-height: 1.4; }
+  .seta { color: var(--tinta2); margin: 0 3px; }
+  .links { margin-top: 7px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .links a { font-size: 14px; padding: 4px 9px; border: 1px solid var(--caneta); border-radius: 3px; color: var(--caneta); text-decoration: none; background: var(--branco); cursor: pointer; }
+  .links a:hover { background: var(--caneta); color: #fff; }
+  .logins { display: grid; grid-template-columns: repeat(3, 1fr) 1.15fr; gap: 0; background: var(--branco); border: 1px solid var(--regua); border-radius: 3px; }
+  .logins div { padding: 6px 12px; border-right: 1px solid var(--regua-clara); font-size: 15.5px; }
+  .logins div:last-child { border-right: 0; color: var(--tinta2); }
+  .logins b { display: block; font-size: 13px; text-transform: uppercase; letter-spacing: .4px; color: var(--tinta2); font-weight: 600; margin-bottom: 2px; }
+  .logins code { font-family: Consolas, "Courier New", monospace; font-size: 15px; color: var(--tinta); }
+  .logins .senha code { background: var(--caneta-clara); padding: 1px 6px; border-radius: 3px; font-size: 16px; }
+  .rodape { margin-top: 10px; padding-top: 7px; border-top: 1px solid var(--regua); color: var(--tinta2); font-size: 14.5px; display: flex; flex-wrap: wrap; gap: 4px 18px; justify-content: space-between; }
+  .rodape a { color: var(--caneta); cursor: pointer; }
+  @media (max-width: 900px) {
+    body.apres { font-size: 16px; }
+    .faixa { padding: 18px 14px 16px; }
+    .faixa h1 { font-size: 25px; }
+    .faixa .data { float: none; text-align: left; margin: 0 0 8px; }
+    .faixa .data b { display: inline; font-size: 18px; margin-right: 6px; }
+    .miolo { padding: 0 14px; }
+    .abertura, ol.roteiro { grid-template-columns: 1fr; }
+    .abrir { margin-top: 12px; }
+    .logins { grid-template-columns: 1fr; }
+    .logins div { border-right: 0; border-bottom: 1px solid var(--regua-clara); }
+    ol.roteiro li { padding-left: 46px; }
+    ol.roteiro li::before { left: 12px; font-size: 25px; }
+  }
+</style>
+</head>
+<body class="apres">
+
+<div class="faixa">
+  <div class="dentro">
+    <div class="data"><b>06/11</b>2ª entrega do 2º bimestre</div>
+    <div class="curso">unicesumar, análise e desenvolvimento de sistemas, imersão profissional em projeto de software</div>
+    <h1>SGP, sistema de gestão de prestadores</h1>
+    <p>Equipe 8: Luis Gustavo Boratto de Oliveira e Igor Schiniegoski Pallisser. Sistema publicado e funcionando.</p>
+  </div>
+</div>
+
+<div class="miolo">
+
+  <div class="abertura">
+    <div>
+      <h2>O problema</h2>
+      <p class="problema">Quem contrata prestador terceirizado controla cadastro, documento com validade e ordem de serviço em planilha e mensagem.
+      O SGP junta tudo num sistema só, com <b>três perfis</b>: administrador, prestador e cliente.</p>
+    </div>
+    <a class="abrir" href="https://sgp-equipe8-sistema.vercel.app" target="_blank">Abrir o sistema publicado
+      <span>sgp-equipe8-sistema.vercel.app</span></a>
+  </div>
+
+  <h2>Roteiro</h2>
+  <ol class="roteiro">
+    <li>
+      <strong>O que mudou desde 20/10</strong>
+      <span class="fala">O recorte de 20/10 ficou pronto antes e seguimos: sistema na Vercel com banco no Supabase (São Paulo), ordem de serviço do pedido à avaliação, contratos, relatórios, log, LGPD e o CI do Igor.</span>
+    </li>
+    <li>
+      <strong>Fluxo completo no sistema publicado</strong>
+      <span class="fala">Cliente abre a solicitação (aviso de feriado no prazo)<span class="seta">→</span>administrador atribui (o não apto fica de fora e a tela diz por quê)<span class="seta">→</span>prestador aceita e conclui<span class="seta">→</span>cliente avalia.</span>
+      <div class="links">
+        <a href="https://sgp-equipe8-sistema.vercel.app/minhas-solicitacoes" target="_blank">Cliente: solicitações</a>
+        <a href="https://sgp-equipe8-sistema.vercel.app/ordens" target="_blank">Administrador: ordens</a>
+        <a href="https://sgp-equipe8-sistema.vercel.app/minhas-ordens" target="_blank">Prestador: ordens</a>
+      </div>
+    </li>
+    <li>
+      <strong>Regra de negócio na hora</strong>
+      <span class="fala">Documento vencido aparece no painel de vencimentos e o RN02 é aplicado pelo botão "Aplicar RN02 agora".</span>
+      <div class="links">
+        <a href="https://sgp-equipe8-sistema.vercel.app/vencimentos" target="_blank">Painel de vencimentos</a>
+      </div>
+    </li>
+    <li>
+      <strong>Testes</strong>
+      <span class="fala">O GitHub Actions confere tipos, lint, testes e build a cada push. Na tabela de testes, um defeito encontrado e corrigido.</span>
+      <div class="links">
+        <a href="https://github.com/Tox1469/Atividade-Sabine/actions" target="_blank">GitHub Actions</a>
+        <a href="docs/testes.html" target="_blank">Tabela de testes</a>
+      </div>
+    </li>
+  </ol>
+
+  <h2>Entrar no sistema</h2>
+  <div class="logins">
+    <div><b>Administrador</b><code>luis@sgp.teste</code><br><code>igor@sgp.teste</code></div>
+    <div><b>Prestador</b><code>eletrica@sgp.teste</code><br><code>treslagoas@sgp.teste</code></div>
+    <div><b>Cliente</b><code>zanin@sgp.teste</code><br><code>dombosco@sgp.teste</code></div>
+    <div class="senha"><b>Senha</b>Todos usam <code>sgp@2026</code>. Na tela de login tem o botão "Entrar como" em cada um.</div>
+  </div>
+
+  <div class="rodape">
+    <span>
+      <a href="https://github.com/Tox1469/Atividade-Sabine" target="_blank">Repositório</a> ·
+      <a href="docs/entrega-06-11.html" target="_blank">Documento da entrega de 06/11</a> ·
+      <a href="./">Toda a documentação e o protótipo</a>
+    </span>
+    <span>Até 27/11: Firefox e Edge, restaurar um backup do banco e ensaiar a apresentação final.</span>
+  </div>
+
+</div>
+
+</body>
+</html>
