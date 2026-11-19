@@ -21,5 +21,6 @@ export default auth((req) => {
 });
 
 export const config = {
-  matcher: ["/((?!api/auth|api/rotinas|_next/static|_next/image|favicon.ico|icon.svg).*)"],
+  // /sair fica de fora: deslogado, o middleware mandaria pro /login e perderia a query da troca de conta
+  matcher: ["/((?!api/auth|api/rotinas|sair|_next/static|_next/image|favicon.ico|icon.svg).*)"],
 };

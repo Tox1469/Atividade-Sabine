@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useRef, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { entrar } from "./actions";
 
 // contas da carga de demonstracao (prisma/seed.ts). todos os dados do sistema sao ficticios
@@ -27,6 +27,15 @@ export default function Login() {
     (f.elements.namedItem("senha") as HTMLInputElement).value = SENHA_DEMONSTRACAO;
     f.requestSubmit();
   }
+
+  // vindo do /sair?como=...&ir=... (botoes da apresentacao): entra direto na conta de demonstracao
+  // e cai na tela pedida. so conta @sgp.teste, que ja tem o botao "Entrar como" aqui mesmo
+  useEffect(() => {
+    const q = new URLSearchParams(location.search);
+    (form.current!.elements.namedItem("ir") as HTMLInputElement).value = q.get("ir") ?? "";
+    const como = q.get("como");
+    if (como?.endsWith("@sgp.teste")) usar(como);
+  }, []);
 
   return (
     <main className="min-h-screen bg-papel">
@@ -58,6 +67,7 @@ export default function Login() {
         <section className="w-full md:max-w-sm">
           <form ref={form} action={enviar} className="cartao" noValidate>
             <h1 className="px-6 pt-6 text-xl font-semibold">Entrar</h1>
+            <input type="hidden" name="ir" />
             <div className="space-y-4 p-6">
               <div>
                 <label htmlFor="email" className="rotulo">E-mail</label>

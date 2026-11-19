@@ -9,11 +9,13 @@ export async function entrar(_estado: Estado, form: FormData): Promise<Estado> {
   // o react limpa o formulario depois da action, entao o email volta junto
   // pra pessoa nao ter que digitar de novo (defeito D01)
   const email = String(form.get("email") ?? "");
+  // so caminho interno: "//x" e "/\x" virariam outro site
+  const ir = String(form.get("ir") ?? "");
   try {
     await signIn("credentials", {
       email,
       senha: form.get("senha"),
-      redirectTo: "/",
+      redirectTo: /^\/(?![/\\])/.test(ir) ? ir : "/",
     });
     return { erro: null, email };
   } catch (erro) {
